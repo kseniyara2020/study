@@ -346,7 +346,7 @@ function initState() {
     shows: [{ id: 'silicon-valley', title: 'Silicon Valley', current: 'S1E3', watched: [],
       episodes: [{ ep: 'S1E3', title: 'Articles of Incorporation' }] }],
     checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
-    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.9, deeplKey: '', lang: 'ru' },
+    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.9, trUrl: '', lang: 'ru' },
     activity: {}
   };
 }
@@ -770,8 +770,9 @@ function vSettings() {
       <span style="width:22px;color:var(--accent)">${on ? IC.check : ''}</span></button>`;
   }).join('') + `<label class="row"><span class="row-main"><span class="row-title">${L('Скорость', 'Speed')}</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label></div>
     <div class="gfoot">${L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: iPhone → Настройки → Универсальный доступ → Устный контент → Голоса → Английский. На Mac: Системные настройки → Универсальный доступ → Устный контент.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: iPhone → Settings → Accessibility → Spoken Content → Voices → English. On Mac: System Settings → Accessibility → Spoken Content.')}</div>`;
-  h += groupHead(L('Перевод', 'Translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Ключ DeepL', 'DeepL key')}</span></span><input class="inline" id="set-deepl" data-set="deeplKey" type="password" autocomplete="off" placeholder="${L('не подключён', 'not connected')}" value="${esc(st.deeplKey)}"></label></div>
-    <div class="gfoot">${L('Бесплатный ключ DeepL заканчивается на «:fx». Без ключа работает встроенный словарь и кнопка Google Translate.', 'A free DeepL key ends with “:fx”. Without a key, the built-in dictionary and the Google Translate button work.')}</div>`;
+  h += groupHead(L('Перевод DeepL', 'DeepL translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Адрес переводчика', 'Translator address')}</span></span><input class="inline" id="set-trurl" data-set="trUrl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://….workers.dev" value="${esc(st.trUrl || '')}"></label>
+    <button class="row" data-act="tr-test"><span class="tile" style="background:var(--green)">${IC.check}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">${L('Проверить перевод', 'Test translation')}</span><span class="row-sub">${st.trUrl ? L('Переведёт пробную фразу через DeepL', 'Translates a sample phrase via DeepL') : L('Сначала вставьте адрес', 'Paste the address first')}</span></span></button></div>
+    <div class="gfoot">${L('Ключ DeepL хранится в вашем Cloudflare Worker, а не в приложении — так его никто не увидит. Без адреса работает встроенный словарь и кнопка Google Translate.', 'Your DeepL key lives in your Cloudflare Worker, not in the app, so nobody can see it. Without an address, the built-in dictionary and the Google Translate button work.')}</div>`;
   h += groupHead(L('Новые задания', 'New tasks')) + `<div class="group icons">
     <button class="row" data-act="check-packs"><span class="tile" style="background:var(--accent)">${IC.box}</span><span class="row-main"><span class="row-title">${L('Проверить новые задания', 'Check for new tasks')}</span><span class="row-sub">${S.lastCheck ? L('Последняя проверка: ', 'Last checked: ') + fmtShort(S.lastCheck) : L('Загружает пакеты, которые выложил Claude', 'Loads packs published by Claude')}</span></span>${IC.chevR}</button></div>
     <div class="gfoot">${L('Приложение проверяет новые пакеты и тесты при каждом запуске, если есть интернет.', 'The app checks for new packs and tests on every launch when online.')}</div>`;
@@ -912,11 +913,35 @@ function sheetAddWord() {
     <div class="lbl">${L('Серия', 'Episode')}</div><input class="field" id="aw-ep" value="${esc(sh.current)}" autocomplete="off" style="font-family:var(--mono)">
     <div class="lbl">${L('Контекст (необязательно)', 'Context (optional)')}</div><input class="field" id="aw-ctx" placeholder="${L('Кто сказал, о чём сцена', 'Who said it, what the scene is about')}" autocomplete="off"></div>`;
 }
-function trHtml(text) {
+function trHtml(text, dl) {
   if (!text.trim()) return `<span style="color:var(--label2)">${L('Перевод появится здесь.', 'The translation appears here.')}</span>`;
   const r = lookup(text), gt = 'https://translate.google.com/?sl=en&tl=ru&op=translate&text=' + encodeURIComponent(text.trim());
-  return (r ? `<div class="ru">${esc(r)}</div>` : `<div style="color:var(--label2);margin-bottom:4px">${L('Нет во встроенном словаре. С ключом DeepL переводы появятся сразу.', 'Not in the built-in dictionary. With a DeepL key, translations appear at once.')}</div>`)
-    + `<a href="${gt}" target="_blank" rel="noopener">${L('Открыть в Google Translate ↗', 'Open in Google Translate ↗')}</a>`;
+  const hasDl = !!(S.settings.trUrl || '').trim();
+  let top;
+  if (dl && dl.ru) top = `<div class="ru">${esc(dl.ru)}</div><div class="row-sub" style="margin-bottom:6px">DeepL${r && norm(r) !== norm(dl.ru) ? ' · ' + L('словарь', 'dictionary') + ': ' + esc(r) : ''}</div>`;
+  else if (r) top = `<div class="ru">${esc(r)}</div><div class="row-sub" style="margin-bottom:6px">${dl && dl.loading ? L('DeepL: перевожу…', 'DeepL: translating…') : L('словарь', 'dictionary')}</div>`;
+  else if (dl && dl.loading) top = `<div style="color:var(--label2);margin-bottom:4px">${L('DeepL: перевожу…', 'DeepL: translating…')}</div>`;
+  else if (dl && dl.error) top = `<div style="color:var(--red);margin-bottom:4px">${L('DeepL не ответил', 'DeepL did not respond')}: ${esc(dl.error)}</div>`;
+  else top = `<div style="color:var(--label2);margin-bottom:4px">${hasDl ? '' : L('Нет во встроенном словаре. Подключите DeepL в Настройках — переводы будут появляться сразу.', 'Not in the built-in dictionary. Connect DeepL in Settings for instant translations.')}</div>`;
+  return top + `<a href="${gt}" target="_blank" rel="noopener">${L('Открыть в Google Translate ↗', 'Open in Google Translate ↗')}</a>`;
+}
+let trTimer = null, trSeq = 0;
+async function deeplTranslate(text) {
+  const u = (S.settings.trUrl || '').trim(); if (!u) return null;
+  const r = await fetch(u, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  if (!r.ok || !j.ru) throw new Error(j.error || ('HTTP ' + r.status));
+  return j.ru;
+}
+function liveTranslate(text) {
+  const box = () => document.getElementById('aw-tr');
+  clearTimeout(trTimer); const seq = ++trSeq;
+  if (!text.trim() || !(S.settings.trUrl || '').trim()) { UI.awTr = null; if (box()) box().innerHTML = trHtml(text); return; }
+  if (box()) box().innerHTML = trHtml(text, { loading: true });
+  trTimer = setTimeout(async () => {
+    try { const ru = await deeplTranslate(text.trim()); if (seq !== trSeq) return; UI.awTr = { k: norm(text), ru }; if (box()) box().innerHTML = trHtml(text, { ru }); }
+    catch (e) { if (seq !== trSeq) return; UI.awTr = null; if (box()) box().innerHTML = trHtml(text, { error: e.message }); }
+  }, 550);
 }
 function buildExport() {
   const V = vocabMap(), writing = {};
@@ -1117,7 +1142,8 @@ document.addEventListener('click', e => {
       const text = document.getElementById('aw-text').value.trim(); if (!text) return;
       const ep = (document.getElementById('aw-ep').value.trim() || 'S1E3').toUpperCase(), ctx = document.getElementById('aw-ctx').value.trim();
       const show = UI.sheet.show || 'silicon-valley';
-      S.myWords.push({ id: 'w-' + uid(), text, ru: lookup(text) || '', show, ep, ctx, at: today() });
+      const dl = UI.awTr && UI.awTr.k === norm(text) ? UI.awTr.ru : '';
+      S.myWords.push({ id: 'w-' + uid(), text, ru: dl || lookup(text) || '', src: dl ? 'deepl' : 'dict', show, ep, ctx, at: today() }); UI.awTr = null;
       const sh = S.shows.find(s => s.id === show); if (sh && !(sh.episodes || []).some(x => x.ep === ep)) (sh.episodes = sh.episodes || []).push({ ep, title: '' });
       save(); UI.sheet = null; UI.seg = 'words'; renderSheet(); render(); toast(L('Слово записано', 'Word saved')); break;
     }
@@ -1132,6 +1158,13 @@ document.addEventListener('click', e => {
       break;
     }
     case 'check-packs': checkPacks(false); break;
+    case 'tr-test': {
+      const inp = document.getElementById('set-trurl'); if (inp) { S.settings.trUrl = inp.value.trim(); save(); }
+      if (!S.settings.trUrl) { toast(L('Сначала вставьте адрес переводчика', 'Paste the translator address first')); break; }
+      toast(L('Перевожу…', 'Translating…'));
+      deeplTranslate('Let me walk you through the new flow.').then(ru => toast('DeepL: ' + ru), er => toast(L('Не работает: ', 'Not working: ') + er.message));
+      break;
+    }
     case 'download-export': {
       try {
         const txt = document.getElementById('exp-text').value, name = 'study-export-' + today() + '.json';
@@ -1166,7 +1199,7 @@ document.addEventListener('input', e => {
     document.getElementById('cwc-' + i).textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${sk.parts[i].minWords}`;
     document.getElementById('cw-submit').disabled = !sk.parts.every((p, k) => words(CS.drafts[k]) >= p.minWords);
   }
-  if (t.dataset.aw) { document.getElementById('aw-tr').innerHTML = trHtml(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
+  if (t.dataset.aw) { liveTranslate(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
   if (t.id === 'set-rate') document.getElementById('rate-val').textContent = Math.round(t.value * 100) + '%';
 });
 document.addEventListener('change', e => {
