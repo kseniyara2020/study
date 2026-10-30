@@ -414,8 +414,14 @@ const VOICE_SLOTS = [
 let VOICES = [];
 function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
 try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
-const vBase = v => v.name.toLowerCase().replace(/^(microsoft|apple)\s+/, '').split(/[\s(,\-–]/)[0];
-const vQuality = v => /premium|премиум|высок/i.test(v.name) ? 2 : /enhanced|улучш|расшир/i.test(v.name) ? 1 : 0;
+const RU_VOICE = { 'дэниэл': 'daniel', 'дэниел': 'daniel', 'даниэль': 'daniel', 'дэниель': 'daniel', 'кейт': 'kate', 'оливер': 'oliver', 'джейми': 'jamie', 'серена': 'serena', 'сирена': 'serena', 'стефани': 'stephanie', 'марта': 'martha', 'артур': 'arthur', 'саманта': 'samantha', 'ава': 'ava', 'эва': 'ava', 'эйва': 'ava', 'зои': 'zoe', 'зоуи': 'zoe', 'эллисон': 'allison', 'элисон': 'allison', 'сьюзан': 'susan', 'сюзан': 'susan', 'ники': 'nicky', 'никки': 'nicky', 'эван': 'evan', 'нейтан': 'nathan', 'натан': 'nathan', 'том': 'tom', 'алекс': 'alex', 'аарон': 'aaron', 'эрон': 'aaron' };
+const vBase = v => {
+  const uri = String(v.voiceURI || '');
+  if (/^com\.apple\./i.test(uri) && !/eloquence|novelty|ttsbundle/i.test(uri)) { const last = uri.split('.').pop().toLowerCase(); if (/^[a-z]+$/.test(last)) return last; }
+  const first = v.name.toLowerCase().replace(/^(microsoft|apple)\s+/, '').split(/[\s(,\-–]/)[0];
+  return RU_VOICE[first] || first;
+};
+const vQuality = v => { const t = v.name + ' ' + (v.voiceURI || ''); return /premium|премиум|высок/i.test(t) ? 2 : /enhanced|улучш|расшир/i.test(t) ? 1 : 0; };
 function voiceFor(slotId) {
   const sl = VOICE_SLOTS.find(s => s.id === slotId); if (!sl) return null;
   const vs = VOICES.filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(sl.lang));
