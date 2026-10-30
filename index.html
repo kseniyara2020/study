@@ -31,7 +31,8 @@
   --card-pad:16px; --tile-size:30px;
   --radius-group:10px; --radius-card:12px; --radius-tile:7px; --radius-sheet:12px;
   --fs-large:34px; --fs-title:20px; --fs-body:17px; --fs-sub:15px; --fs-foot:13px; --fs-tab:10px;
-  --tabbar-h:49px; --nav-h:44px;
+  --tabbar-h:49px; --nav-h:44px; --tab-pad-top:4px;
+  --tab-inactive:#919191;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,monospace;
 }
@@ -228,7 +229,7 @@ textarea.field{min-height:180px;resize:vertical}
 /* Tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
   border-top:.5px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:var(--tabbar-h);border:0;background:none;color:var(--label3);font-size:10px;font-weight:500;letter-spacing:.1px;cursor:pointer}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:0;height:var(--tabbar-h);padding:var(--tab-pad-top) 0 0;border:0;background:none;color:var(--tab-inactive);font-size:10px;font-weight:500;letter-spacing:.1px;cursor:pointer}
 .tab svg{width:25px;height:25px}
 .tab.on{color:var(--accent)}
 
