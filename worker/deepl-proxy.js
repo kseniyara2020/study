@@ -25,12 +25,15 @@ export default {
     if (!text) return json({ error: 'Empty text' }, 400);
     if (text.length > 500) return json({ error: 'Text is longer than 500 characters' }, 400);
 
-    const host = env.DEEPL_KEY.endsWith(':fx') ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
-    const r = await fetch(host + '/v2/translate', {
+    // Free/Developer keys usually end with ":fx" and use api-free; if the endpoint is wrong, DeepL answers 403 — then try the other one.
+    const hosts = env.DEEPL_KEY.endsWith(':fx') ? ['https://api-free.deepl.com', 'https://api.deepl.com'] : ['https://api.deepl.com', 'https://api-free.deepl.com'];
+    const call = host => fetch(host + '/v2/translate', {
       method: 'POST',
       headers: { 'Authorization': 'DeepL-Auth-Key ' + env.DEEPL_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: [text], source_lang: 'EN', target_lang: 'RU' }),
     });
+    let r = await call(hosts[0]);
+    if (r.status === 403) r = await call(hosts[1]);
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) return json({ error: (data && data.message) || ('DeepL HTTP ' + r.status) }, r.status === 456 ? 429 : 502);
