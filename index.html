@@ -262,6 +262,9 @@ textarea.field{min-height:180px;resize:vertical}
 .mic-row .chip svg{width:16px;height:16px}
 .chip.rec{background:var(--red);color:#fff;animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.7}}
+.sec-bar{display:block;height:6px;border-radius:3px;background:var(--fill);overflow:hidden;margin:6px 0 4px}
+.sec-bar i{display:block;height:100%;border-radius:3px;transition:width .3s}
+.sec-card .row-main{gap:3px}
 .opt.sel{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .passage{white-space:pre-line;font-size:var(--fs-sub);line-height:21px;margin-bottom:16px}
 .notice{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:var(--label);border-radius:var(--radius-card);padding:12px var(--card-pad);margin-bottom:var(--block-gap);font-size:var(--fs-sub);line-height:20px}
@@ -490,7 +493,10 @@ function speakDialog(lines, slow) {
 /* ---------- actions on data ---------- */
 function touchActivity() { const t = today(); S.activity[t] = (S.activity[t] || 0) + 1; }
 function markDone(id, extra) {
-  S.progress[id] = Object.assign({ done: true, at: today() }, S.progress[id] || {}, extra || {}, { done: true });
+  const prev = S.progress[id] || {};
+  let spent = prev.spent || 0;
+  if (TS && TS.id === id && TS.t0) { spent += Math.min(1800, Math.round((Date.now() - TS.t0) / 1000)); TS.t0 = Date.now(); }
+  S.progress[id] = Object.assign({ done: true, at: today() }, prev, extra || {}, { done: true, spent });
   touchActivity(); save();
 }
 function addCards(ids) { const t = addDays(today(), 1); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; }); }
@@ -504,6 +510,32 @@ function taskRow(t) {
   return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
     <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
     <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${mins(t.minutes)}${score}</span></span>${IC.chevR}</button>`;
+}
+function secStats(list) {
+  const done = list.filter(t => isDone(t.id));
+  const plan = list.reduce((a, t) => a + (t.minutes || 0), 0);
+  const spent = Math.round(done.reduce((a, t) => a + ((S.progress[t.id].spent || 0) / 60 || t.minutes || 0), 0));
+  return { done: done.length, total: list.length, plan, spent };
+}
+function secCard(sec, list, di) {
+  const s = SECTIONS[sec], st = secStats(list), pct = st.total ? Math.round(st.done / st.total * 100) : 0;
+  const next = list.find(t => !isDone(t.id));
+  return `<button class="row sec-card" data-act="open-daysec" data-sec="${sec}" data-di="${di}">
+    <span class="tile" style="background:${s.color}">${s.icon}</span>
+    <span class="row-main"><span class="row-title" style="font-weight:600">${s.name()}</span>
+      <span class="row-sub">${st.done}/${st.total} ${L('заданий', 'tasks')} · ${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span>
+      <span class="sec-bar"><i style="width:${pct}%;background:${s.color}"></i></span>
+      <span class="row-sub">${next ? L('Дальше: ', 'Next: ') + esc(next.title) : L('Всё готово на сегодня', 'All done for today')}</span></span>${IC.chevR}</button>`;
+}
+function vDaySec(sec, di) {
+  const p = activePack(), d = p && p.days[di];
+  if (!d) return { title: SECTIONS[sec].name(), back: true, body: '' };
+  const list = d[sec] || [], st = secStats(list), next = list.find(t => !isDone(t.id));
+  let h = `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b>${st.done}/${st.total} ${L('заданий', 'tasks')}</b><span class="row-sub">${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span></div>
+    <span class="sec-bar" style="margin-top:10px"><i style="width:${st.total ? Math.round(st.done / st.total * 100) : 0}%;background:${SECTIONS[sec].color}"></i></span>
+    ${next ? `<div class="actions" style="margin-top:14px"><button class="btn" data-act="open-task" data-id="${esc(next.id)}">${L('Продолжить', 'Continue')}: ${esc(next.title)}</button></div>` : ''}</div>`;
+  h += groupHead(L('Задания дня', 'Today’s tasks')) + `<div class="group">${list.map(taskRow).join('')}</div>`;
+  return { title: SECTIONS[sec].name(), back: true, sub: esc(L('День ', 'Day ') + d.day + ' · ' + d.title), body: h };
 }
 function secHead(sec, list) {
   const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
@@ -530,7 +562,7 @@ function vToday() {
   h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
       <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
       <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="${L('Следующий день', 'Next day')}">${IC.chevRb}</button></div>`;
-  ['general', 'ux'].forEach(sec => { const list = d[sec] || []; if (list.length) h += secHead(sec, list) + `<div class="group">${list.map(taskRow).join('')}</div>`; });
+  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + '</div>';
   const show = S.shows[0];
   if (show && S.settings.mediaNudge) {
     const n = S.myWords.filter(w => w.show === show.id).length;
@@ -848,7 +880,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 30.10 19:48</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 30.10 19:51</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
@@ -856,7 +888,7 @@ function vSettings() {
 function startTask(id) {
   const x = findTask(id); if (!x) return;
   const p = S.progress[id] || {};
-  TS = { id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [] };
+  TS = { t0: Date.now(), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [] };
   UI.stack.push({ v: 'task', id });
 }
 function vTask(id) {
@@ -1136,6 +1168,7 @@ function currentView() {
     if (top.v === 'checks') return vChecks();
     if (top.v === 'check') return vCheck(top.skill);
     if (top.v === 'media-item') return vMediaItem(top.id);
+    if (top.v === 'daysec') return vDaySec(top.sec, top.di);
   }
   return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
 }
@@ -1290,6 +1323,7 @@ document.addEventListener('click', e => {
     case 'shadow-done': TS.results[TS.i] = true; nextItem(); break;
     case 'next': nextItem(); break;
     case 'open-media': go(() => UI.stack.push({ v: 'media-item', id: el.dataset.id })); break;
+    case 'open-daysec': go(() => UI.stack.push({ v: 'daysec', sec: el.dataset.sec, di: Number(el.dataset.di) })); break;
     case 'media-seg': UI.mseg = el.dataset.seg; render(); break;
     case 'retry': { const id = TS.id; TS = null; startTask(id); UI.stack.pop(); render(); break; }
     case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast(L('Урок пройден', 'Lesson done')); break;
