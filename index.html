@@ -944,7 +944,23 @@ if ('serviceWorker' in navigator && window.self === window.top && location.proto
   try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
 }
 
-render();
+/* ---------- direct links to screens (for design import: html.to.design etc.) ---------- */
+const ROUTES = { lesson: 'p1-d1-g1', cards: 'p1-d1-g2', quiz: 'p1-d1-g3', dialog: 'p1-d1-u2', gap: 'p1-d2-g2', write: 'p1-d2-u3' };
+function applyHash() {
+  const h = (location.hash || '').slice(1);
+  if (!h) return false;
+  UI.stack = []; TS = null; RV = null; UI.sheet = null;
+  if (['today', 'english', 'media', 'progress', 'settings'].includes(h)) UI.tab = h;
+  else if (h === 'show') { UI.tab = 'media'; UI.stack.push({ v: 'show', id: 'silicon-valley' }); }
+  else if (h === 'review') { UI.tab = 'english'; UI.stack.push({ v: 'review' }); }
+  else if (h === 'section') { UI.tab = 'english'; UI.stack.push({ v: 'section', sec: 'general' }); }
+  else if (ROUTES[h]) { UI.tab = 'today'; startTask(ROUTES[h]); }
+  else return false;
+  render(); renderSheet(); return true;
+}
+window.addEventListener('hashchange', applyHash);
+
+if (!applyHash()) render();
 checkPacks(true);
 })();
 </script>
