@@ -249,6 +249,11 @@ textarea.field{min-height:180px;resize:vertical}
 .lbl{font-size:13px;color:var(--label2);margin:4px 16px -4px}
 .code{width:100%;min-height:200px;font:12px/16px var(--mono);border:0;border-radius:12px;background:var(--card);color:var(--label);padding:12px}
 .toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--label);color:var(--bg);padding:10px 16px;border-radius:20px;font-size:15px;max-width:calc(100% - 32px);animation:fade .2s}
+.opt.sel{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.passage{white-space:pre-line;font-size:var(--fs-sub);line-height:21px;margin-bottom:16px}
+.notice{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:var(--label);border-radius:var(--radius-card);padding:12px var(--card-pad);margin-bottom:var(--block-gap);font-size:var(--fs-sub);line-height:20px}
+.notice svg{color:var(--accent);width:20px;height:20px;flex:none;margin-top:1px}
+.notice b{font-weight:600}
 @keyframes fade{from{opacity:0}}
 @keyframes up{from{transform:translateY(40px);opacity:.4}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -266,12 +271,14 @@ textarea.field{min-height:180px;resize:vertical}
 <div id="toast-root"></div>
 
 <script type="application/json" id="seed-pack">{"type": "study-pack", "version": 1, "id": "pack-001", "title": "Неделя 1: make/do, used to, wish и разговор о макетах", "level": "B1", "created": "2026-10-30", "vocab": [{"id": "g1", "en": "make a decision", "ru": "принять решение", "ex": "We need to make a decision by Friday.", "lvl": "B1", "tag": "general"}, {"id": "g2", "en": "do someone a favour", "ru": "оказать услугу, сделать одолжение", "ex": "Could you do me a favour and check this file?", "lvl": "B1", "tag": "general"}, {"id": "g3", "en": "make a mistake", "ru": "ошибиться, допустить ошибку", "ex": "Everyone makes mistakes when they start.", "lvl": "A2", "tag": "general"}, {"id": "g4", "en": "do research", "ru": "проводить исследование", "ex": "We did some user research before the redesign.", "lvl": "B1", "tag": "general"}, {"id": "g5", "en": "make progress", "ru": "продвигаться, делать успехи", "ex": "I'm making real progress with my English.", "lvl": "B1", "tag": "general"}, {"id": "g6", "en": "do your best", "ru": "сделать всё возможное", "ex": "Don't worry about the result, just do your best.", "lvl": "B1", "tag": "general"}, {"id": "g7", "en": "call off", "ru": "отменить", "ex": "They called off the meeting because the client was ill.", "lvl": "B2", "tag": "general"}, {"id": "g8", "en": "put off", "ru": "отложить, откладывать", "ex": "Stop putting off the difficult tasks.", "lvl": "B2", "tag": "general"}, {"id": "g9", "en": "come up with", "ru": "придумать, предложить (идею)", "ex": "She came up with a much simpler solution.", "lvl": "B2", "tag": "general"}, {"id": "g10", "en": "figure out", "ru": "разобраться, понять", "ex": "I can't figure out why this layout breaks.", "lvl": "B2", "tag": "general"}, {"id": "g11", "en": "point out", "ru": "указать, обратить внимание на", "ex": "He pointed out a problem in the checkout flow.", "lvl": "B2", "tag": "general"}, {"id": "g12", "en": "carry on", "ru": "продолжать", "ex": "Sorry for interrupting, please carry on.", "lvl": "B1", "tag": "general"}, {"id": "g13", "en": "compelling", "ru": "убедительный, захватывающий", "ex": "She made a compelling case for the redesign.", "lvl": "C1", "tag": "general"}, {"id": "g14", "en": "compulsory", "ru": "обязательный", "ex": "The training is compulsory for all new employees.", "lvl": "B2", "tag": "general"}, {"id": "g15", "en": "sensible", "ru": "разумный, здравый", "ex": "That sounds like a sensible plan.", "lvl": "B1", "tag": "general"}, {"id": "g16", "en": "sensitive", "ru": "чувствительный, деликатный", "ex": "Salary is a sensitive topic in our team.", "lvl": "B2", "tag": "general"}, {"id": "g17", "en": "eventually", "ru": "в конце концов, со временем", "ex": "We eventually found the cause of the bug.", "lvl": "B1", "tag": "general"}, {"id": "g18", "en": "actually", "ru": "на самом деле, вообще-то", "ex": "Actually, the deadline is next week, not tomorrow.", "lvl": "B1", "tag": "general"}, {"id": "u1", "en": "stakeholder", "ru": "стейкхолдер, заинтересованное лицо", "ex": "We'll present the concept to the stakeholders on Monday.", "lvl": "C1", "tag": "ux"}, {"id": "u2", "en": "wireframe", "ru": "вайрфрейм, схема экрана", "ex": "I sketched a few wireframes for the new dashboard.", "lvl": "pro", "tag": "ux"}, {"id": "u3", "en": "pain point", "ru": "болевая точка, проблема пользователя", "ex": "Slow search is the main pain point for our users.", "lvl": "pro", "tag": "ux"}, {"id": "u4", "en": "iterate on", "ru": "дорабатывать итерациями", "ex": "Let's test it and iterate on the design.", "lvl": "pro", "tag": "ux"}, {"id": "u5", "en": "hand-off", "ru": "передача макетов в разработку", "ex": "The hand-off to developers is planned for Friday.", "lvl": "pro", "tag": "ux"}, {"id": "u6", "en": "edge case", "ru": "пограничный, редкий случай", "ex": "What happens in the edge case when the list is empty?", "lvl": "pro", "tag": "ux"}, {"id": "u7", "en": "walk someone through", "ru": "показать шаг за шагом, провести по", "ex": "Let me walk you through the new flow.", "lvl": "B2", "tag": "ux"}, {"id": "u8", "en": "rationale", "ru": "обоснование, логика решения", "ex": "Can you explain the rationale behind this layout?", "lvl": "C1", "tag": "ux"}, {"id": "u9", "en": "trade-off", "ru": "компромисс, выбор с потерями", "ex": "A simpler animation is a good trade-off for the first release.", "lvl": "C1", "tag": "ux"}, {"id": "u10", "en": "follow up (on)", "ru": "вернуться к вопросу, напомнить", "ex": "I'm just following up on my last email.", "lvl": "B2", "tag": "ux"}, {"id": "u11", "en": "align on", "ru": "согласовать, прийти к общему мнению", "ex": "Let's align on the scope before we start.", "lvl": "pro", "tag": "ux"}, {"id": "u12", "en": "deliverable", "ru": "результат работы, то, что сдаём", "ex": "The main deliverable is a clickable prototype.", "lvl": "pro", "tag": "ux"}], "days": [{"day": 1, "title": "make или do", "general": [{"id": "p1-d1-g1", "type": "lesson", "title": "make или do", "minutes": 5, "body": ["В русском и «делать», и «сделать» — одно слово. В английском глагол зависит от существительного, и это просто нужно запомнить парами.", "**make** — когда появляется результат: решение, ошибка, план, деньги, прогресс.", "**do** — когда выполняем действие или работу: исследование, задание, одолжение, «всё возможное».", "Если не уверены, учите целую фразу, а не одно слово: не «favour», а «do someone a favour»."], "examples": [{"en": "We need to make a decision today.", "ru": "Нам нужно принять решение сегодня."}, {"en": "I made a mistake in the spacing.", "ru": "Я ошиблась в отступах."}, {"en": "Could you do me a favour?", "ru": "Можешь оказать мне услугу?"}, {"en": "We did some research first.", "ru": "Сначала мы провели исследование."}]}, {"id": "p1-d1-g2", "type": "cards", "title": "6 сочетаний с make и do", "minutes": 5, "cards": ["g1", "g2", "g3", "g4", "g5", "g6"]}, {"id": "p1-d1-g3", "type": "quiz", "title": "make или do: практика", "minutes": 5, "items": [{"q": "It's time to ___ a decision about the logo.", "options": ["do", "make", "take"], "a": 1, "explain": "make a decision — принять решение. Вариант take a decision тоже встречается в британском английском, но make — основной."}, {"q": "Could you ___ me a favour and send the file?", "options": ["make", "give", "do"], "a": 2, "explain": "do someone a favour — устойчивое сочетание."}, {"q": "Before the redesign we ___ some user research.", "options": ["did", "made", "had"], "a": 0, "explain": "do research — проводить исследование."}, {"q": "Don't worry, everyone ___ mistakes.", "options": ["does", "makes", "takes"], "a": 1, "explain": "make a mistake — ошибаться."}, {"q": "You're ___ great progress with your English!", "options": ["making", "doing", "having"], "a": 0, "explain": "make progress — продвигаться."}, {"q": "Just ___ your best, nobody expects perfection.", "options": ["make", "try", "do"], "a": 2, "explain": "do your best — сделать всё возможное."}]}], "ux": [{"id": "p1-d1-u1", "type": "cards", "title": "Слова дизайн-ревью", "minutes": 6, "cards": ["u1", "u2", "u3", "u4", "u5", "u6"]}, {"id": "p1-d1-u2", "type": "dialog", "title": "Диалог: ревью вайрфреймов", "minutes": 8, "lines": [{"s": "PM", "t": "Thanks for sharing the wireframes. Before we go further, can you walk me through the main flow?"}, {"s": "Designer", "t": "Sure. We start on the dashboard. Users told us the old filters were a real pain point, so I moved them to the top."}, {"s": "PM", "t": "Makes sense. What about the edge case when a user has no documents yet?"}, {"s": "Designer", "t": "Good point. I haven't designed that state yet. I'll add an empty state and iterate on it before the hand-off."}, {"s": "PM", "t": "Great. Let's share it with the stakeholders on Thursday."}], "items": [{"q": "Why did the designer move the filters to the top?", "options": ["The stakeholders asked for it", "Users found the old filters difficult", "Developers wanted a simpler layout"], "a": 1, "explain": "Users told us the old filters were a real pain point — пользователи жаловались на старые фильтры."}, {"q": "What hasn't the designer designed yet?", "options": ["The empty state", "The dashboard", "The filters"], "a": 0, "explain": "I haven't designed that state yet. I'll add an empty state…"}, {"q": "When will they show the design to the stakeholders?", "options": ["On Tuesday", "After the hand-off", "On Thursday"], "a": 2, "explain": "Let's share it with the stakeholders on Thursday."}]}]}, {"day": 2, "title": "used to, be used to, get used to", "general": [{"id": "p1-d2-g1", "type": "lesson", "title": "Три вида used to", "minutes": 6, "body": ["**used to + глагол** — так было раньше, сейчас уже нет: I used to work in an office (раньше работала в офисе).", "**be used to + -ing** — привыкла, для меня это нормально: I'm used to working from home.", "**get used to + -ing** — привыкаю, процесс: I'm getting used to working with a new team.", "Главная ловушка: после be used to и get used to стоит **-ing** или существительное, а не голый глагол. «I'm used to get up» — ошибка."], "examples": [{"en": "I used to draw by hand.", "ru": "Раньше я рисовала от руки."}, {"en": "I'm used to getting feedback.", "ru": "Я привыкла получать обратную связь."}, {"en": "You'll get used to it.", "ru": "Ты привыкнешь."}, {"en": "We didn't use to have design reviews.", "ru": "Раньше у нас не было дизайн-ревью."}]}, {"id": "p1-d2-g2", "type": "gap", "title": "Впишите правильную форму", "minutes": 6, "items": [{"q": "When I was a child, I ___ (play) the piano.", "a": ["used to play"], "explain": "Привычка в прошлом, которой больше нет: used to + глагол."}, {"q": "She is used to ___ (work) late.", "a": ["working"], "explain": "be used to + -ing."}, {"q": "I'm not used to ___ (speak) English at work.", "a": ["speaking"], "explain": "be used to + -ing, отрицание делаем через not."}, {"q": "Don't worry, you'll get used to ___ (use) Figma variables.", "a": ["using"], "explain": "get used to + -ing."}, {"q": "We ___ (not / have) design reviews, but now we have them every week.", "a": ["didn't use to have", "did not use to have", "never used to have"], "explain": "Отрицание: didn't use to (без -d после didn't)."}, {"q": "It took me a month to get used to ___ (wake) up at 6.", "a": ["waking"], "explain": "get used to + -ing."}]}, {"id": "p1-d2-g3", "type": "dictation", "title": "Диктант: used to", "minutes": 4, "items": [{"say": "I'm used to working from home.", "a": ["I'm used to working from home", "I am used to working from home"]}, {"say": "We used to meet every Monday.", "a": ["We used to meet every Monday"]}, {"say": "You'll get used to it soon.", "a": ["You'll get used to it soon", "You will get used to it soon"]}]}], "ux": [{"id": "p1-d2-u1", "type": "lesson", "title": "Как презентовать макет", "minutes": 5, "body": ["Хорошая презентация макета звучит как рассказ: цель → что сделано → почему так → где нужна помощь.", "Ниже фразы на каждый шаг. Прослушайте их и повторите вслух: интонацию лучше ставить сразу."], "examples": [{"en": "Let me walk you through the new checkout flow.", "ru": "Давайте я покажу новый сценарий оплаты шаг за шагом."}, {"en": "The main goal here is to reduce drop-offs.", "ru": "Главная цель — сократить отток."}, {"en": "I went with cards because they scan better on mobile.", "ru": "Я выбрала карточки, потому что на мобильном их легче просматривать."}, {"en": "One trade-off is that we show less data at once.", "ru": "Компромисс в том, что одновременно видно меньше данных."}, {"en": "I'd love your feedback on the empty states.", "ru": "Мне очень нужен ваш фидбэк по пустым состояниям."}]}, {"id": "p1-d2-u2", "type": "quiz", "title": "Какая фраза подходит?", "minutes": 4, "items": [{"q": "Вы начинаете показ макета на созвоне.", "options": ["Let me walk you through the flow.", "Let me walk you the flow.", "Let me go you through the flow."], "a": 0, "explain": "walk someone through something — провести кого-то по чему-то."}, {"q": "Вы объясняете, почему выбрали вкладки, а не меню.", "options": ["I chose tabs, because reason.", "I went with tabs because they're faster to reach.", "I went to tabs because faster."], "a": 1, "explain": "go with — выбрать вариант. После because нужна полная причина."}, {"q": "Вы честно называете минус решения.", "options": ["One trade-off is that the page gets longer.", "One trade is that the page longer.", "The page is bad, sorry."], "a": 0, "explain": "trade-off — компромисс: что мы теряем ради выигрыша."}, {"q": "Вы просите фидбэк по конкретной части.", "options": ["Give me feedbacks.", "Any feedbacks?", "I'd love your feedback on the onboarding."], "a": 2, "explain": "feedback неисчисляемое: без -s и без a. Конкретная просьба работает лучше общей."}]}, {"id": "p1-d2-u3", "type": "write", "title": "Сообщение в Slack", "minutes": 6, "prompt": "Напишите продакт-менеджеру в Slack: макеты нового онбординга готовы, вы прикрепили ссылку и просите фидбэк до четверга. Отдельно упомяните, что пустые состояния ещё в работе.", "hint": "Используйте: walk you through, I'd love your feedback on, by Thursday, still working on.", "minWords": 30}]}, {"day": 3, "title": "Фразовые глаголы для работы", "general": [{"id": "p1-d3-g1", "type": "cards", "title": "6 фразовых глаголов", "minutes": 5, "cards": ["g7", "g8", "g9", "g10", "g11", "g12"]}, {"id": "p1-d3-g2", "type": "quiz", "title": "Фразовые глаголы: практика", "minutes": 5, "items": [{"q": "The client was ill, so we ___ the meeting.", "options": ["called off", "turned down", "took off"], "a": 0, "explain": "call off — отменить. turn down — отклонить предложение, take off — снять, взлететь."}, {"q": "I keep ___ my portfolio update. I should start today.", "options": ["putting on", "putting off", "putting out"], "a": 1, "explain": "put off — откладывать."}, {"q": "Our team ___ a great name for the new feature.", "options": ["came up with", "came over", "came across"], "a": 0, "explain": "come up with — придумать. come across — случайно наткнуться."}, {"q": "I can't ___ why the grid breaks on tablets.", "options": ["find up", "figure out", "point out"], "a": 1, "explain": "figure out — разобраться."}, {"q": "Thanks for ___ that typo in the header!", "options": ["pointing out", "calling off", "carrying on"], "a": 0, "explain": "point out — указать на что-то."}, {"q": "Sorry for interrupting. Please ___.", "options": ["put off", "carry on", "come up"], "a": 1, "explain": "carry on — продолжайте."}]}, {"id": "p1-d3-g3", "type": "quiz", "title": "Аудирование: что имелось в виду?", "minutes": 4, "items": [{"say": "We had to put off the launch until March.", "q": "Что случилось с запуском?", "options": ["Его отменили", "Его отложили до марта", "Его провели в марте досрочно"], "a": 1, "explain": "put off — отложить."}, {"say": "Can you figure out why the button doesn't work?", "q": "О чём просят?", "options": ["Разобраться, почему не работает кнопка", "Убрать кнопку", "Нарисовать новую кнопку"], "a": 0, "explain": "figure out — разобраться."}, {"say": "She came up with a much simpler flow.", "q": "Что сделала коллега?", "options": ["Нашла ошибку в сценарии", "Отказалась от сценария", "Придумала более простой сценарий"], "a": 2, "explain": "come up with — придумать."}, {"say": "Sorry to interrupt, please carry on.", "q": "Что просит говорящий?", "options": ["Подождать", "Продолжать", "Повторить"], "a": 1, "explain": "carry on — продолжать."}]}], "ux": [{"id": "p1-d3-u1", "type": "lesson", "title": "Давать и принимать фидбэк", "minutes": 5, "body": ["На ревью важно звучать уверенно, но не резко. В английском критику смягчают вопросами и фразами «I'm not sure about…».", "Когда критикуют вас, сначала признайте мысль, потом уточните, потом ответьте или возьмите время."], "examples": [{"en": "I like how clear the navigation is.", "ru": "Мне нравится, насколько понятная навигация."}, {"en": "Have you considered a bottom sheet here?", "ru": "Вы не думали сделать здесь нижнюю шторку?"}, {"en": "I'm not sure about the colour of the main button.", "ru": "Я не уверена насчёт цвета главной кнопки."}, {"en": "That's a fair point.", "ru": "Справедливое замечание."}, {"en": "Could you say more about that?", "ru": "Можете рассказать подробнее?"}, {"en": "Let me think about it and follow up tomorrow.", "ru": "Дайте мне подумать, вернусь с ответом завтра."}]}, {"id": "p1-d3-u2", "type": "dialog", "title": "Диалог: разработчик против анимаций", "minutes": 8, "lines": [{"s": "Developer", "t": "I've looked at the new onboarding. The animations look great, but they'll take about two weeks to build."}, {"s": "Designer", "t": "That's a fair point. Could you say more about which part is the hardest?"}, {"s": "Developer", "t": "Mostly the card transitions. What if we use a simple fade for the first release?"}, {"s": "Designer", "t": "I see. The rationale for the transitions was to show progress, but a progress bar could do the same job. Let me think about it and follow up tomorrow."}], "items": [{"q": "What is the developer's concern?", "options": ["The animations look bad", "The animations will take a long time to build", "The onboarding is too long"], "a": 1, "explain": "…they'll take about two weeks to build."}, {"q": "What does the developer suggest?", "options": ["A simple fade for the first release", "Removing the onboarding", "A progress bar"], "a": 0, "explain": "What if we use a simple fade for the first release?"}, {"q": "What will the designer do?", "options": ["Agree immediately", "Ask the PM", "Think and reply tomorrow"], "a": 2, "explain": "Let me think about it and follow up tomorrow."}]}]}, {"day": 4, "title": "wish и деловые письма", "general": [{"id": "p1-d4-g1", "type": "lesson", "title": "wish: сожаление о настоящем и прошлом", "minutes": 6, "body": ["**wish + Past Simple** — жалею о том, что сейчас: I wish I had more time (жаль, что у меня нет времени). С to be часто were: I wish it were Friday.", "**wish + Past Perfect** — жалею о прошлом: I wish I had studied harder (жаль, что я не училась усерднее).", "**wish + could** — не хватает умения сейчас: I wish I could speak fluently.", "**If only** — то же самое, только эмоциональнее: If only we had tested it earlier!", "Подсказка: смотрите на маркер времени. yesterday, last year, at school → Past Perfect."], "examples": [{"en": "I wish I had more time for English.", "ru": "Жаль, что у меня мало времени на английский."}, {"en": "I wish I hadn't said that.", "ru": "Зря я это сказала."}, {"en": "I wish I could draw like her.", "ru": "Хотела бы я рисовать, как она."}, {"en": "If only we had tested it with users!", "ru": "Если бы мы только протестировали это на пользователях!"}]}, {"id": "p1-d4-g2", "type": "gap", "title": "Впишите форму после wish", "minutes": 6, "items": [{"q": "I wish I ___ (have) more time now.", "a": ["had"], "explain": "Настоящее → Past Simple."}, {"q": "I wish I ___ (study) harder at school.", "a": ["had studied"], "explain": "Прошлое (at school) → Past Perfect."}, {"q": "She wishes she ___ (not / say) that yesterday.", "a": ["hadn't said", "had not said"], "explain": "yesterday → Past Perfect, отрицание hadn't."}, {"q": "I wish I ___ (can) speak English fluently.", "a": ["could"], "explain": "can → could после wish."}, {"q": "If only we ___ (test) the design before the launch.", "a": ["had tested"], "explain": "Сожаление о прошлом → Past Perfect."}, {"q": "I wish it ___ (not / be) so cold today.", "a": ["wasn't", "weren't", "was not", "were not"], "explain": "Настоящее → Past Simple. Weren't — более формальный вариант."}]}, {"id": "p1-d4-g3", "type": "write", "title": "Три сожаления", "minutes": 4, "prompt": "Напишите 3 предложения о себе: одно с wish + Past Simple (о настоящем) и два с wish + Past Perfect (о прошлом).", "hint": "Например: I wish I had… / I wish I had learnt… / If only I hadn't…", "minWords": 15}], "ux": [{"id": "p1-d4-u1", "type": "cards", "title": "Слова для созвонов и писем", "minutes": 5, "cards": ["u7", "u8", "u9", "u10", "u11", "u12"]}, {"id": "p1-d4-u2", "type": "quiz", "title": "Фразы для писем клиенту", "minutes": 4, "items": [{"q": "Клиент не ответил на прошлое письмо. Вы мягко напоминаете.", "options": ["Why don't you answer?", "Just following up on my email from Monday.", "I wait your answer."], "a": 1, "explain": "follow up on — вежливо вернуться к вопросу."}, {"q": "Вы хотите договориться о составе работ.", "options": ["Could we align on the scope this week?", "We must agree the scope now.", "Scope, please."], "a": 0, "explain": "align on — прийти к общему пониманию."}, {"q": "Вы прикладываете файл.", "options": ["In attach is the file.", "I attached you the file.", "I've attached the updated mockups."], "a": 2, "explain": "I've attached… — естественно и коротко. Please find attached звучит формальнее, но тоже верно."}, {"q": "Вы заканчиваете письмо.", "options": ["Waiting for answer.", "Looking forward to hearing from you.", "Answer me soon."], "a": 1, "explain": "Стандартная вежливая концовка."}]}, {"id": "p1-d4-u3", "type": "write", "title": "Письмо-напоминание клиенту", "minutes": 7, "prompt": "Клиент неделю назад обещал прислать тексты для сайта, и без них вы не можете закончить макеты. Напишите вежливое письмо-напоминание: напомните о текстах, объясните, что от них зависит, и предложите созвон, чтобы согласовать сроки.", "hint": "Используйте: following up on, deliverable, align on, looking forward to hearing from you.", "minWords": 40}]}, {"day": 5, "title": "Слова-двойники и собеседование", "general": [{"id": "p1-d5-g1", "type": "cards", "title": "Слова-двойники B2", "minutes": 5, "cards": ["g13", "g14", "g15", "g16", "g17", "g18"]}, {"id": "p1-d5-g2", "type": "quiz", "title": "Не перепутайте", "minutes": 4, "items": [{"q": "Her argument was so ___ that everyone agreed.", "options": ["compulsory", "compelling", "complimentary"], "a": 1, "explain": "compelling — убедительный."}, {"q": "English classes are ___ for all students.", "options": ["compulsory", "compelling", "sensible"], "a": 0, "explain": "compulsory — обязательный."}, {"q": "Buying a cheaper laptop was a ___ decision.", "options": ["sensitive", "sensible", "eventual"], "a": 1, "explain": "sensible — разумный. Ложный друг: не «сенситивный»."}, {"q": "Be careful, it's a ___ topic for him.", "options": ["sensible", "actual", "sensitive"], "a": 2, "explain": "sensitive — деликатный, болезненный."}, {"q": "We ___ found the bug after three days.", "options": ["eventually", "actually", "possibly"], "a": 0, "explain": "eventually — в конце концов. Ложный друг: не «возможно»."}, {"q": "___, the meeting is tomorrow, not today.", "options": ["Eventually", "Actually", "Actual"], "a": 1, "explain": "actually — на самом деле. Ложный друг: не «актуально»."}]}, {"id": "p1-d5-g3", "type": "quiz", "title": "Мини-проверка недели", "minutes": 5, "items": [{"q": "I'm sorry, I ___ a mistake in the report.", "options": ["did", "made", "had"], "a": 1, "explain": "make a mistake."}, {"q": "I'm used to ___ in English now.", "options": ["write", "wrote", "writing"], "a": 2, "explain": "be used to + -ing."}, {"q": "I wish I ___ that job offer last year.", "options": ["accepted", "had accepted", "would accept"], "a": 1, "explain": "last year → wish + Past Perfect."}, {"q": "The conference was ___ because of the storm.", "options": ["called off", "put on", "figured out"], "a": 0, "explain": "call off — отменить."}, {"q": "We ___ have remote days, but now we do.", "options": ["didn't use to", "weren't used to", "didn't used to"], "a": 0, "explain": "Привычка в прошлом: didn't use to + глагол."}, {"q": "Can you ___ me a favour?", "options": ["make", "do", "give"], "a": 1, "explain": "do someone a favour."}]}], "ux": [{"id": "p1-d5-u1", "type": "lesson", "title": "Tell me about yourself", "minutes": 5, "body": ["Самый частый первый вопрос на собеседовании. Удобная схема: **настоящее → прошлое → будущее**, около минуты.", "Настоящее: кто вы и чем занимаетесь сейчас. Прошлое: 1–2 проекта с результатом. Будущее: почему вам интересна именно эта роль.", "Говорите глаголами действия: I led, I designed, I tested, I improved. И давайте цифры, если они есть."], "examples": [{"en": "I'm a UX/UI designer with a focus on dashboards and web products.", "ru": "Я UX/UI дизайнер, специализируюсь на дашбордах и веб-продуктах."}, {"en": "Recently I designed a dashboard that collects messages from several channels.", "ru": "Недавно я спроектировала дашборд, который собирает сообщения из нескольких каналов."}, {"en": "I'm looking for a team where research is part of the process.", "ru": "Я ищу команду, где исследования — часть процесса."}]}, {"id": "p1-d5-u2", "type": "dialog", "title": "Диалог: собеседование", "minutes": 7, "lines": [{"s": "Interviewer", "t": "So, can you tell me a bit about your design process?"}, {"s": "Candidate", "t": "Sure. I usually start with research. I talk to users and stakeholders to understand their pain points."}, {"s": "Interviewer", "t": "And what happens after that?"}, {"s": "Candidate", "t": "Then I make low-fidelity wireframes and test them early. It's much cheaper to change a wireframe than a finished screen."}, {"s": "Interviewer", "t": "How do you handle disagreements with developers?"}, {"s": "Candidate", "t": "I explain my rationale and listen to theirs. Usually we find a trade-off that works for both the users and the team."}], "items": [{"q": "How does the candidate start a project?", "options": ["With high-fidelity mockups", "With research", "With a meeting with developers"], "a": 1, "explain": "I usually start with research."}, {"q": "Why does she test wireframes early?", "options": ["Users prefer wireframes", "Stakeholders ask for it", "Changes are cheaper at that stage"], "a": 2, "explain": "It's much cheaper to change a wireframe than a finished screen."}, {"q": "How does she handle disagreements?", "options": ["She explains her reasons and looks for a compromise", "She asks her manager to decide", "She always follows the developers"], "a": 0, "explain": "I explain my rationale… we find a trade-off."}]}, {"id": "p1-d5-u3", "type": "write", "title": "Ваш ответ: Tell me about yourself", "minutes": 8, "prompt": "Напишите свой ответ на «Tell me about yourself» для собеседования на позицию UX/UI дизайнера: 60–80 слов, по схеме настоящее → прошлое → будущее. Пришлите его в экспорте — проверю по критериям CEFR и подскажу, как звучать естественнее.", "hint": "I'm a… / Recently I… / I'm looking for…", "minWords": 60}]}]}</script>
+<script type="application/json" id="seed-test">{"type": "level-test", "id": "level-v1", "version": 1, "title": "Проверка уровня · версия 1", "created": "2026-10-30", "skills": {"grammar": {"title": "Грамматика и лексика", "minutes": 12, "about": "20 вопросов от A2 до C1, сложность растёт. Если не знаете ответа, не угадывайте — выберите наугад только если есть мысль.", "parts": [{"title": "Выберите правильный вариант", "items": [{"q": "We ___ to the cinema last weekend.", "options": ["go", "went", "have gone"], "a": 1, "band": "A2"}, {"q": "There isn't ___ milk in the fridge.", "options": ["many", "some", "much"], "a": 2, "band": "A2"}, {"q": "Anna is ___ than her sister.", "options": ["taller", "more tall", "tallest"], "a": 0, "band": "A2"}, {"q": "It's dark in here. Can you turn ___ the light?", "options": ["on", "in", "up"], "a": 0, "band": "A2"}, {"q": "My train ___ at 7 a.m. tomorrow.", "options": ["leave", "leaves", "leaving"], "a": 1, "band": "A2"}, {"q": "I've worked at this company ___ three years.", "options": ["since", "for", "during"], "a": 1, "band": "B1"}, {"q": "If it rains tomorrow, we ___ at home.", "options": ["stay", "will stay", "would stay"], "a": 1, "band": "B1"}, {"q": "The report ___ by the manager yesterday.", "options": ["was written", "wrote", "has written"], "a": 0, "band": "B1"}, {"q": "I'm looking forward to ___ from you.", "options": ["hear", "hearing", "heard"], "a": 1, "band": "B1"}, {"q": "She asked me where ___.", "options": ["I lived", "did I live", "do I live"], "a": 0, "band": "B1"}, {"q": "I'd rather you ___ this to anyone yet.", "options": ["don't mention", "didn't mention", "not mention"], "a": 1, "band": "B2"}, {"q": "By next June, I ___ here for ten years.", "options": ["will work", "will have worked", "am working"], "a": 1, "band": "B2"}, {"q": "The new rules will ___ effect from Monday.", "options": ["take", "make", "have"], "a": 0, "band": "B2"}, {"q": "She ___ the job offer because the salary was too low.", "options": ["turned down", "turned up", "turned over"], "a": 0, "band": "B2"}, {"q": "It's high time we ___ the project.", "options": ["start", "started", "will start"], "a": 1, "band": "B2"}, {"q": "Not only ___ late, but he also forgot the slides.", "options": ["he was", "was he", "he has been"], "a": 1, "band": "C1"}, {"q": "Had I known about the delay, I ___ a later train.", "options": ["would take", "would have taken", "took"], "a": 1, "band": "C1"}, {"q": "The proposal was rejected, ___ was hardly surprising.", "options": ["that", "which", "what"], "a": 1, "band": "C1"}, {"q": "The results were ___: they could be read in two different ways.", "options": ["ambiguous", "ambitious", "ambient"], "a": 0, "band": "C1"}, {"q": "The company ___ its losses on the weak market.", "options": ["blamed", "accused", "charged"], "a": 0, "band": "C1"}]}]}, "reading": {"title": "Чтение", "minutes": 15, "about": "3 текста разной сложности, по 4 вопроса к каждому. Можно перечитывать текст сколько угодно.", "parts": [{"title": "Текст 1 · Сообщение в рабочем чате", "passage": "Hi everyone,\n\nFrom Monday 9 November the office on the third floor will be closed for repairs for two weeks. During this time, the design team will work on the fifth floor, in the meeting room next to the kitchen.\n\nPlease take your laptops home on Friday evening — there will be no space to leave them. The coffee machine on the fifth floor is broken, but a new one will arrive on Tuesday.\n\nIf you would rather work from home during the repairs, tell your manager by Thursday.\n\nThanks,\nMarta", "items": [{"q": "How long will the repairs take?", "options": ["One week", "Two weeks", "Until Tuesday"], "a": 1, "band": "A2"}, {"q": "Where will the design team work?", "options": ["On the third floor", "In a meeting room on the fifth floor", "Only from home"], "a": 1, "band": "A2"}, {"q": "What should people do on Friday evening?", "options": ["Take their laptops home", "Tell their manager", "Buy a new coffee machine"], "a": 0, "band": "B1"}, {"q": "Working from home during the repairs is…", "options": ["required for everyone", "not allowed", "possible if you tell your manager by Thursday"], "a": 2, "band": "B1"}]}, {"title": "Текст 2 · Статья о дизайнере", "passage": "When Lena started her first job as a product designer, she avoided talking to developers. She was worried they would ask technical questions she couldn't answer.\n\nAfter a difficult project in which several of her screens had to be redesigned at the last minute, she decided to change her approach. She didn't try to become a programmer; instead, she spent an hour a week learning the basics of how web pages are built.\n\nWithin a few months, she noticed that her conversations with developers had become shorter and more productive. She could predict which ideas would be expensive to build and suggest simpler alternatives early.\n\n\"The biggest change wasn't technical,\" she says. \"It was that developers started inviting me to their planning meetings.\" Today Lena recommends that every junior designer spend a little time on the basics — not to write code, but to understand the people who do.", "items": [{"q": "Why did Lena avoid developers at first?", "options": ["She didn't like them", "She was afraid of technical questions", "She was too busy"], "a": 1, "band": "B1"}, {"q": "What made her change her approach?", "options": ["A project where screens had to be redone late", "Advice from her manager", "A course she took"], "a": 0, "band": "B1"}, {"q": "What was her main aim in learning the basics?", "options": ["To become a developer", "To understand how web pages are built", "To find a better job"], "a": 1, "band": "B2"}, {"q": "According to Lena, the most important result was that…", "options": ["she started writing code", "developers began to include her in planning", "she had fewer meetings"], "a": 1, "band": "B2"}]}, {"title": "Текст 3 · Статья о концентрации", "passage": "Most people believe that they are good at multitasking, but research suggests otherwise. What we call multitasking is usually rapid switching between tasks, and every switch carries a cost: it takes time for the brain to fully re-engage with the previous task.\n\nFor short, routine activities this cost is barely noticeable. For complex work, such as writing or designing, it can add up to a significant loss of time and quality.\n\nInterestingly, the problem is not only the interruptions themselves but the expectation of them. Some studies suggest that people perform worse when they merely know a message might arrive, even if it never does.\n\nThis has led some companies to experiment with \"quiet hours\" — fixed periods when no meetings are scheduled and chat notifications are paused. Early results are encouraging, although critics point out that such policies only work if managers follow them too; otherwise, employees feel they must stay available anyway.", "items": [{"q": "What does the writer say about multitasking?", "options": ["It is mostly switching quickly between tasks", "It improves the quality of work", "Most people are good at it"], "a": 0, "band": "B2"}, {"q": "The cost of switching is most serious for…", "options": ["routine tasks", "complex tasks such as writing", "short meetings"], "a": 1, "band": "B2"}, {"q": "According to the text, performance can drop when people…", "options": ["receive too many messages", "only expect that a message may arrive", "switch off notifications"], "a": 1, "band": "C1"}, {"q": "What is the critics' point about quiet hours?", "options": ["They are too expensive", "They only work if managers respect them as well", "They reduce communication in teams"], "a": 1, "band": "C1"}]}]}, "listening": {"title": "Аудирование", "minutes": 12, "about": "3 части: короткие фразы, диалог, выступление. Слушайте сколько угодно раз, но не открывайте текст — его нет.", "parts": [{"title": "Часть 1 · Короткие фразы", "items": [{"say": "The meeting has been moved from Tuesday to Thursday afternoon.", "q": "When is the meeting now?", "options": ["Tuesday afternoon", "Thursday morning", "Thursday afternoon"], "a": 2, "band": "A2"}, {"say": "Could you send me the file by five? I need to check it before I leave.", "q": "Why does the speaker need the file by five?", "options": ["To check it before leaving", "To send it to a client", "To print it"], "a": 0, "band": "A2"}, {"say": "I'd love to come, but I've already promised to help my brother move house.", "q": "Will the speaker come?", "options": ["Yes, definitely", "No, because of another plan", "Yes, but later"], "a": 1, "band": "B1"}, {"say": "The new version looks great, although the buttons are a bit hard to see on mobile.", "q": "What is the problem with the new version?", "options": ["The colours", "The buttons are hard to see on mobile", "It is too slow"], "a": 1, "band": "B1"}]}, {"title": "Часть 2 · Созвон с клиентом", "lines": [{"s": "Client", "t": "Hi, thanks for joining. I've had a look at the homepage designs. Overall, we really like the direction."}, {"s": "Designer", "t": "Great to hear. Is there anything you'd like to change?"}, {"s": "Client", "t": "Just one thing. Our sales team feels the pricing section is too far down the page. They'd like people to see it earlier."}, {"s": "Designer", "t": "That makes sense. I can move it up, but then the customer stories would drop below it. Is that okay?"}, {"s": "Client", "t": "Yes, that's fine. The stories are nice, but pricing is what people ask about first."}, {"s": "Designer", "t": "Okay. I'll send an updated version on Wednesday, and if you approve it, we can hand it off to development on Friday."}], "items": [{"q": "What does the client think of the designs overall?", "options": ["They like them", "They are not happy", "They haven't seen them yet"], "a": 0, "band": "B1"}, {"q": "Who wants the pricing section moved?", "options": ["The designer", "The sales team", "The developers"], "a": 1, "band": "B1"}, {"q": "What will happen to the customer stories?", "options": ["They will be removed", "They will appear below the pricing", "They will move to a separate page"], "a": 1, "band": "B2"}, {"q": "When could the design go to development?", "options": ["On Wednesday", "On Friday, if the client approves it", "Next week"], "a": 1, "band": "B2"}]}, {"title": "Часть 3 · Выступление на встрече", "lines": [{"s": "Speaker", "t": "Good morning, everyone. Today I want to talk about why accessibility should be part of our process from the very beginning, rather than something we check at the end."}, {"s": "Speaker", "t": "When accessibility is left until the last stage, fixing problems usually means redesigning components that are already built, which is slow and expensive. By contrast, if we choose accessible colour combinations and clear focus states while we're still sketching, the extra effort is minimal."}, {"s": "Speaker", "t": "There's also a common misconception that accessible design only benefits a small group of users. In reality, features like larger tap targets and good contrast help everyone — for example, someone using their phone in bright sunlight."}, {"s": "Speaker", "t": "So my proposal is simple: we add three accessibility questions to every design review, starting next sprint."}], "items": [{"q": "What is the main purpose of the talk?", "options": ["To suggest including accessibility early in the process", "To report on a finished project", "To train developers"], "a": 0, "band": "B2"}, {"q": "Why is late accessibility work a problem?", "options": ["Built components have to be redesigned, which is slow and costly", "Users complain about it", "It is not allowed in most companies"], "a": 0, "band": "B2"}, {"q": "The speaker mentions bright sunlight to show that…", "options": ["accessible features help everyone", "phones have technical problems", "many users work outdoors"], "a": 0, "band": "C1"}, {"q": "What exactly does the speaker propose?", "options": ["Creating a new accessibility team", "Adding three accessibility questions to every design review", "Postponing the next sprint"], "a": 1, "band": "C1"}]}]}, "writing": {"title": "Письмо", "minutes": 35, "about": "2 задания. Оценивает Claude по критериям CEFR: содержание, достижение цели, организация текста, язык. Результат придёт в следующем пакете.", "parts": [{"title": "Задание 1 · Письмо коллеге (B1)", "prompt": "Your colleague Sam is joining your team next week. Write an email to Sam (80–100 words):\n• welcome Sam to the team;\n• explain what your team is working on now;\n• suggest when and where you could meet in the first week.", "minWords": 70}, {"title": "Задание 2 · Эссе-мнение (B2)", "prompt": "Some people think that working from home makes teams less creative. Write an essay (140–190 words) giving your opinion. Support it with reasons and examples from your own experience.", "minWords": 120}]}, "speaking": {"title": "Говорение", "minutes": 10, "about": "Ответьте вслух на 3 вопроса, около минуты на каждый. Потом честно отметьте, что у вас получилось — уровень посчитается по этой самооценке.", "prompts": [{"t": "Talk about your job. What do you do, what do you like about it, and what is difficult?", "band": "B1"}, {"t": "Describe a project you are proud of. What was the problem, what did you do, and what was the result?", "band": "B2"}, {"t": "Some people say AI tools will replace designers. Do you agree? Give reasons and examples.", "band": "C1"}], "descriptors": [{"band": "A2", "t": "Я могу простыми фразами рассказать о своей работе и дне."}, {"band": "A2", "t": "Я могу задать и ответить на простые вопросы на знакомые темы."}, {"band": "A2", "t": "Я могу сказать, что мне нравится и что нет."}, {"band": "B1", "t": "Я могу рассказать о прошлом проекте, связывая события словами then, because, so."}, {"band": "B1", "t": "Я могу высказать мнение и объяснить его простыми причинами."}, {"band": "B1", "t": "Я справляюсь с обычным рабочим разговором, хотя иногда подбираю слова."}, {"band": "B2", "t": "Я могу 1–2 минуты говорить на рабочую тему без долгих пауз."}, {"band": "B2", "t": "Я могу объяснить плюсы и минусы разных вариантов."}, {"band": "B2", "t": "Я могу участвовать в обсуждении с носителями языка и отстаивать свою точку зрения."}, {"band": "C1", "t": "Я говорю свободно и спонтанно, почти не ищу слова."}, {"band": "C1", "t": "Я меняю стиль речи: формально с клиентом, неформально с коллегами."}, {"band": "C1", "t": "Я могу выстроить чёткую, логичную аргументацию на сложную тему."}]}}}</script>
 <script>
 (function(){
 'use strict';
 
 /* ---------- utilities ---------- */
 const SEED = JSON.parse(document.getElementById('seed-pack').textContent);
+const SEED_TEST = JSON.parse(document.getElementById('seed-test').textContent);
 const KEY = 'study-app-v1';
 const INTERVALS = [0, 1, 3, 7, 14, 30];
 const pad = n => String(n).padStart(2, '0');
@@ -279,13 +286,20 @@ const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.get
 const today = () => ymd(new Date());
 const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
 const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return ymd(d); };
-const fmtDate = (s, o) => parse(s).toLocaleDateString('ru-RU', o || { day: 'numeric', month: 'long', year: 'numeric' });
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;:]+$/g, '').replace(/[.!?,;:]/g, '').replace(/\s+/g, ' ').trim();
+const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;:]/g, '').replace(/\s+/g, ' ').trim();
 const words = s => (String(s || '').trim().match(/\S+/g) || []).length;
-const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
+const ruPlural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
+
+/* ---------- language ---------- */
+const lang = () => (S && S.settings && S.settings.lang) || 'ru';
+const L = (ru, en) => lang() === 'en' ? en : ru;
+const P = (n, r1, r2, r5, e1, en) => lang() === 'en' ? (n === 1 ? e1 : en) : ruPlural(n, r1, r2, r5);
+const loc = () => lang() === 'en' ? 'en-GB' : 'ru-RU';
+const fmtDate = (s, o) => parse(s).toLocaleDateString(loc(), o || { day: 'numeric', month: 'long', year: 'numeric' });
+const fmtShort = s => fmtDate(s, { day: 'numeric', month: 'long' });
 
 const I = (p, fill) => `<svg viewBox="0 0 24 24" width="24" height="24" fill="${fill ? 'currentColor' : 'none'}" stroke="${fill ? 'none' : 'currentColor'}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const IC = {
@@ -312,6 +326,12 @@ const IC = {
   down: I('<path d="M12 3v12M7 10l5 5 5-5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
   trash: I('<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/>'),
   box: I('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>'),
+  lang: I('<path d="M4 5h9M8.5 3v2M6 5c.5 3 2.5 5.5 5.5 7M11 5c-.6 3.4-3 6.3-6.5 8"/><path d="M13 21l4-10 4 10M14.5 17.5h5"/>'),
+  read: I('<path d="M3 5.5C5.5 4 9 4 12 6c3-2 6.5-2 9-.5V19c-2.5-1.5-6-1.5-9 .5-3-2-6.5-2-9-.5z"/><path d="M12 6v13.5"/>'),
+  ear: I('<path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.5"/><path d="M10 9.5a2 2 0 1 1 4 0"/>'),
+  pen: I('<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>'),
+  mic: I('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
+  abc: I('<path d="M3 17l3.5-10L10 17M4.2 13.5h4.6M13 7v10h3.5a2.5 2.5 0 0 0 0-5H13h3a2.5 2.5 0 0 0 0-5z"/>'),
 };
 
 /* ---------- state ---------- */
@@ -319,28 +339,37 @@ function initState() {
   return {
     version: 1,
     packs: [SEED],
+    tests: [SEED_TEST],
     progress: {},
     cards: {},
     myWords: [],
     shows: [{ id: 'silicon-valley', title: 'Silicon Valley', current: 'S1E3', watched: [],
       episodes: [{ ep: 'S1E3', title: 'Articles of Incorporation' }] }],
-    checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'Входной тест', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
-    settings: { remind: '19:00', mediaNudge: true, voice: '', rate: 0.9, deeplKey: '' },
+    checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
+    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.9, deeplKey: '', lang: 'ru' },
     activity: {}
   };
 }
 function load() { try { const r = localStorage.getItem(KEY); if (!r) return null; const s = JSON.parse(r); return s && s.version === 1 ? s : null; } catch (e) { return null; } }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 let S = load() || initState();
+// migrations
+if (!S.tests) S.tests = [SEED_TEST];
+if (!S.tests.some(t => t.id === SEED_TEST.id)) S.tests.unshift(SEED_TEST);
+if (!S.settings.voiceSlot) S.settings.voiceSlot = 'us-f';
+if (!S.settings.lang) S.settings.lang = 'ru';
+S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
+document.documentElement.lang = lang();
 
 const UI = { tab: 'today', stack: [], viewDay: null, seg: 'words', sheet: null, resetAsk: false, scrolled: false };
 let TS = null; // task session
 let RV = null; // review session
+let CS = null; // level check session
 
 /* ---------- derived ---------- */
 const SECTIONS = {
-  general: { name: 'Общий английский', short: 'Общий', color: 'var(--blue)', icon: IC.globe, goal: 'B1 → B2' },
-  ux: { name: 'Английский для UX/UI', short: 'UX/UI', color: 'var(--orange)', icon: IC.brief, goal: 'созвоны, ревью, письма, собеседования' }
+  general: { name: () => L('Общий английский', 'General English'), short: () => L('Общий', 'General'), color: 'var(--blue)', icon: IC.globe, goal: () => L('B1 → B2', 'B1 → B2') },
+  ux: { name: () => L('Английский для UX/UI', 'English for UX/UI'), short: () => 'UX/UI', color: 'var(--orange)', icon: IC.brief, goal: () => L('созвоны, ревью, письма, собеседования', 'calls, reviews, emails, interviews') }
 };
 function vocabMap() { const m = {}; S.packs.forEach(p => (p.vocab || []).forEach(v => { m[v.id] = v; })); return m; }
 function allTasks() {
@@ -365,33 +394,54 @@ function streak() {
 }
 function doneCount() { return Object.values(S.progress).filter(p => p.done).length; }
 function typeLabel(t) {
-  if (t.type === 'quiz') return t.items.some(i => i.say) ? 'Аудирование' : 'Тест';
-  return { lesson: 'Урок', gap: 'Упражнение', dictation: 'Диктант', dialog: 'Диалог', cards: 'Новые слова', write: 'Письмо' }[t.type] || 'Задание';
+  if (t.type === 'quiz') return t.items.some(i => i.say) ? L('Аудирование', 'Listening') : L('Тест', 'Quiz');
+  return ({ lesson: L('Урок', 'Lesson'), gap: L('Упражнение', 'Exercise'), dictation: L('Диктант', 'Dictation'), dialog: L('Диалог', 'Dialogue'), cards: L('Новые слова', 'New words'), write: L('Письмо', 'Writing') })[t.type] || L('Задание', 'Task');
 }
+const mins = n => L(n + ' мин', n + ' min');
 
-/* ---------- speech ---------- */
+/* ---------- speech: 4 curated natural voices ---------- */
+const VOICE_SLOTS = [
+  { id: 'gb-f', lang: 'en-gb', ru: 'Британский · женский', en: 'British · female', suggest: 'Serena, Kate',
+    prefs: ['serena (premium)', 'serena (enhanced)', 'kate (enhanced)', 'stephanie (enhanced)', 'martha (enhanced)', 'serena', 'kate', 'stephanie', 'martha', 'google uk english female'] },
+  { id: 'gb-m', lang: 'en-gb', ru: 'Британский · мужской', en: 'British · male', suggest: 'Daniel, Oliver',
+    prefs: ['jamie (premium)', 'jamie (enhanced)', 'oliver (enhanced)', 'daniel (enhanced)', 'arthur (enhanced)', 'daniel', 'oliver', 'arthur', 'jamie', 'google uk english male'] },
+  { id: 'us-f', lang: 'en-us', ru: 'Американский · женский', en: 'American · female', suggest: 'Ava, Samantha',
+    prefs: ['ava (premium)', 'zoe (premium)', 'ava (enhanced)', 'zoe (enhanced)', 'allison (enhanced)', 'samantha (enhanced)', 'susan (enhanced)', 'ava', 'samantha', 'zoe', 'allison', 'susan', 'nicky', 'google us english'] },
+  { id: 'us-m', lang: 'en-us', ru: 'Американский · мужской', en: 'American · male', suggest: 'Evan, Tom',
+    prefs: ['evan (premium)', 'evan (enhanced)', 'nathan (enhanced)', 'tom (enhanced)', 'alex', 'evan', 'nathan', 'tom', 'aaron'] }
+];
 let VOICES = [];
 function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
 try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
-function pickVoice(alt) {
-  if (!VOICES.length) return null;
-  const main = VOICES.find(v => v.voiceURI === S.settings.voice) || VOICES.find(v => /en-US/i.test(v.lang)) || VOICES[0];
-  if (!alt) return main;
-  return VOICES.find(v => v !== main && v.lang === main.lang) || VOICES.find(v => v !== main) || main;
+function voiceFor(slotId) {
+  const sl = VOICE_SLOTS.find(s => s.id === slotId); if (!sl) return null;
+  const vs = VOICES.filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(sl.lang));
+  for (const p of sl.prefs) {
+    const v = vs.find(v => { const n = v.name.toLowerCase().trim().replace(/\((улучш|расшир)[^)]*\)/, '(enhanced)').replace(/\((премиум|высокое качество)[^)]*\)/, '(premium)'); return p.includes('(') ? n === p : (n === p || n.split(' (')[0] === p && !/premium|enhanced|улучш/i.test(n) || n === p + ' (compact)'); });
+    if (v) return v;
+  }
+  return null;
+}
+function mainVoice() {
+  return voiceFor(S.settings.voiceSlot) || VOICE_SLOTS.map(s => voiceFor(s.id)).find(Boolean) || null;
+}
+function altVoice() {
+  const s = S.settings.voiceSlot || 'us-f';
+  const other = s.slice(0, 3) + (s.endsWith('f') ? 'm' : 'f');
+  return voiceFor(other) || mainVoice();
 }
 function speak(text, opts) {
   opts = opts || {};
   try {
     const ss = window.speechSynthesis;
-    if (!ss) { toast('Озвучка недоступна в этом браузере'); return; }
+    if (!ss) { toast(L('Озвучка недоступна в этом браузере', 'Speech is not available in this browser')); return; }
     if (!opts.queue) ss.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const v = pickVoice(opts.alt);
-    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-US';
+    const v = opts.alt ? altVoice() : mainVoice();
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = (S.settings.voiceSlot || 'us').startsWith('gb') ? 'en-GB' : 'en-US';
     u.rate = (opts.slow ? 0.7 : 1) * (Number(S.settings.rate) || 0.9);
-    if (opts.alt) u.pitch = 0.9;
     ss.speak(u);
-  } catch (e) { toast('Не удалось воспроизвести'); }
+  } catch (e) { toast(L('Не удалось воспроизвести', 'Could not play audio')); }
 }
 function speakDialog(lines, slow) {
   try { speechSynthesis.cancel(); } catch (e) {}
@@ -408,187 +458,336 @@ function markDone(id, extra) {
 }
 function addCards(ids) { const t = addDays(today(), 1); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; }); }
 
-/* ---------- views ---------- */
+/* ---------- views: common ---------- */
 function groupHead(text, extra) { return `<div class="ghead">${text}${extra || ''}</div>`; }
+function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(title)}</b>${esc(text)}</div>`; }
 function taskRow(t) {
   const p = S.progress[t.id], d = p && p.done;
   const score = p && p.total ? ` · ${p.score}/${p.total}` : '';
   return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
     <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
-    <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${t.minutes} мин${score}</span></span>${IC.chevR}</button>`;
+    <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${mins(t.minutes)}${score}</span></span>${IC.chevR}</button>`;
 }
 function secHead(sec, list) {
   const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
-  return `<div class="ghead"><span class="tile" style="background:${s.color};width:22px;height:22px;border-radius:6px">${s.icon}</span>${s.name}<span style="margin-left:auto">${done}/${list.length}</span></div>`;
+  return `<div class="ghead"><span class="tile" style="background:${s.color};width:22px;height:22px;border-radius:6px">${s.icon}</span>${s.name()}<span style="margin-left:auto">${done}/${list.length}</span></div>`;
 }
 
+/* ---------- Today ---------- */
 function vToday() {
   const p = activePack();
-  const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
-  if (!p) return { title: 'Сегодня', sub: esc(dateStr), body: empty(IC.box, 'Нет пакета заданий', 'Попросите Claude собрать пакет и импортируйте его в Настройках.') };
+  const dateStr = new Date().toLocaleDateString(loc(), { weekday: 'long', day: 'numeric', month: 'long' });
+  if (!p) return { title: L('Сегодня', 'Today'), sub: esc(dateStr), body: empty(IC.box, L('Нет пакета заданий', 'No task pack'), L('Попросите Claude собрать пакет и импортируйте его в Настройках.', 'Ask Claude for a pack and import it in Settings.')) };
   const ci = currentDayIndex(p);
   const di = UI.viewDay == null ? ci : Math.max(0, Math.min(p.days.length - 1, UI.viewDay));
   const d = p.days[di];
-  const all = dayTasks(d), mins = all.reduce((a, t) => a + (t.minutes || 0), 0);
+  const all = dayTasks(d), total = all.reduce((a, t) => a + (t.minutes || 0), 0);
   const due = dueCards().length, st = streak();
   let h = `<div class="strip">
-      <div class="stat"><b>${IC.flame}${st}</b><span>${plural(st, 'день', 'дня', 'дней')} подряд</span></div>
-      <div class="stat"><b>${all.filter(t => isDone(t.id)).length}/${all.length}</b><span>заданий сегодня</span></div>
-      <div class="stat"><b>${mins}</b><span>минут по плану</span></div></div>`;
+      <div class="stat"><b>${IC.flame}${st}</b><span>${P(st, 'день подряд', 'дня подряд', 'дней подряд', 'day in a row', 'days in a row')}</span></div>
+      <div class="stat"><b>${all.filter(t => isDone(t.id)).length}/${all.length}</b><span>${L('заданий сегодня', 'tasks today')}</span></div>
+      <div class="stat"><b>${total}</b><span>${L('минут по плану', 'minutes planned')}</span></div></div>`;
   if (due) h += `<button class="banner" data-act="open-review"><span class="tile" style="background:rgba(255,255,255,.2)">${IC.cards}</span>
-      <span class="row-main"><span class="row-title" style="font-weight:600">Повторить слова</span><span class="row-sub">${due} ${plural(due, 'карточка', 'карточки', 'карточек')} ждут повторения</span></span>${IC.chevR}</button>`;
-  h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="Предыдущий день">${IC.chevL}</button>
-      <div class="daybar-t"><b>День ${d.day} из ${p.days.length}${di === ci ? '' : di < ci ? ' · пройден' : ' · впереди'}</b><span>${esc(d.title)}</span></div>
-      <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="Следующий день">${IC.chevRb}</button></div>`;
+      <span class="row-main"><span class="row-title" style="font-weight:600">${L('Повторить слова', 'Review words')}</span><span class="row-sub">${due} ${P(due, 'карточка ждёт', 'карточки ждут', 'карточек ждут', 'card is due', 'cards are due')}</span></span>${IC.chevR}</button>`;
+  const state = di === ci ? '' : di < ci ? L(' · пройден', ' · done') : L(' · впереди', ' · ahead');
+  h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
+      <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
+      <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="${L('Следующий день', 'Next day')}">${IC.chevRb}</button></div>`;
   ['general', 'ux'].forEach(sec => { const list = d[sec] || []; if (list.length) h += secHead(sec, list) + `<div class="group">${list.map(taskRow).join('')}</div>`; });
   const show = S.shows[0];
   if (show && S.settings.mediaNudge) {
     const n = S.myWords.filter(w => w.show === show.id).length;
-    h += groupHead('По желанию') + `<div class="group icons"><button class="row" data-act="open-show" data-id="${show.id}">
+    h += groupHead(L('По желанию', 'Optional')) + `<div class="group icons"><button class="row" data-act="open-show" data-id="${show.id}">
       <span class="tile" style="background:var(--pink)">${IC.tv}</span>
-      <span class="row-main"><span class="row-title">${esc(show.title)} · ${esc(show.current)}</span><span class="row-sub">${n ? n + ' ' + plural(n, 'слово записано', 'слова записано', 'слов записано') : 'Записывайте незнакомые слова во время просмотра'}</span></span>${IC.chevR}</button></div>
-      <div class="gfoot">Медиа не входит в обязательный план и не влияет на серию дней.</div>`;
+      <span class="row-main"><span class="row-title">${esc(show.title)} · ${esc(show.current)}</span><span class="row-sub">${n ? n + ' ' + P(n, 'слово записано', 'слова записано', 'слов записано', 'word saved', 'words saved') : L('Записывайте незнакомые слова во время просмотра', 'Save unknown words while you watch')}</span></span>${IC.chevR}</button></div>
+      <div class="gfoot">${L('Медиа не входит в обязательный план и не влияет на серию дней.', 'Media is not part of the daily plan and does not affect your streak.')}</div>`;
   }
-  return { title: 'Сегодня', sub: esc(dateStr), body: h };
+  return { title: L('Сегодня', 'Today'), sub: esc(dateStr), body: h };
 }
 
+/* ---------- English ---------- */
 function vEnglish() {
   const tasks = allTasks();
-  let h = groupHead('Ежедневно') + '<div class="group icons">';
+  let h = groupHead(L('Ежедневно', 'Daily')) + '<div class="group icons">';
   ['general', 'ux'].forEach(sec => {
     const list = tasks.filter(x => x.sec === sec), done = list.filter(x => isDone(x.task.id)).length, s = SECTIONS[sec];
     h += `<button class="row" data-act="open-section" data-sec="${sec}"><span class="tile" style="background:${s.color}">${s.icon}</span>
-      <span class="row-main"><span class="row-title">${s.name}</span><span class="row-sub">${esc(s.goal)}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
+      <span class="row-main"><span class="row-title">${s.name()}</span><span class="row-sub">${esc(s.goal())}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
   });
-  h += '</div>' + groupHead('По желанию') + `<div class="group icons"><button class="row" data-act="tab" data-tab="media"><span class="tile" style="background:var(--pink)">${IC.tv}</span>
-      <span class="row-main"><span class="row-title">Медиа</span><span class="row-sub">Сериалы, фильмы, видео</span></span>${IC.chevR}</button></div>`;
+  h += '</div>' + groupHead(L('По желанию', 'Optional')) + `<div class="group icons"><button class="row" data-act="tab" data-tab="media"><span class="tile" style="background:var(--pink)">${IC.tv}</span>
+      <span class="row-main"><span class="row-title">${L('Медиа', 'Media')}</span><span class="row-sub">${L('Сериалы, фильмы, видео', 'Series, films, videos')}</span></span>${IC.chevR}</button></div>`;
   const due = dueCards().length, total = Object.keys(S.cards).length;
-  h += groupHead('Карточки слов') + `<div class="group icons">
+  h += groupHead(L('Карточки слов', 'Word cards')) + `<div class="group icons">
       <button class="row" data-act="open-review"><span class="tile" style="background:var(--accent)">${IC.cards}</span>
-      <span class="row-main"><span class="row-title">Повторить сейчас</span><span class="row-sub">Интервальное повторение: 1 → 3 → 7 → 14 → 30 дней</span></span><span class="row-val">${due}</span>${IC.chevR}</button>
-      <div class="row static"><span class="tile" style="background:var(--teal)">${IC.box}</span><span class="row-main"><span class="row-title">Всего в повторении</span></span><span class="row-val">${total}</span></div></div>
-      <div class="gfoot">Слова попадают сюда после заданий «Новые слова».</div>`;
-  return { title: 'Английский', body: h };
+      <span class="row-main"><span class="row-title">${L('Повторить сейчас', 'Review now')}</span><span class="row-sub">${L('Интервальное повторение: 1 → 3 → 7 → 14 → 30 дней', 'Spaced repetition: 1 → 3 → 7 → 14 → 30 days')}</span></span><span class="row-val">${due}</span>${IC.chevR}</button>
+      <div class="row static"><span class="tile" style="background:var(--teal)">${IC.box}</span><span class="row-main"><span class="row-title">${L('Всего в повторении', 'Total in review')}</span></span><span class="row-val">${total}</span></div></div>
+      <div class="gfoot">${L('Слова попадают сюда после заданий «Новые слова».', 'Words get here after “New words” tasks.')}</div>`;
+  return { title: L('Английский', 'English'), body: h };
 }
-
 function vSection(sec) {
   const s = SECTIONS[sec];
   let h = '';
   S.packs.forEach(p => {
     h += `<div class="ghead">${esc(p.title)}</div>`;
-    p.days.forEach(d => { const list = d[sec] || []; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">День ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
+    p.days.forEach(d => { const list = d[sec] || []; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">${L('День', 'Day')} ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
   });
-  return { title: s.name, back: true, sub: esc(s.goal), body: h };
+  return { title: s.name(), back: true, sub: esc(s.goal()), body: h };
 }
 
+/* ---------- Media ---------- */
 function vMedia() {
-  let h = groupHead('Полка') + '<div class="group">';
+  let h = groupHead(L('Полка', 'Shelf')) + '<div class="group">';
   S.shows.forEach(sh => {
     const n = S.myWords.filter(w => w.show === sh.id).length;
     h += `<button class="row" data-act="open-show" data-id="${sh.id}"><span class="poster">Silicon<br>Valley</span>
-      <span class="row-main"><span class="row-title" style="font-weight:600">${esc(sh.title)}</span><span class="row-sub">Сериал · сейчас <span class="epi">${esc(sh.current)}</span></span><span class="row-sub">${n} ${plural(n, 'слово', 'слова', 'слов')} · просмотрено серий: ${sh.watched.length}</span></span>${IC.chevR}</button>`;
+      <span class="row-main"><span class="row-title" style="font-weight:600">${esc(sh.title)}</span><span class="row-sub">${L('Сериал · сейчас', 'Series · now')} <span class="epi">${esc(sh.current)}</span></span><span class="row-sub">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('просмотрено серий', 'episodes watched')}: ${sh.watched.length}</span></span>${IC.chevR}</button>`;
   });
-  h += '</div><div class="gfoot">Сюда добавляются сериалы, фильмы, видео и подкасты. Новый сериал появится на полке вместе с пакетом от Claude.</div>';
-  h += groupHead('Как это работает') + `<div class="group">
-    <div class="row static"><span class="row-main"><span class="row-title">1. Смотрите с английскими субтитрами</span><span class="row-sub">Без плана и без штрафа за пропуски</span></span></div>
-    <div class="row static"><span class="row-main"><span class="row-title">2. Записывайте непонятное</span><span class="row-sub">Кнопка «+» внутри сериала, перевод появится сразу</span></span></div>
-    <div class="row static"><span class="row-main"><span class="row-title">3. Отметьте серию просмотренной</span><span class="row-sub">Пришлите экспорт — Claude соберёт задания по серии и вашим словам</span></span></div></div>`;
-  return { title: 'Медиа', body: h };
+  h += `</div><div class="gfoot">${L('Сюда добавляются сериалы, фильмы, видео и подкасты. Новый сериал появится на полке вместе с пакетом от Claude.', 'Series, films, videos and podcasts live here. A new series appears together with a pack from Claude.')}</div>`;
+  h += groupHead(L('Как это работает', 'How it works')) + `<div class="group">
+    <div class="row static"><span class="row-main"><span class="row-title">${L('1. Смотрите с английскими субтитрами', '1. Watch with English subtitles')}</span><span class="row-sub">${L('Без плана и без штрафа за пропуски', 'No plan and no penalty for skipping')}</span></span></div>
+    <div class="row static"><span class="row-main"><span class="row-title">${L('2. Записывайте непонятное', '2. Save what you don’t understand')}</span><span class="row-sub">${L('Кнопка «+» внутри сериала, перевод появится сразу', 'Tap “+” inside the series, the translation appears at once')}</span></span></div>
+    <div class="row static"><span class="row-main"><span class="row-title">${L('3. Отметьте серию просмотренной', '3. Mark the episode as watched')}</span><span class="row-sub">${L('Пришлите экспорт — Claude соберёт задания по серии и вашим словам', 'Send an export — Claude builds tasks from the episode and your words')}</span></span></div></div>`;
+  return { title: L('Медиа', 'Media'), body: h };
 }
-
 function vShow(id) {
   const sh = S.shows.find(s => s.id === id);
-  if (!sh) return { title: 'Медиа', back: true, body: empty(IC.tv, 'Сериал не найден', '') };
-  let h = `<div class="seg" role="tablist"><button class="${UI.seg === 'words' ? 'on' : ''}" data-act="seg" data-seg="words">Мои слова</button><button class="${UI.seg === 'tasks' ? 'on' : ''}" data-act="seg" data-seg="tasks">Задания</button></div>`;
+  if (!sh) return { title: L('Медиа', 'Media'), back: true, body: empty(IC.tv, L('Сериал не найден', 'Series not found'), '') };
+  let h = `<div class="seg" role="tablist"><button class="${UI.seg === 'words' ? 'on' : ''}" data-act="seg" data-seg="words">${L('Мои слова', 'My words')}</button><button class="${UI.seg === 'tasks' ? 'on' : ''}" data-act="seg" data-seg="tasks">${L('Задания', 'Tasks')}</button></div>`;
   if (UI.seg === 'words') {
     const list = S.myWords.filter(w => w.show === id);
-    if (!list.length) h += `<div class="empty">${IC.plus}<b>Пока нет слов</b>Во время просмотра нажмите «+» и запишите слово или фразу, которую не поняли. Перевод покажется сразу, а точное значение в контексте сцены Claude объяснит в задании.</div><button class="btn" data-act="add-word">Добавить слово</button>`;
+    if (!list.length) h += `<div class="empty">${IC.plus}<b>${L('Пока нет слов', 'No words yet')}</b>${L('Во время просмотра нажмите «+» и запишите слово или фразу, которую не поняли. Перевод покажется сразу, а точное значение в контексте сцены Claude объяснит в задании.', 'While watching, tap “+” and save a word or phrase you didn’t understand. The translation appears at once, and Claude explains its meaning in the scene in a task.')}</div><button class="btn" data-act="add-word">${L('Добавить слово', 'Add word')}</button>`;
     else {
       const eps = [...new Set(list.map(w => w.ep))].sort().reverse();
       eps.forEach(ep => {
         const ws = list.filter(w => w.ep === ep);
         h += groupHead(`<span class="epi">${esc(ep)}</span>`, `<span style="margin-left:auto">${ws.length}</span>`) + '<div class="group">' + ws.map(w => `<div class="row static">
-          <button class="play small" data-act="speak" data-text="${esc(w.text)}" aria-label="Произнести">${IC.play}</button>
-          <span class="row-main"><span class="row-title">${esc(w.text)}</span><span class="row-sub">${w.ru ? esc(w.ru) : 'Перевод — в задании от Claude'}${w.ctx ? ' · ' + esc(w.ctx) : ''}</span></span>
-          <button class="del" data-act="del-word" data-id="${esc(w.id)}" aria-label="Удалить">${IC.trash}</button></div>`).join('') + '</div>';
+          <button class="play small" data-act="speak" data-text="${esc(w.text)}" aria-label="${L('Произнести', 'Play')}">${IC.play}</button>
+          <span class="row-main"><span class="row-title">${esc(w.text)}</span><span class="row-sub">${w.ru ? esc(w.ru) : L('Перевод — в задании от Claude', 'Translation will come in a task from Claude')}${w.ctx ? ' · ' + esc(w.ctx) : ''}</span></span>
+          <button class="del" data-act="del-word" data-id="${esc(w.id)}" aria-label="${L('Удалить', 'Delete')}">${IC.trash}</button></div>`).join('') + '</div>';
       });
     }
   } else {
     const eps = sh.episodes || [{ ep: sh.current }];
-    h += groupHead('Сезон 1') + '<div class="group">' + eps.map(e => {
+    h += groupHead(L('Сезон 1', 'Season 1')) + '<div class="group">' + eps.map(e => {
       const w = sh.watched.includes(e.ep), n = S.myWords.filter(x => x.show === id && x.ep === e.ep).length;
       return `<div class="row static"><span class="check ${w ? 'on' : ''}">${w ? IC.check : ''}</span>
         <span class="row-main"><span class="row-title"><span class="epi">${esc(e.ep)}</span> ${esc(e.title || '')}</span>
-        <span class="row-sub">${w ? 'Просмотрено · ждёт задания от Claude' : 'Не просмотрено'} · ${n} ${plural(n, 'слово', 'слова', 'слов')}</span></span>
-        ${w ? '' : `<button class="chip on" data-act="watched" data-ep="${esc(e.ep)}">Посмотрела</button>`}</div>`;
-    }).join('') + '</div><div class="gfoot">Задания по серии появятся здесь после импорта пакета. Чтобы Claude их собрал, отправьте экспорт: Настройки → Экспорт.</div>';
+        <span class="row-sub">${w ? L('Просмотрено · ждёт задания от Claude', 'Watched · waiting for tasks from Claude') : L('Не просмотрено', 'Not watched')} · ${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')}</span></span>
+        ${w ? '' : `<button class="chip on" data-act="watched" data-ep="${esc(e.ep)}">${L('Посмотрела', 'Watched')}</button>`}</div>`;
+    }).join('') + `</div><div class="gfoot">${L('Задания по серии появятся здесь после импорта пакета. Чтобы Claude их собрал, отправьте экспорт: Настройки → Экспорт.', 'Episode tasks appear here after a pack import. To get them, send Claude an export: Settings → Export.')}</div>`;
   }
-  return { title: sh.title, back: true, sub: 'Сериал · сейчас ' + esc(sh.current), action: `<button class="nav-btn" data-act="add-word" aria-label="Добавить слово">${IC.plus}</button>`, body: h };
+  return { title: sh.title, back: true, sub: L('Сериал · сейчас ', 'Series · now ') + esc(sh.current), action: `<button class="nav-btn" data-act="add-word" aria-label="${L('Добавить слово', 'Add word')}">${IC.plus}</button>`, body: h };
 }
 
-const SKILLS = [['grammar', 'Грамматика и лексика'], ['reading', 'Чтение'], ['listening', 'Аудирование'], ['writing', 'Письмо'], ['speaking', 'Говорение']];
+/* ---------- Level checks ---------- */
+const SKILLS = ['grammar', 'reading', 'listening', 'writing', 'speaking'];
+const SKILL_UI = {
+  grammar: { ru: 'Грамматика и лексика', en: 'Grammar & vocabulary', icon: IC.abc, color: 'var(--blue)' },
+  reading: { ru: 'Чтение', en: 'Reading', icon: IC.read, color: 'var(--green)' },
+  listening: { ru: 'Аудирование', en: 'Listening', icon: IC.ear, color: 'var(--orange)' },
+  writing: { ru: 'Письмо', en: 'Writing', icon: IC.pen, color: 'var(--pink)' },
+  speaking: { ru: 'Говорение', en: 'Speaking', icon: IC.mic, color: 'var(--teal)' }
+};
+const skillName = k => L(SKILL_UI[k].ru, SKILL_UI[k].en);
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-function latestLevel(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return r; } return null; }
+const BANDS = ['A2', 'B1', 'B2', 'C1'];
+function currentTest() { return S.tests.slice().sort((a, b) => (b.version || 0) - (a.version || 0))[0]; }
+function latestResult(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return Object.assign({ date: S.checks[i].date, test: S.checks[i].test }, r); } return null; }
+function latestLevel(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r && r.level) return r; } return null; }
+function doneInTest(testId, skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const c = S.checks[i]; if (c.test === testId && c.results[skill]) return Object.assign({ date: c.date }, c.results[skill]); } return null; }
+function overallLevel() {
+  const ls = SKILLS.map(k => latestLevel(k)).filter(Boolean).map(r => LEVELS.indexOf(r.level)).filter(i => i >= 0);
+  if (!ls.length) return { level: 'B1', n: 0 };
+  return { level: LEVELS[Math.floor(ls.reduce((a, b) => a + b, 0) / ls.length)], n: ls.length };
+}
+function levelFromBands(b) {
+  let lvl = 'A1';
+  for (const band of BANDS) {
+    const x = b[band]; if (!x || !x.t) continue;
+    const pass = x.t <= 2 ? x.c >= 1 : x.c / x.t >= 0.6;
+    if (pass) lvl = band; else break;
+  }
+  return lvl;
+}
+function checkKind(c) {
+  return ({ placement: L('Входной тест', 'Placement test'), skill: L('Проверка навыка', 'Skill check'), graded: L('Оценка Claude', 'Graded by Claude') })[c.kind] || esc(c.kind);
+}
+function skillMinutes(t, k) { return (t.skills[k] && t.skills[k].minutes) || 10; }
+
 function vProgress() {
-  const g = latestLevel('grammar'), cur = g ? g.level : 'B1';
-  const ci = LEVELS.indexOf(cur);
-  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>дней подряд</span></div>
-     <div class="stat"><b>${doneCount()}</b><span>заданий выполнено</span></div>
-     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>слов в повторении</span></div></div>`;
-  // 14-day activity
+  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level);
+  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>${L('дней подряд', 'days in a row')}</span></div>
+     <div class="stat"><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
+     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>`;
+  // activity: fills left to right from the first study day
   const t = today(), first = Object.keys(S.activity).filter(k => S.activity[k]).sort()[0];
   let start = first || t; if (addDays(start, 13) < t) start = addDays(t, -13);
   let cells = '', active = 0;
-  for (let i = 0; i < 14; i++) { const d = addDays(start, i), a = d <= t ? (S.activity[d] || 0) : 0; if (a) active++; cells += `<i class="${a ? 'on' : ''}" title="${fmtDate(d, { day: 'numeric', month: 'short' })}"></i>`; }
-  h += groupHead('Активность, 14 дней') + `<div class="panel"><div class="days14">${cells}</div><div class="row-sub" style="margin-top:10px">Дней с занятиями: ${active} из 14</div></div>`;
-  h += groupHead('Уровень по CEFR') + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${cur}</b><span class="row-sub">цель: ${LEVELS[ci + 1] || cur}</span></div>
-     <div class="cefr" style="margin-bottom:0">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : ''}">${l}</div>`).join('')}</div></div>`;
-  h += groupHead('По навыкам') + '<div class="group">' + SKILLS.map(([k, n]) => {
-    const r = latestLevel(k);
-    return `<div class="row static"><span class="row-main"><span class="row-title">${n}</span><span class="row-sub">${r ? (r.total ? `${r.score} из ${r.total}` : 'оценка Claude') : k === 'speaking' ? 'самооценка — в контрольной' : 'проверим в контрольной'}</span></span>${r ? `<span class="pill lvl big">${r.level}</span>` : '<span class="pill big">—</span>'}</div>`;
+  for (let i = 0; i < 14; i++) { const d = addDays(start, i), a = d <= t ? (S.activity[d] || 0) : 0; if (a) active++; cells += `<i class="${a ? 'on' : ''}" title="${fmtShort(d)}"></i>`; }
+  h += groupHead(L('Активность, 14 дней', 'Activity, 14 days')) + `<div class="panel"><div class="days14">${cells}</div><div class="row-sub" style="margin-top:10px">${L('Дней с занятиями', 'Study days')}: ${active} ${L('из', 'of')} 14</div></div>`;
+  h += groupHead(L('Уровень по CEFR', 'CEFR level')) + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${ov.level}</b><span class="row-sub">${L('цель', 'goal')}: ${LEVELS[ci + 1] || ov.level}</span></div>
+     <div class="cefr" style="margin-bottom:0">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : ''}">${l}</div>`).join('')}</div>
+     <div class="actions" style="margin-top:16px"><button class="btn" data-act="open-checks">${L('Пройти проверку уровня', 'Take a level check')}</button></div></div>`;
+  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group">' + SKILLS.map(k => {
+    const r = latestResult(k);
+    let sub, pill;
+    if (r && r.pending) { sub = L('на проверке у Claude', 'waiting for Claude'); pill = `<span class="pill">${L('ждёт', 'pending')}</span>`; }
+    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? L('самооценка · ', 'self-assessment · ') : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
+    else { sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k)); pill = '<span class="pill big">—</span>'; }
+    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${pill}${IC.chevR}</button>`;
   }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо оценивает Claude, говорение — самооценка.', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing is graded by Claude, speaking is a self-assessment.')}</div>`;
   const last = S.checks[S.checks.length - 1];
   const from = addDays(last.date, 28), to = addDays(last.date, 42);
-  h += `<div class="gfoot">Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Задания проверок составляет Claude, в формате этих экзаменов. Письмо оценивает Claude, говорение — самооценка.</div>`;
-  h += groupHead('Проверки') + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
-      <span class="row-main"><span class="row-title">Следующая контрольная</span><span class="row-sub">${fmtDate(from, { day: 'numeric', month: 'long' })} – ${fmtDate(to, { day: 'numeric', month: 'long' })}</span></span><span class="pill">все 5 навыков</span></div>` +
-    S.checks.slice().reverse().map(c => `<div class="row static"><span class="tile" style="background:var(--green)">${IC.check}</span>
-      <span class="row-main"><span class="row-title">${esc(c.kind)}</span><span class="row-sub">${fmtDate(c.date)} · ${Object.keys(c.results).map(k => (SKILLS.find(s => s[0] === k) || [k, k])[1] + ' ' + (c.results[k].total ? c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span><span class="pill lvl">${Object.values(c.results)[0].level}</span></div>`).join('') + '</div>';
-  return { title: 'Прогресс', body: h };
+  h += groupHead(L('Проверки', 'Checks')) + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
+      <span class="row-main"><span class="row-title">${L('Следующая контрольная', 'Next full check')}</span><span class="row-sub">${fmtShort(from)} – ${fmtShort(to)}</span></span><span class="pill">${L('5 навыков', '5 skills')}</span></div>` +
+    S.checks.slice().reverse().map(c => {
+      const ks = Object.keys(c.results), r0 = c.results[ks[0]];
+      return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
+      <span class="row-main"><span class="row-title">${checkKind(c)}</span><span class="row-sub">${fmtDate(c.date)} · ${ks.map(k => skillName(k) + (c.results[k].total ? ' ' + c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span>${r0.pending ? `<span class="pill">${L('ждёт', 'pending')}</span>` : `<span class="pill lvl">${r0.level}</span>`}</div>`;
+    }).join('') + '</div>';
+  return { title: L('Прогресс', 'Progress'), body: h };
 }
 
+function vChecks() {
+  const t = currentTest();
+  const total = SKILLS.reduce((a, k) => a + skillMinutes(t, k), 0);
+  const doneAll = SKILLS.every(k => doneInTest(t.id, k));
+  let h = '';
+  if (doneAll) h += `<div class="notice">${IC.check}<span>${L('Все навыки в этой версии пройдены. Новую версию теста Claude выложит к следующей контрольной — она загрузится сама.', 'All skills in this version are done. Claude will publish a new version for the next full check — it will load automatically.')}</span></div>`;
+  h += groupHead(L('Навыки', 'Skills')) + '<div class="group icons">' + SKILLS.map(k => {
+    const d = doneInTest(t.id, k), u = SKILL_UI[k];
+    const sub = d ? (d.pending ? L('отправлено Claude · ', 'sent to Claude · ') : L('пройдено · ', 'done · ') + (d.level ? d.level + ' · ' : '')) + fmtShort(d.date) : mins(skillMinutes(t, k));
+    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="tile" style="background:${u.color}">${u.icon}</span>
+      <span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${d ? `<span class="check on">${IC.check}</span>` : ''}${IC.chevR}</button>`;
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Навыки можно проходить по одному, в разные дни. Задания составлены по формату Cambridge и IELTS, но свои. Когда пройдены все пять — это полная контрольная.', 'You can take the skills one by one, on different days. The tasks follow the Cambridge and IELTS formats but are original. All five together make a full check.')}</div>`;
+  return { title: L('Проверка уровня', 'Level check'), back: true, sub: esc(L('Версия ', 'Version ') + t.version + ' · ≈' + mins(total) + ' ' + L('всего', 'in total')), body: h };
+}
+
+function checkSteps(sk) { const out = []; (sk.parts || []).forEach((p, pi) => (p.items || []).forEach((it, ii) => out.push({ p, it, pi, ii }))); return out; }
+function startCheck(skill) { const t = currentTest(); CS = { skill, test: t.id, started: false, i: 0, answers: [], drafts: [], ticks: {}, phase: 0, result: null }; }
+function vCheck(skill) {
+  const t = currentTest(), sk = t.skills[skill];
+  if (!CS || CS.skill !== skill || CS.test !== t.id) startCheck(skill);
+  const title = skillName(skill);
+  if (!CS.started) return { title, back: true, body: checkIntro(t, skill, sk) };
+  if (CS.result) return { title, back: true, body: checkResult(skill, sk) };
+  if (skill === 'writing') return { title, back: true, body: checkWriting(sk) };
+  if (skill === 'speaking') return { title, back: true, body: checkSpeaking(sk) };
+  return { title, back: true, body: checkChoice(skill, sk) };
+}
+function checkIntro(t, skill, sk) {
+  const d = doneInTest(t.id, skill);
+  const n = skill === 'writing' ? sk.parts.length : skill === 'speaking' ? sk.prompts.length : checkSteps(sk).length;
+  const unit = skill === 'writing' ? P(n, 'задание', 'задания', 'заданий', 'task', 'tasks') : skill === 'speaking' ? P(n, 'вопрос', 'вопроса', 'вопросов', 'prompt', 'prompts') : P(n, 'вопрос', 'вопроса', 'вопросов', 'question', 'questions');
+  let h = `<div class="tmeta"><span class="pill" style="background:${SKILL_UI[skill].color};color:#fff">${L('CEFR A2–C1', 'CEFR A2–C1')}</span><span class="pill">${mins(sk.minutes)}</span><span class="pill">${n} ${unit}</span><span class="pill">${L('версия', 'version')} ${t.version}</span></div>`;
+  if (d) h += `<div class="notice">${IC.check}<span><b>${L('Вы уже проходили эту версию', 'You have taken this version')} ${fmtShort(d.date)}${d.level ? ' · ' + d.level : d.pending ? L(' · на проверке', ' · pending') : ''}.</b> ${L('Новую версию теста Claude выложит к следующей контрольной, она загрузится сама. Повторное прохождение этой версии даст завышенный результат: вопросы уже знакомы.', 'Claude will publish a new version for the next full check, and it will load automatically. Retaking this version gives an inflated result: you have seen the questions.')}</span></div>`;
+  h += `<div class="panel"><p class="prompt" style="margin:0">${md(sk.about)}</p></div>`;
+  h += `<div class="actions"><button class="btn" data-act="check-start">${d ? L('Пройти ещё раз', 'Take again') : L('Начать', 'Start')}</button></div>`;
+  return h;
+}
+function checkChoice(skill, sk) {
+  const steps = checkSteps(sk), st = steps[CS.i], it = st.it, p = st.p, sel = CS.answers[CS.i];
+  let h = `<div class="progress"><i style="width:${(CS.i / steps.length) * 100}%"></i></div>`;
+  h += `<div class="lbl" style="margin:0 0 10px">${esc(p.title)}</div>`;
+  if (p.passage) h += `<div class="panel passage">${esc(p.passage)}</div>`;
+  if (p.lines) h += `<div class="audio"><button class="play" data-act="check-dialog" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+      <div class="audio-t"><b>${L('Прослушайте запись', 'Listen to the recording')}</b><span>${L('Можно слушать сколько угодно раз', 'Listen as many times as you need')}</span></div>
+      <button class="chip" data-act="check-dialog" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
+  if (it.say) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(it.say)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+      <div class="audio-t"><b>${L('Прослушайте', 'Listen')}</b><span>${L('и ответьте на вопрос', 'and answer the question')}</span></div>
+      <button class="chip" data-act="speak" data-text="${esc(it.say)}" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
+  h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => `<button class="opt ${sel === k ? 'sel' : ''}" data-act="check-pick" data-i="${k}"><span>${md(o)}</span>${sel === k ? IC.check : ''}</button>`).join('') + '</div>';
+  h += `<div class="btns">${CS.i > 0 ? `<button class="btn sec" data-act="check-prev">${L('Назад', 'Back')}</button>` : ''}<button class="btn" data-act="check-next" ${sel == null ? 'disabled' : ''}>${CS.i === steps.length - 1 ? L('Завершить', 'Finish') : L('Дальше', 'Next')}</button></div>`;
+  h += `<div class="qcount">${L('Вопрос', 'Question')} ${CS.i + 1} ${L('из', 'of')} ${steps.length}</div>`;
+  return h;
+}
+function finishChoice(skill, sk) {
+  const steps = checkSteps(sk), bands = {};
+  let c = 0; const wrong = [];
+  steps.forEach((st, i) => { const b = st.it.band; bands[b] = bands[b] || { c: 0, t: 0 }; bands[b].t++; if (CS.answers[i] === st.it.a) { bands[b].c++; c++; } else wrong.push(i); });
+  const level = levelFromBands(bands);
+  const res = { score: c, total: steps.length, level, bands, wrong };
+  S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { [skill]: res } });
+  touchActivity(); save(); CS.result = res;
+}
+function checkResult(skill, sk) {
+  const r = CS.result;
+  if (r.pending) return `<div class="summary"><div class="big" style="font-size:34px">${L('Отправлено', 'Submitted')}</div><p>${L('Тексты сохранены. Сделайте экспорт (Настройки → Экспорт) и пришлите его Claude — оценка по CEFR придёт в следующем пакете.', 'Your texts are saved. Make an export (Settings → Export) and send it to Claude — the CEFR grade will come with the next pack.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+  let h = `<div class="summary"><div class="big">${r.level}</div><p>${r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : ''}${skillName(skill)}</p></div>`;
+  if (r.bands) h += groupHead(L('По уровням', 'By level')) + '<div class="group">' + BANDS.filter(b => r.bands[b]).map(b => { const x = r.bands[b]; const ok = x.t <= 2 ? x.c >= 1 : x.c / x.t >= 0.6; return `<div class="row static"><span class="row-main"><span class="row-title">${b}</span></span><span class="row-val">${x.c}/${x.t}</span><span class="pill ${ok ? 'good' : ''}">${ok ? L('пройден', 'passed') : L('не пройден', 'not passed')}</span></div>`; }).join('') + '</div>';
+  if (r.wrong && r.wrong.length) {
+    const steps = checkSteps(sk);
+    h += groupHead(L('Ошибки', 'Mistakes')) + '<div class="group">' + r.wrong.map(i => { const it = steps[i].it, a = CS.answers[i]; return `<div class="row static"><span class="row-main"><span class="row-title">${md(it.q)}</span><span class="row-sub">${L('Ваш ответ', 'Your answer')}: ${esc(it.options[a])} · ${L('верно', 'correct')}: <b>${esc(it.options[it.a])}</b></span></span></div>`; }).join('') + '</div>';
+  }
+  h += `<div class="gfoot">${L('Уровень считается так: уровень засчитан, если верно не меньше 60% вопросов этого уровня и всех уровней ниже.', 'How it is scored: a level counts when at least 60% of its questions and of all lower levels are correct.')}</div>`;
+  h += `<div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+  return h;
+}
+function checkWriting(sk) {
+  let h = '', ok = true;
+  sk.parts.forEach((p, i) => {
+    const n = words(CS.drafts[i]); if (n < p.minWords) ok = false;
+    h += `<div class="lbl" style="margin:${i ? 26 : 0}px 16px 8px">${esc(p.title)}</div><div class="panel"><p class="prompt" style="margin:0;white-space:pre-line">${esc(p.prompt)}</p></div>
+      <textarea class="field" style="margin-top:10px" id="cw-${i}" data-cw="${i}" placeholder="Start writing here…" lang="en" spellcheck="true">${esc(CS.drafts[i] || '')}</textarea>
+      <div class="wc" id="cwc-${i}">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${p.minWords}</div>`;
+  });
+  h += `<div class="actions"><button class="btn" data-act="check-submit-writing" id="cw-submit" ${ok ? '' : 'disabled'}>${L('Отправить на проверку', 'Submit for grading')}</button></div>
+    <div class="gfoot">${L('Критерии: содержание, достижение цели, организация текста, язык. Черновик сохраняется, пока экран открыт.', 'Criteria: content, communicative achievement, organisation, language. Your draft is kept while this screen is open.')}</div>`;
+  return h;
+}
+function checkSpeaking(sk) {
+  if (CS.phase === 0) {
+    let h = `<div class="hint">${L('Прочитайте или прослушайте вопрос и отвечайте вслух около минуты. Можно включить таймер.', 'Read or listen to each prompt and answer aloud for about a minute. You can use the timer.')}</div>`;
+    h += sk.prompts.map((p, i) => `<div class="panel" style="margin-bottom:10px"><div class="lbl" style="margin:0 0 6px">${L('Вопрос', 'Prompt')} ${i + 1}</div><p class="prompt">${esc(p.t)}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="chip" data-act="speak" data-text="${esc(p.t)}">${L('Прослушать', 'Listen')}</button><button class="chip on" data-act="timer" data-i="${i}" id="tm-${i}">${L('Таймер 1:00', 'Timer 1:00')}</button></div></div>`).join('');
+    h += `<div class="actions"><button class="btn" data-act="speak-next">${L('К самооценке', 'Go to self-assessment')}</button></div>`;
+    return h;
+  }
+  let h = `<div class="hint">${L('Отметьте, что у вас получилось во время ответов. Честность важнее высокого балла.', 'Tick what you managed while answering. Honesty matters more than a high score.')}</div>`;
+  BANDS.forEach(b => {
+    const ds = sk.descriptors.map((d, i) => Object.assign({ i }, d)).filter(d => d.band === b);
+    h += groupHead(b) + '<div class="group">' + ds.map(d => `<label class="row"><input type="checkbox" data-tick="${d.i}" ${CS.ticks[d.i] ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--accent);flex:none"><span class="row-main"><span class="row-title" style="font-size:var(--fs-sub);line-height:20px">${esc(d.t)}</span></span></label>`).join('') + '</div>';
+  });
+  h += `<div class="actions"><button class="btn" data-act="check-submit-speaking">${L('Посчитать уровень', 'Get my level')}</button><button class="btn plain" data-act="speak-back">${L('Назад к вопросам', 'Back to prompts')}</button></div>`;
+  return h;
+}
+
+/* ---------- Settings ---------- */
 function vSettings() {
   const st = S.settings;
-  const voiceOpts = VOICES.length ? VOICES.map(v => `<option value="${esc(v.voiceURI)}" ${v.voiceURI === st.voice ? 'selected' : ''}>${esc(v.name)} · ${esc(v.lang)}</option>`).join('') : '<option>Системный голос</option>';
-  let h = groupHead('Напоминания') + `<div class="group icons">
-    <label class="row"><span class="tile" style="background:var(--red)">${IC.bell}</span><span class="row-main"><span class="row-title">Время занятий</span></span><input type="time" id="set-remind" data-set="remind" value="${esc(st.remind)}"></label>
-    <label class="row"><span class="tile" style="background:var(--pink)">${IC.tv}</span><span class="row-main"><span class="row-title">Медиа на экране «Сегодня»</span><span class="row-sub">Мягкое напоминание, без плана</span></span><input type="checkbox" id="set-media" data-set="mediaNudge" ${st.mediaNudge ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
-    <div class="gfoot">Ежедневное напоминание присылает приложение «Команды» на iPhone и Mac: автоматизация «Время суток» открывает учебное приложение. Без сервера и бесплатно.</div>`;
-  h += groupHead('Озвучка') + `<div class="group icons">
-    <label class="row"><span class="tile" style="background:var(--teal)">${IC.wave}</span><span class="row-main"><span class="row-title">Голос</span></span><select id="set-voice" data-set="voice">${voiceOpts}</select></label>
-    <label class="row"><span class="tile" style="background:var(--blue)">${IC.play}</span><span class="row-main"><span class="row-title">Скорость</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label>
-    <button class="row" data-act="test-voice"><span class="tile" style="background:var(--green)">${IC.wave}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">Прослушать пример</span></span></button></div>
-    <div class="gfoot">Голоса встроены в iPhone и Mac и работают без интернета. Больше голосов: Настройки iPhone → Универсальный доступ → Устный контент → Голоса.</div>`;
-  h += groupHead('Перевод') + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">Ключ DeepL</span></span><input class="inline" id="set-deepl" data-set="deeplKey" type="password" autocomplete="off" placeholder="не подключён" value="${esc(st.deeplKey)}"></label></div>
-    <div class="gfoot">Бесплатный ключ DeepL заканчивается на «:fx». Без ключа работает встроенный словарь и кнопка Google Translate.</div>`;
-  h += groupHead('Новые задания') + `<div class="group icons">
-    <button class="row" data-act="check-packs"><span class="tile" style="background:var(--accent)">${IC.box}</span><span class="row-main"><span class="row-title">Проверить новые задания</span><span class="row-sub">${S.lastCheck ? 'Последняя проверка: ' + fmtDate(S.lastCheck, { day: 'numeric', month: 'long' }) : 'Загружает пакеты, которые выложил Claude'}</span></span>${IC.chevR}</button></div>
-    <div class="gfoot">Приложение проверяет новые пакеты и при каждом запуске, если есть интернет.</div>`;
-  h += groupHead('Данные') + `<div class="group icons">
-    <button class="row" data-act="export"><span class="tile" style="background:var(--blue)">${IC.up}</span><span class="row-main"><span class="row-title">Экспорт</span><span class="row-sub">Прогресс, слова, ответы — для Claude и второго устройства</span></span>${IC.chevR}</button>
-    <button class="row" data-act="import"><span class="tile" style="background:var(--green)">${IC.down}</span><span class="row-main"><span class="row-title">Импорт</span><span class="row-sub">Пакет заданий или экспорт с другого устройства</span></span>${IC.chevR}</button></div>`;
-  h += groupHead('Пакеты') + '<div class="group">' + S.packs.map(p => {
+  let h = groupHead(L('Язык интерфейса', 'App language')) + `<div class="group">` + [['ru', 'Русский', 'Russian'], ['en', 'English', 'English']].map(([k, r, e]) => `<button class="row" data-act="set-lang" data-lang="${k}"><span class="row-main"><span class="row-title">${k === 'ru' ? 'Русский' : 'English'}</span></span>${st.lang === k ? `<span style="color:var(--accent)">${IC.check}</span>` : ''}</button>`).join('') + `</div>
+    <div class="gfoot">${L('Меняется язык меню и кнопок. Объяснения в заданиях остаются на русском, примеры — на английском.', 'Changes menus and buttons. Explanations inside tasks stay in Russian, examples stay in English.')}</div>`;
+  h += groupHead(L('Напоминания', 'Reminders')) + `<div class="group icons">
+    <label class="row"><span class="tile" style="background:var(--red)">${IC.bell}</span><span class="row-main"><span class="row-title">${L('Время занятий', 'Study time')}</span></span><input type="time" id="set-remind" data-set="remind" value="${esc(st.remind)}"></label>
+    <label class="row"><span class="tile" style="background:var(--pink)">${IC.tv}</span><span class="row-main"><span class="row-title">${L('Медиа на экране «Сегодня»', 'Media on the Today screen')}</span><span class="row-sub">${L('Мягкое напоминание, без плана', 'A gentle reminder, no plan')}</span></span><input type="checkbox" id="set-media" data-set="mediaNudge" ${st.mediaNudge ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+    <div class="gfoot">${L('Ежедневное напоминание присылает приложение «Команды» на iPhone и Mac: автоматизация «Время суток» открывает учебное приложение. Без сервера и бесплатно.', 'The daily reminder comes from the Shortcuts app on iPhone and Mac: a “Time of Day” automation opens this app. Free, no server needed.')}</div>`;
+  h += groupHead(L('Озвучка', 'Voice')) + '<div class="group">' + VOICE_SLOTS.map(sl => {
+    const v = voiceFor(sl.id), on = st.voiceSlot === sl.id;
+    return `<button class="row" data-act="set-voice" data-slot="${sl.id}"><span class="row-main"><span class="row-title">${L(sl.ru, sl.en)}</span><span class="row-sub">${v ? esc(v.name) : L('не установлен — скачайте ', 'not installed — download ') + esc(sl.suggest)}</span></span>
+      <span class="play small" data-act="voice-test" data-slot="${sl.id}" role="button" aria-label="${L('Прослушать', 'Listen')}" style="display:grid;place-items:center">${IC.play}</span>
+      <span style="width:22px;color:var(--accent)">${on ? IC.check : ''}</span></button>`;
+  }).join('') + `<label class="row"><span class="row-main"><span class="row-title">${L('Скорость', 'Speed')}</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label></div>
+    <div class="gfoot">${L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: iPhone → Настройки → Универсальный доступ → Устный контент → Голоса → Английский. На Mac: Системные настройки → Универсальный доступ → Устный контент.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: iPhone → Settings → Accessibility → Spoken Content → Voices → English. On Mac: System Settings → Accessibility → Spoken Content.')}</div>`;
+  h += groupHead(L('Перевод', 'Translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Ключ DeepL', 'DeepL key')}</span></span><input class="inline" id="set-deepl" data-set="deeplKey" type="password" autocomplete="off" placeholder="${L('не подключён', 'not connected')}" value="${esc(st.deeplKey)}"></label></div>
+    <div class="gfoot">${L('Бесплатный ключ DeepL заканчивается на «:fx». Без ключа работает встроенный словарь и кнопка Google Translate.', 'A free DeepL key ends with “:fx”. Without a key, the built-in dictionary and the Google Translate button work.')}</div>`;
+  h += groupHead(L('Новые задания', 'New tasks')) + `<div class="group icons">
+    <button class="row" data-act="check-packs"><span class="tile" style="background:var(--accent)">${IC.box}</span><span class="row-main"><span class="row-title">${L('Проверить новые задания', 'Check for new tasks')}</span><span class="row-sub">${S.lastCheck ? L('Последняя проверка: ', 'Last checked: ') + fmtShort(S.lastCheck) : L('Загружает пакеты, которые выложил Claude', 'Loads packs published by Claude')}</span></span>${IC.chevR}</button></div>
+    <div class="gfoot">${L('Приложение проверяет новые пакеты и тесты при каждом запуске, если есть интернет.', 'The app checks for new packs and tests on every launch when online.')}</div>`;
+  h += groupHead(L('Данные', 'Data')) + `<div class="group icons">
+    <button class="row" data-act="export"><span class="tile" style="background:var(--blue)">${IC.up}</span><span class="row-main"><span class="row-title">${L('Экспорт', 'Export')}</span><span class="row-sub">${L('Прогресс, слова, ответы — для Claude и второго устройства', 'Progress, words, answers — for Claude and your other device')}</span></span>${IC.chevR}</button>
+    <button class="row" data-act="import"><span class="tile" style="background:var(--green)">${IC.down}</span><span class="row-main"><span class="row-title">${L('Импорт', 'Import')}</span><span class="row-sub">${L('Пакет заданий или экспорт с другого устройства', 'A task pack or an export from another device')}</span></span>${IC.chevR}</button></div>`;
+  h += groupHead(L('Пакеты', 'Packs')) + '<div class="group">' + S.packs.map(p => {
     const ts = p.days.flatMap(dayTasks), d = ts.filter(t => isDone(t.id)).length;
-    return `<div class="row static"><span class="row-main"><span class="row-title">${esc(p.title)}</span><span class="row-sub">${p.days.length} ${plural(p.days.length, 'день', 'дня', 'дней')} · уровень ${esc(p.level)} · от ${fmtDate(p.created)}</span></span><span class="row-val">${d}/${ts.length}</span></div>`;
+    return `<div class="row static"><span class="row-main"><span class="row-title">${esc(p.title)}</span><span class="row-sub">${p.days.length} ${P(p.days.length, 'день', 'дня', 'дней', 'day', 'days')} · ${L('уровень', 'level')} ${esc(p.level)} · ${fmtDate(p.created)}</span></span><span class="row-val">${d}/${ts.length}</span></div>`;
   }).join('') + '</div>';
-  h += groupHead('Сброс') + (UI.resetAsk
-    ? `<div class="panel"><p style="margin:0 0 12px">Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.</p><div class="btns"><button class="btn sec" data-act="reset-no">Отмена</button><button class="btn danger" data-act="reset-yes">Удалить</button></div></div>`
-    : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">Сбросить прогресс</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">Прототип · данные хранятся только на этом устройстве</div>`;
-  return { title: 'Настройки', body: h };
+  h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
+    ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
+    : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}</div>`;
+  return { title: L('Настройки', 'Settings'), body: h };
 }
-
-function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(title)}</b>${esc(text)}</div>`; }
 
 /* ---------- task session ---------- */
 function startTask(id) {
@@ -598,10 +797,10 @@ function startTask(id) {
   UI.stack.push({ v: 'task', id });
 }
 function vTask(id) {
-  const x = findTask(id); if (!x) return { title: 'Задание', back: true, body: '' };
+  const x = findTask(id); if (!x) return { title: L('Задание', 'Task'), back: true, body: '' };
   const t = x.task, s = SECTIONS[x.sec];
-  if (!TS || TS.id !== id) startTask(id), UI.stack.pop();
-  const meta = `<div class="tmeta"><span class="pill" style="background:${s.color};color:#fff">${s.short}</span><span class="pill">День ${x.day.day}</span><span class="pill">${typeLabel(t)} · ${t.minutes} мин</span>${isDone(id) ? '<span class="pill good">Выполнено</span>' : ''}</div>`;
+  if (!TS || TS.id !== id) { startTask(id); UI.stack.pop(); }
+  const meta = `<div class="tmeta"><span class="pill" style="background:${s.color};color:#fff">${s.short()}</span><span class="pill">${L('День', 'Day')} ${x.day.day}</span><span class="pill">${typeLabel(t)} · ${mins(t.minutes)}</span>${isDone(id) ? `<span class="pill good">${L('Выполнено', 'Done')}</span>` : ''}</div>`;
   let body = '';
   if (t.type === 'lesson') body = tLesson(t);
   else if (t.type === 'cards') body = tCards(t);
@@ -611,62 +810,63 @@ function vTask(id) {
 }
 function tLesson(t) {
   let h = '<div class="panel lesson">' + t.body.map(p => `<p>${md(p)}</p>`).join('') + '</div>';
-  h += groupHead('Примеры') + '<div class="group">' + t.examples.map(e => `<div class="row static ex">
-     <button class="play small" data-act="speak" data-text="${esc(e.en)}" aria-label="Прослушать">${IC.play}</button>
+  h += groupHead(L('Примеры', 'Examples')) + '<div class="group">' + t.examples.map(e => `<div class="row static ex">
+     <button class="play small" data-act="speak" data-text="${esc(e.en)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
      <span class="row-main"><span class="row-title">${esc(e.en)}</span><span class="row-sub">${esc(e.ru)}</span></span></div>`).join('') + '</div>';
-  h += `<div class="actions"><button class="btn" data-act="lesson-done">${isDone(t.id) ? 'Готово' : 'Понятно'}</button></div>`;
+  h += `<div class="actions"><button class="btn" data-act="lesson-done">${isDone(t.id) ? L('Готово', 'Done') : L('Понятно', 'Got it')}</button></div>`;
   return h;
 }
 function tCards(t) {
   const V = vocabMap(), ids = t.cards.filter(id => V[id]);
   if (TS.finished || TS.i >= ids.length) {
-    return `<div class="summary"><div class="big">${ids.length}</div><p>${plural(ids.length, 'слово', 'слова', 'слов')} добавлено в повторение. Первое повторение — завтра.</p></div><div class="actions"><button class="btn" data-act="back">Готово</button></div>`;
+    return `<div class="summary"><div class="big">${ids.length}</div><p>${L(ruPlural(ids.length, 'слово', 'слова', 'слов') + ' добавлено в повторение. Первое повторение — завтра.', 'words added to review. The first review is tomorrow.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
   }
   const v = V[ids[TS.i]];
   let h = `<div class="progress"><i style="width:${(TS.i / ids.length) * 100}%"></i></div>`;
-  h += `<button class="flash" data-act="flip" aria-label="Перевернуть карточку">
-      <span class="pill lvl">${v.lvl === 'pro' ? 'проф. лексика' : esc(v.lvl)}</span>
+  h += `<button class="flash" data-act="flip" aria-label="${L('Перевернуть карточку', 'Flip card')}">
+      <span class="pill lvl">${v.lvl === 'pro' ? L('проф. лексика', 'work vocabulary') : esc(v.lvl)}</span>
       <span class="en">${esc(v.en)}</span>
-      ${TS.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : '<span class="tap">Нажмите, чтобы увидеть перевод</span>'}</button>`;
-  h += `<div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(TS.flipped ? v.ex : v.en)}">${IC.play} ${TS.flipped ? 'Пример' : 'Слово'}</button>
-      <button class="btn" data-act="card-next">${TS.i === ids.length - 1 ? 'Добавить в повторение' : 'Дальше'}</button></div>
-      <div class="qcount" style="text-align:center">${TS.i + 1} из ${ids.length}</div>`;
+      ${TS.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Нажмите, чтобы увидеть перевод', 'Tap to see the translation')}</span>`}</button>`;
+  h += `<div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(TS.flipped ? v.ex : v.en)}">${IC.play} ${TS.flipped ? L('Пример', 'Example') : L('Слово', 'Word')}</button>
+      <button class="btn" data-act="card-next">${TS.i === ids.length - 1 ? L('Добавить в повторение', 'Add to review') : L('Дальше', 'Next')}</button></div>
+      <div class="qcount" style="text-align:center">${TS.i + 1} ${L('из', 'of')} ${ids.length}</div>`;
   return h;
 }
 function tWrite(t) {
   const n = words(TS.draft), ok = n >= t.minWords;
   const p = S.progress[t.id];
   return `<div class="panel"><p class="prompt">${md(t.prompt)}</p><p class="hint" style="margin:0">${md(t.hint || '')}</p></div>
-    <div class="lbl" style="margin:18px 16px 8px">Ваш текст на английском</div>
+    <div class="lbl" style="margin:18px 16px 8px">${L('Ваш текст на английском', 'Your text in English')}</div>
     <textarea class="field" id="write-${esc(t.id)}" data-write="1" placeholder="Start writing here…" spellcheck="true" lang="en">${esc(TS.draft)}</textarea>
-    <div class="wc" id="wc">${n} ${plural(n, 'слово', 'слова', 'слов')} · минимум ${t.minWords}</div>
-    <div class="actions"><button class="btn" data-act="save-write" id="save-write" ${ok ? '' : 'disabled'}>${p && p.done ? 'Сохранить изменения' : 'Сохранить'}</button></div>
-    <div class="gfoot">Текст попадёт в экспорт. Claude проверит его по критериям CEFR: содержание, связность, лексика, грамматика.</div>`;
+    <div class="wc" id="wc">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${t.minWords}</div>
+    <div class="actions"><button class="btn" data-act="save-write" id="save-write" ${ok ? '' : 'disabled'}>${p && p.done ? L('Сохранить изменения', 'Save changes') : L('Сохранить', 'Save')}</button></div>
+    <div class="gfoot">${L('Текст попадёт в экспорт. Claude проверит его по критериям CEFR: содержание, связность, лексика, грамматика.', 'The text goes into your export. Claude grades it by CEFR criteria: content, coherence, vocabulary, grammar.')}</div>`;
 }
 function tItems(t) {
   const items = t.items;
   if (TS.finished) {
     const sc = TS.results.filter(Boolean).length;
-    return `<div class="summary"><div class="big">${sc}/${items.length}</div><p>${sc === items.length ? 'Без ошибок.' : sc >= items.length * 0.7 ? 'Хороший результат. Ошибки вернутся в следующих заданиях.' : 'Эту тему Claude повторит в следующем пакете.'}</p></div>
-      <div class="actions"><button class="btn" data-act="back">Готово</button><button class="btn plain" data-act="retry">Пройти ещё раз</button></div>`;
+    const msg = sc === items.length ? L('Без ошибок.', 'No mistakes.') : sc >= items.length * 0.7 ? L('Хороший результат. Ошибки вернутся в следующих заданиях.', 'Good result. Your mistakes will come back in later tasks.') : L('Эту тему Claude повторит в следующем пакете.', 'Claude will revisit this topic in the next pack.');
+    return `<div class="summary"><div class="big">${sc}/${items.length}</div><p>${msg}</p></div>
+      <div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button><button class="btn plain" data-act="retry">${L('Пройти ещё раз', 'Try again')}</button></div>`;
   }
   const it = items[TS.i];
   let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
   if (t.type === 'dialog') {
-    h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="Прослушать диалог">${IC.play}</button>
-       <div class="audio-t"><b>Прослушайте диалог</b><span>${t.lines.length} реплик · можно слушать сколько угодно</span></div>
-       <button class="chip" data-act="play-dialog" data-slow="1">Медленно</button></div>
-       <button class="chip ${TS.showText ? 'on' : ''}" data-act="toggle-text" style="margin-bottom:${TS.showText ? '0' : '16px'}">${TS.showText ? 'Скрыть текст' : 'Показать текст'}</button>
+    h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="${L('Прослушать диалог', 'Play dialogue')}">${IC.play}</button>
+       <div class="audio-t"><b>${L('Прослушайте диалог', 'Listen to the dialogue')}</b><span>${t.lines.length} ${L('реплик · можно слушать сколько угодно', 'lines · listen as often as you like')}</span></div>
+       <button class="chip" data-act="play-dialog" data-slow="1">${L('Медленно', 'Slow')}</button></div>
+       <button class="chip ${TS.showText ? 'on' : ''}" data-act="toggle-text" style="margin-bottom:${TS.showText ? '0' : '16px'}">${TS.showText ? L('Скрыть текст', 'Hide text') : L('Показать текст', 'Show text')}</button>
        ${TS.showText ? `<div class="panel transcript" style="margin:10px 0 16px">${t.lines.map(l => `<div class="line"><b>${esc(l.s)}</b><span>${esc(l.t)}</span></div>`).join('')}</div>` : ''}`;
   }
-  if (it.say) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(it.say)}" aria-label="Прослушать">${IC.play}</button>
-       <div class="audio-t"><b>Прослушайте</b><span>${t.type === 'dictation' ? 'и напишите, что услышали' : 'и ответьте на вопрос'}</span></div>
-       <button class="chip" data-act="speak" data-text="${esc(it.say)}" data-slow="1">Медленно</button></div>`;
+  if (it.say) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(it.say)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+       <div class="audio-t"><b>${L('Прослушайте', 'Listen')}</b><span>${t.type === 'dictation' ? L('и напишите, что услышали', 'and type what you hear') : L('и ответьте на вопрос', 'and answer the question')}</span></div>
+       <button class="chip" data-act="speak" data-text="${esc(it.say)}" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
   if (t.type === 'gap' || t.type === 'dictation') {
     if (it.q) h += `<p class="q">${md(it.q)}</p>`;
-    h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" placeholder="${t.type === 'dictation' ? 'Напишите предложение' : 'Ваш ответ'}" value="${esc(TS.input || '')}" ${TS.checked ? 'disabled' : ''}>`;
-    if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">Проверить</button></div>`;
-    else h += fb(TS.ok, (TS.ok ? '' : 'Правильно: <b style="display:inline;font-size:inherit">' + esc(it.a[0]) + '</b>. ') + md(it.explain || '')) + nextBtn(t);
+    h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" placeholder="${t.type === 'dictation' ? L('Напишите предложение', 'Type the sentence') : L('Ваш ответ', 'Your answer')}" value="${esc(TS.input || '')}" ${TS.checked ? 'disabled' : ''}>`;
+    if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">${L('Проверить', 'Check')}</button></div>`;
+    else h += fb(TS.ok, (TS.ok ? '' : L('Правильно', 'Correct') + ': <b style="display:inline;font-size:inherit">' + esc(it.a[0]) + '</b>. ') + md(it.explain || '')) + nextBtn(t);
   } else {
     h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
       let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
@@ -674,30 +874,31 @@ function tItems(t) {
     }).join('') + '</div>';
     if (TS.picked !== null) h += fb(TS.picked === it.a, md(it.explain || '')) + nextBtn(t);
   }
-  h += `<div class="qcount">Вопрос ${TS.i + 1} из ${items.length}</div>`;
+  h += `<div class="qcount">${L('Вопрос', 'Question')} ${TS.i + 1} ${L('из', 'of')} ${items.length}</div>`;
   return h;
 }
-function fb(ok, text) { return `<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Верно' : 'Не совсем'}</b>${text}</div>`; }
-function nextBtn(t) { return `<div class="actions"><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? 'Результат' : 'Дальше'}</button></div>`; }
+function fb(ok, text) { return `<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? L('Верно', 'Correct') : L('Не совсем', 'Not quite')}</b>${text}</div>`; }
+function nextBtn(t) { return `<div class="actions"><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? L('Результат', 'Result') : L('Дальше', 'Next')}</button></div>`; }
 
 /* ---------- review ---------- */
 function vReview() {
   const V = vocabMap();
   if (!RV) RV = { queue: dueCards().filter(id => V[id]), i: 0, flipped: false, known: 0 };
+  const title = L('Повторение', 'Review');
   if (!RV.queue.length || RV.i >= RV.queue.length) {
     const next = Object.values(S.cards).map(c => c.due).sort()[0];
     const done = RV.queue.length;
-    return { title: 'Повторение', back: true, body: done
-      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>Повторение на сегодня закончено.</p></div><div class="actions"><button class="btn" data-act="back">Готово</button></div>`
-      : empty(IC.cards, 'Всё повторено', next ? 'Следующее повторение: ' + fmtDate(next, { day: 'numeric', month: 'long' }) + '.' : 'Слова появятся после заданий «Новые слова».') };
+    return { title, back: true, body: done
+      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>${L('Повторение на сегодня закончено.', 'Today’s review is done.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`
+      : empty(IC.cards, L('Всё повторено', 'All caught up'), next ? L('Следующее повторение: ', 'Next review: ') + fmtShort(next) + '.' : L('Слова появятся после заданий «Новые слова».', 'Words appear after “New words” tasks.')) };
   }
   const v = V[RV.queue[RV.i]];
   let h = `<div class="progress"><i style="width:${(RV.i / RV.queue.length) * 100}%"></i></div>
-    <button class="flash" data-act="rv-flip"><span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : '<span class="tap">Вспомните перевод и нажмите</span>'}</button>
-    <div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} Слово</button></div>`;
-  if (RV.flipped) h += `<div class="btns"><button class="btn danger" data-act="rv" data-ok="0">Не помню</button><button class="btn" style="background:var(--green)" data-act="rv" data-ok="1">Помню</button></div>`;
-  h += `<div class="qcount" style="text-align:center">${RV.i + 1} из ${RV.queue.length}</div>`;
-  return { title: 'Повторение', back: true, body: h };
+    <button class="flash" data-act="rv-flip"><span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Вспомните перевод и нажмите', 'Recall the translation and tap')}</span>`}</button>
+    <div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} ${L('Слово', 'Word')}</button></div>`;
+  if (RV.flipped) h += `<div class="btns"><button class="btn danger" data-act="rv" data-ok="0">${L('Не помню', 'Forgot')}</button><button class="btn" style="background:var(--green)" data-act="rv" data-ok="1">${L('Помню', 'Remembered')}</button></div>`;
+  h += `<div class="qcount" style="text-align:center">${RV.i + 1} ${L('из', 'of')} ${RV.queue.length}</div>`;
+  return { title, back: true, body: h };
 }
 
 /* ---------- sheets ---------- */
@@ -705,75 +906,88 @@ const DICT = { 'pivot': 'сменить направление бизнеса', 
 function lookup(text) { const k = norm(text); if (!k) return null; if (DICT[k]) return DICT[k]; const V = vocabMap(); const v = Object.values(V).find(x => norm(x.en) === k); return v ? v.ru : null; }
 function sheetAddWord() {
   const sh = S.shows.find(s => s.id === (UI.sheet.show || 'silicon-valley')) || S.shows[0];
-  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">Отмена</button><b>Новое слово</b><button class="nav-btn" data-act="save-word" id="aw-save" disabled>Готово</button></div>
-    <div class="stack"><input class="field" id="aw-text" data-aw="1" placeholder="Слово или фраза" autocomplete="off" autocapitalize="off" lang="en">
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">${L('Отмена', 'Cancel')}</button><b>${L('Новое слово', 'New word')}</b><button class="nav-btn" data-act="save-word" id="aw-save" disabled>${L('Готово', 'Done')}</button></div>
+    <div class="stack"><input class="field" id="aw-text" data-aw="1" placeholder="${L('Слово или фраза', 'Word or phrase')}" autocomplete="off" autocapitalize="off" lang="en">
     <div class="trbox" id="aw-tr">${trHtml('')}</div>
-    <div class="lbl">Серия</div><input class="field" id="aw-ep" value="${esc(sh.current)}" autocomplete="off" style="font-family:var(--mono)">
-    <div class="lbl">Контекст (необязательно)</div><input class="field" id="aw-ctx" placeholder="Кто сказал, о чём сцена" autocomplete="off"></div>`;
+    <div class="lbl">${L('Серия', 'Episode')}</div><input class="field" id="aw-ep" value="${esc(sh.current)}" autocomplete="off" style="font-family:var(--mono)">
+    <div class="lbl">${L('Контекст (необязательно)', 'Context (optional)')}</div><input class="field" id="aw-ctx" placeholder="${L('Кто сказал, о чём сцена', 'Who said it, what the scene is about')}" autocomplete="off"></div>`;
 }
 function trHtml(text) {
-  if (!text.trim()) return '<span style="color:var(--label2)">Перевод появится здесь.</span>';
+  if (!text.trim()) return `<span style="color:var(--label2)">${L('Перевод появится здесь.', 'The translation appears here.')}</span>`;
   const r = lookup(text), gt = 'https://translate.google.com/?sl=en&tl=ru&op=translate&text=' + encodeURIComponent(text.trim());
-  return (r ? `<div class="ru">${esc(r)}</div>` : `<div style="color:var(--label2);margin-bottom:4px">Нет во встроенном словаре. С ключом DeepL переводы появятся сразу.</div>`)
-    + `<a href="${gt}" target="_blank" rel="noopener">Открыть в Google Translate ↗</a>`;
+  return (r ? `<div class="ru">${esc(r)}</div>` : `<div style="color:var(--label2);margin-bottom:4px">${L('Нет во встроенном словаре. С ключом DeepL переводы появятся сразу.', 'Not in the built-in dictionary. With a DeepL key, translations appear at once.')}</div>`)
+    + `<a href="${gt}" target="_blank" rel="noopener">${L('Открыть в Google Translate ↗', 'Open in Google Translate ↗')}</a>`;
 }
 function buildExport() {
   const V = vocabMap(), writing = {};
   Object.entries(S.progress).forEach(([id, p]) => { if (p.answer) writing[id] = p.answer; });
   return {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
-    summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id) },
+    summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
-    packs: S.packs
+    packs: S.packs, tests: S.tests
   };
 }
 function sheetExport() {
-  const json = JSON.stringify(buildExport(), null, 1);
+  const ex = buildExport(), json = JSON.stringify(ex, null, 1);
   const framed = window.self !== window.top;
-  return `<div class="sheet-h"><span></span><b>Экспорт</b><button class="nav-btn" data-act="sheet-close">Готово</button></div>
-    <p class="hint" style="margin:0 4px 12px">Скопируйте и вставьте Claude в чат проекта или перенесите на другое устройство (там — Импорт → вставить текст).</p>
+  return `<div class="sheet-h"><span></span><b>${L('Экспорт', 'Export')}</b><button class="nav-btn" data-act="sheet-close">${L('Готово', 'Done')}</button></div>
+    <p class="hint" style="margin:0 4px 12px">${L('Скопируйте и вставьте Claude в чат проекта или перенесите на другое устройство (там — Импорт → вставить текст).', 'Copy it and paste to Claude in the project chat, or move it to your other device (there: Import → paste text).')}</p>
     <textarea class="code" id="exp-text" readonly>${esc(json)}</textarea>
-    <div class="actions"><button class="btn" data-act="copy-export">Скопировать</button>${framed ? '' : '<button class="btn sec" data-act="download-export">Сохранить файл</button>'}</div>
-    <div class="gfoot">${(json.length / 1024).toFixed(1)} КБ · ${S.myWords.length} ${plural(S.myWords.length, 'слово', 'слова', 'слов')} из медиа · ${Object.keys(buildExport().writing).length} письменных ответов</div>`;
+    <div class="actions"><button class="btn" data-act="copy-export">${L('Скопировать', 'Copy')}</button>${framed ? '' : `<button class="btn sec" data-act="download-export">${L('Сохранить файл', 'Save file')}</button>`}</div>
+    <div class="gfoot">${(json.length / 1024).toFixed(1)} KB · ${S.myWords.length} ${P(S.myWords.length, 'слово', 'слова', 'слов', 'word', 'words')} ${L('из медиа', 'from media')} · ${Object.keys(ex.writing).length} ${L('письменных ответов', 'written answers')}</div>`;
 }
 function sheetImport() {
   const d = UI.sheet.draft;
-  if (d && d.type === 'study-export') return `<div class="sheet-h"><button class="nav-btn" data-act="import" style="justify-self:start">Назад</button><b>Импорт данных</b><span></span></div>
-    <div class="panel"><p style="margin:0 0 6px;font-weight:600">Экспорт от ${esc(new Date(d.exportedAt).toLocaleString('ru-RU'))}</p><p class="hint" style="margin:0">${Object.keys(d.progress || {}).length} заданий · ${(d.myWords || []).length} слов · ${Object.keys(d.cards || {}).length} карточек</p></div>
-    <div class="actions"><button class="btn" data-act="import-merge">Объединить</button><button class="btn sec" data-act="import-replace">Заменить</button></div>
-    <div class="gfoot">«Объединить» сложит слова и выполненные задания с обоих устройств. «Заменить» сделает это устройство копией экспорта.</div>`;
-  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">Отмена</button><b>Импорт</b><button class="nav-btn" data-act="do-import">Импорт</button></div>
-    <div class="stack"><label class="btn sec" for="imp-file" style="cursor:pointer">Выбрать файл .json</label><input type="file" id="imp-file" accept=".json,application/json" hidden>
-    <div class="lbl">или вставьте текст пакета / экспорта</div><textarea class="code" id="imp-text" placeholder='{"type": "study-pack", …}'></textarea></div>
-    <div class="gfoot">Пакет заданий добавится к текущему плану. Экспорт с другого устройства можно объединить или заменить им данные.</div>`;
+  if (d && d.type === 'study-export') return `<div class="sheet-h"><button class="nav-btn" data-act="import" style="justify-self:start">${L('Назад', 'Back')}</button><b>${L('Импорт данных', 'Import data')}</b><span></span></div>
+    <div class="panel"><p style="margin:0 0 6px;font-weight:600">${L('Экспорт от', 'Export from')} ${esc(new Date(d.exportedAt).toLocaleString(loc()))}</p><p class="hint" style="margin:0">${Object.keys(d.progress || {}).length} ${L('заданий', 'tasks')} · ${(d.myWords || []).length} ${L('слов', 'words')} · ${Object.keys(d.cards || {}).length} ${L('карточек', 'cards')}</p></div>
+    <div class="actions"><button class="btn" data-act="import-merge">${L('Объединить', 'Merge')}</button><button class="btn sec" data-act="import-replace">${L('Заменить', 'Replace')}</button></div>
+    <div class="gfoot">${L('«Объединить» сложит слова и выполненные задания с обоих устройств. «Заменить» сделает это устройство копией экспорта.', '“Merge” combines words and finished tasks from both devices. “Replace” makes this device a copy of the export.')}</div>`;
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">${L('Отмена', 'Cancel')}</button><b>${L('Импорт', 'Import')}</b><button class="nav-btn" data-act="do-import">${L('Импорт', 'Import')}</button></div>
+    <div class="stack"><label class="btn sec" for="imp-file" style="cursor:pointer">${L('Выбрать файл .json', 'Choose a .json file')}</label><input type="file" id="imp-file" accept=".json,application/json" hidden>
+    <div class="lbl">${L('или вставьте текст пакета / экспорта', 'or paste the text of a pack / export')}</div><textarea class="code" id="imp-text" placeholder='{"type": "study-pack", …}'></textarea></div>
+    <div class="gfoot">${L('Пакет заданий добавится к текущему плану. Экспорт с другого устройства можно объединить или заменить им данные.', 'A task pack is added to your plan. An export from another device can be merged or used to replace data.')}</div>`;
 }
-function importData(raw) {
-  let d; try { d = JSON.parse(raw); } catch (e) { toast('Не получилось прочитать файл: это не JSON'); return; }
-  if (d.type === 'study-pack') {
-    if (!Array.isArray(d.days) || !d.id) { toast('В пакете нет дней или id'); return; }
-    if (S.packs.some(p => p.id === d.id)) { toast('Этот пакет уже импортирован'); return; }
+// adds a pack or a level test (and any graded results inside it); returns a short message or null
+function addContent(d) {
+  let msg = null;
+  if (d.type === 'study-pack' && Array.isArray(d.days) && d.id && !S.packs.some(p => p.id === d.id)) {
     S.packs.push(d);
     (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
-    save(); UI.sheet = null; render(); toast('Пакет «' + d.title + '» добавлен'); return;
+    msg = L('Пакет «', 'Pack “') + d.title + L('» добавлен', '” added');
   }
+  if (d.type === 'level-test' && d.skills && d.id && !S.tests.some(t => t.id === d.id)) {
+    S.tests.push(d); msg = L('Новая версия теста уровня загружена', 'A new level test version is loaded');
+  }
+  (d.results || []).forEach(c => { if (c && c.id && c.results && !S.checks.some(x => x.id === c.id)) { S.checks.push(c); S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); msg = msg || L('Получена оценка от Claude', 'A grade from Claude has arrived'); } });
+  return msg;
+}
+function importData(raw) {
+  let d; try { d = JSON.parse(raw); } catch (e) { toast(L('Не получилось прочитать файл: это не JSON', 'Could not read the file: it is not JSON')); return; }
   if (d.type === 'study-export') { UI.sheet = { kind: 'import', draft: d }; renderSheet(); return; }
-  toast('Файл не похож на пакет или экспорт');
+  if (d.type === 'study-pack' || d.type === 'level-test') {
+    const m = addContent(d);
+    if (!m) { toast(L('Это уже загружено', 'This is already loaded')); return; }
+    save(); UI.sheet = null; render(); renderSheet(); toast(m); return;
+  }
+  toast(L('Файл не похож на пакет или экспорт', 'The file is not a pack or an export'));
 }
 function mergeExport(d, replace) {
   if (replace) {
-    S = Object.assign(initState(), { packs: d.packs && d.packs.length ? d.packs : S.packs, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings });
+    S = Object.assign(initState(), { packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings });
   } else {
     (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
+    (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
     Object.entries(d.progress || {}).forEach(([id, p]) => { const cur = S.progress[id]; if (!cur || (!cur.done && p.done) || ((p.answer || '').length > (cur.answer || '').length)) S.progress[id] = Object.assign({}, cur, p); });
     Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
     (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
     (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
-    (d.checks || []).forEach(c => { if (!S.checks.some(x => x.id === c.id)) S.checks.push(c); });
-    S.checks.sort((a, b) => a.date < b.date ? -1 : 1);
+    (d.checks || []).forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; if (!S.checks.some(x => x.id === c.id)) S.checks.push(c); });
+    S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     Object.entries(d.activity || {}).forEach(([k, v]) => { S.activity[k] = Math.max(S.activity[k] || 0, v); });
   }
-  save(); UI.sheet = null; UI.stack = []; render(); toast(replace ? 'Данные заменены' : 'Данные объединены');
+  save(); UI.sheet = null; UI.stack = []; render(); renderSheet(); toast(replace ? L('Данные заменены', 'Data replaced') : L('Данные объединены', 'Data merged'));
 }
 
 /* ---------- render ---------- */
@@ -784,19 +998,22 @@ function currentView() {
     if (top.v === 'section') return vSection(top.sec);
     if (top.v === 'show') return vShow(top.id);
     if (top.v === 'review') return vReview();
+    if (top.v === 'checks') return vChecks();
+    if (top.v === 'check') return vCheck(top.skill);
   }
   return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
 }
-const TABS = [['today', 'Сегодня', IC.today], ['english', 'Английский', IC.book], ['media', 'Медиа', IC.tv], ['progress', 'Прогресс', IC.chart], ['settings', 'Настройки', IC.gear]];
+function tabs() { return [['today', L('Сегодня', 'Today'), IC.today], ['english', L('Английский', 'English'), IC.book], ['media', L('Медиа', 'Media'), IC.tv], ['progress', L('Прогресс', 'Progress'), IC.chart], ['settings', L('Настройки', 'Settings'), IC.gear]]; }
 function render() {
   const v = currentView();
   document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
-      <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>Назад</span></button>` : ''}</div>
+      <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>${L('Назад', 'Back')}</span></button>` : ''}</div>
       <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
     <div class="content"><h1 class="large">${esc(v.title)}</h1>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
-  document.getElementById('tabbar').innerHTML = TABS.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
-  document.getElementById('sidebar').innerHTML = '<div class="side-h">Учёба</div>' + TABS.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
-    + `<div class="side-h" style="margin-top:18px">Скоро</div><div class="side-i" style="color:var(--label3);cursor:default">${IC.target}<span>Психология</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.chart}<span>Развитие</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.brief}<span>Профессия</span></div>`;
+  const T = tabs();
+  document.getElementById('tabbar').innerHTML = T.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
+  document.getElementById('sidebar').innerHTML = `<div class="side-h">${L('Учёба', 'Study')}</div>` + T.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
+    + `<div class="side-h" style="margin-top:18px">${L('Скоро', 'Coming soon')}</div><div class="side-i" style="color:var(--label3);cursor:default">${IC.target}<span>${L('Психология', 'Psychology')}</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.chart}<span>${L('Развитие', 'Growth')}</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.brief}<span>${L('Профессия', 'Career')}</span></div>`;
 }
 function renderSheet() {
   const root = document.getElementById('sheet-root');
@@ -808,6 +1025,14 @@ function renderSheet() {
 function go(fn) { fn(); UI.scrolled = false; render(); window.scrollTo(0, 0); }
 let toastT;
 function toast(msg) { const r = document.getElementById('toast-root'); r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toastT); toastT = setTimeout(() => { r.innerHTML = ''; }, 2600); }
+let timerT = null;
+function runTimer(i) {
+  clearInterval(timerT); let left = 60;
+  document.querySelectorAll('[data-act="timer"]').forEach(b => { b.textContent = L('Таймер 1:00', 'Timer 1:00'); });
+  const el = document.getElementById('tm-' + i);
+  timerT = setInterval(() => { left--; const b = document.getElementById('tm-' + i); if (!b) { clearInterval(timerT); return; } b.textContent = left > 0 ? '0:' + pad(left) : L('Время вышло', 'Time is up'); if (left <= 0) clearInterval(timerT); }, 1000);
+  if (el) el.textContent = '1:00';
+}
 
 /* ---------- events ---------- */
 document.addEventListener('click', e => {
@@ -816,19 +1041,51 @@ document.addEventListener('click', e => {
   if (a === 'scrim') { if (e.target === el) { UI.sheet = null; renderSheet(); } return; }
   switch (a) {
     case 'tab': go(() => { UI.tab = el.dataset.tab; UI.stack = []; UI.viewDay = null; UI.resetAsk = false; }); break;
-    case 'back': try { speechSynthesis.cancel(); } catch (er) {} go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') TS = null; if (top && top.v === 'review') RV = null; }); break;
+    case 'back': try { speechSynthesis.cancel(); } catch (er) {} clearInterval(timerT); go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') TS = null; if (top && top.v === 'review') RV = null; if (top && top.v === 'check') CS = null; }); break;
     case 'day': go(() => { UI.viewDay = Number(el.dataset.d); }); break;
     case 'open-task': go(() => startTask(el.dataset.id)); break;
     case 'open-section': go(() => UI.stack.push({ v: 'section', sec: el.dataset.sec })); break;
     case 'open-show': go(() => { UI.seg = 'words'; UI.stack.push({ v: 'show', id: el.dataset.id }); }); break;
     case 'open-review': go(() => { RV = null; UI.stack.push({ v: 'review' }); }); break;
+    case 'open-checks': go(() => UI.stack.push({ v: 'checks' })); break;
+    case 'open-check': go(() => { CS = null; UI.stack.push({ v: 'check', skill: el.dataset.skill }); }); break;
+    case 'check-start': CS.started = true; CS.i = 0; CS.answers = []; go(() => {}); break;
+    case 'check-pick': CS.answers[CS.i] = Number(el.dataset.i); render(); break;
+    case 'check-prev': CS.i = Math.max(0, CS.i - 1); go(() => {}); break;
+    case 'check-next': {
+      const sk = currentTest().skills[CS.skill], n = checkSteps(sk).length;
+      try { speechSynthesis.cancel(); } catch (er) {}
+      if (CS.i >= n - 1) finishChoice(CS.skill, sk); else CS.i++;
+      go(() => {}); break;
+    }
+    case 'check-dialog': { const sk = currentTest().skills[CS.skill], st = checkSteps(sk)[CS.i]; speakDialog(st.p.lines, !!el.dataset.slow); break; }
+    case 'check-submit-writing': {
+      const sk = currentTest().skills.writing;
+      const answers = sk.parts.map((p, i) => ({ task: p.title, text: CS.drafts[i] || '', words: words(CS.drafts[i]) }));
+      const res = { pending: true, answers };
+      S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { writing: res } });
+      touchActivity(); save(); CS.result = res; go(() => {}); break;
+    }
+    case 'timer': runTimer(el.dataset.i); break;
+    case 'speak-next': clearInterval(timerT); try { speechSynthesis.cancel(); } catch (er) {} CS.phase = 1; go(() => {}); break;
+    case 'speak-back': CS.phase = 0; go(() => {}); break;
+    case 'check-submit-speaking': {
+      const sk = currentTest().skills.speaking, bands = {};
+      sk.descriptors.forEach((d, i) => { bands[d.band] = bands[d.band] || { c: 0, t: 0 }; bands[d.band].t++; if (CS.ticks[i]) bands[d.band].c++; });
+      let level = 'A1';
+      for (const b of BANDS) { const x = bands[b]; if (x && x.c >= 2) level = b; else break; }
+      const ticked = Object.keys(CS.ticks).filter(k => CS.ticks[k]).length;
+      const res = { level, score: ticked, total: sk.descriptors.length, bands, self: true };
+      S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { speaking: res } });
+      touchActivity(); save(); CS.result = res; go(() => {}); break;
+    }
     case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
     case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
     case 'toggle-text': TS.showText = !TS.showText; render(); break;
     case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a; render(); break; }
     case 'check': {
       const it = findTask(TS.id).task.items[TS.i]; const v = (document.getElementById('gap-input') || {}).value || '';
-      if (!v.trim()) { toast('Сначала впишите ответ'); return; }
+      if (!v.trim()) { toast(L('Сначала впишите ответ', 'Type an answer first')); return; }
       TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => norm(ans) === norm(v)); TS.results[TS.i] = TS.ok; render(); break;
     }
     case 'next': {
@@ -838,7 +1095,7 @@ document.addEventListener('click', e => {
       render(); window.scrollTo(0, 0); break;
     }
     case 'retry': { const id = TS.id; TS = null; startTask(id); UI.stack.pop(); render(); break; }
-    case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast('Урок пройден'); break;
+    case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast(L('Урок пройден', 'Lesson done')); break;
     case 'flip': TS.flipped = !TS.flipped; render(); break;
     case 'card-next': {
       const t = findTask(TS.id).task;
@@ -846,7 +1103,7 @@ document.addEventListener('click', e => {
       else { TS.i++; TS.flipped = false; }
       render(); break;
     }
-    case 'save-write': { const t = findTask(TS.id).task; markDone(t.id, { answer: TS.draft, words: words(TS.draft) }); S.progress[t.id].answer = TS.draft; save(); toast('Сохранено — попадёт в экспорт'); render(); break; }
+    case 'save-write': { const t = findTask(TS.id).task; markDone(t.id, { answer: TS.draft, words: words(TS.draft) }); S.progress[t.id].answer = TS.draft; save(); toast(L('Сохранено — попадёт в экспорт', 'Saved — it goes into your export')); render(); break; }
     case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
     case 'rv': {
       const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
@@ -862,16 +1119,16 @@ document.addEventListener('click', e => {
       const show = UI.sheet.show || 'silicon-valley';
       S.myWords.push({ id: 'w-' + uid(), text, ru: lookup(text) || '', show, ep, ctx, at: today() });
       const sh = S.shows.find(s => s.id === show); if (sh && !(sh.episodes || []).some(x => x.ep === ep)) (sh.episodes = sh.episodes || []).push({ ep, title: '' });
-      save(); UI.sheet = null; UI.seg = 'words'; renderSheet(); render(); toast('Слово записано'); break;
+      save(); UI.sheet = null; UI.seg = 'words'; renderSheet(); render(); toast(L('Слово записано', 'Word saved')); break;
     }
-    case 'del-word': S.myWords = S.myWords.filter(w => w.id !== el.dataset.id); save(); render(); toast('Удалено'); break;
-    case 'watched': { const sh = S.shows.find(s => s.id === UI.stack[UI.stack.length - 1].id); if (!sh.watched.includes(el.dataset.ep)) sh.watched.push(el.dataset.ep); save(); render(); toast('Отмечено. Пришлите экспорт Claude'); break; }
+    case 'del-word': S.myWords = S.myWords.filter(w => w.id !== el.dataset.id); save(); render(); toast(L('Удалено', 'Deleted')); break;
+    case 'watched': { const sh = S.shows.find(s => s.id === UI.stack[UI.stack.length - 1].id); if (!sh.watched.includes(el.dataset.ep)) sh.watched.push(el.dataset.ep); save(); render(); toast(L('Отмечено. Пришлите экспорт Claude', 'Marked. Send Claude an export')); break; }
     case 'sheet-close': UI.sheet = null; renderSheet(); break;
     case 'export': UI.sheet = { kind: 'export' }; renderSheet(); break;
     case 'copy-export': {
       const ta = document.getElementById('exp-text');
-      const fallback = () => { ta.focus(); ta.select(); toast('Текст выделен — скопируйте его'); };
-      try { navigator.clipboard.writeText(ta.value).then(() => toast('Скопировано'), fallback); } catch (er) { fallback(); }
+      const fallback = () => { ta.focus(); ta.select(); toast(L('Текст выделен — скопируйте его', 'Text selected — copy it')); };
+      try { navigator.clipboard.writeText(ta.value).then(() => toast(L('Скопировано', 'Copied')), fallback); } catch (er) { fallback(); }
       break;
     }
     case 'check-packs': checkPacks(false); break;
@@ -881,25 +1138,33 @@ document.addEventListener('click', e => {
         const file = typeof File === 'function' ? new File([txt], name, { type: 'application/json' }) : null;
         if (file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: name }).catch(() => {}); break; }
       } catch (er) {}
-      try { const b = new Blob([document.getElementById('exp-text').value], { type: 'application/json' }); const u = URL.createObjectURL(b); const l = document.createElement('a'); l.href = u; l.download = 'study-export-' + today() + '.json'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); } catch (er) { toast('Не удалось сохранить файл'); }
+      try { const b = new Blob([document.getElementById('exp-text').value], { type: 'application/json' }); const u = URL.createObjectURL(b); const l = document.createElement('a'); l.href = u; l.download = 'study-export-' + today() + '.json'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); } catch (er) { toast(L('Не удалось сохранить файл', 'Could not save the file')); }
       break;
     }
     case 'import': UI.sheet = { kind: 'import' }; renderSheet(); break;
-    case 'do-import': { const v = document.getElementById('imp-text').value.trim(); if (!v) { toast('Выберите файл или вставьте текст'); return; } importData(v); break; }
+    case 'do-import': { const v = document.getElementById('imp-text').value.trim(); if (!v) { toast(L('Выберите файл или вставьте текст', 'Choose a file or paste text')); return; } importData(v); break; }
     case 'import-merge': mergeExport(UI.sheet.draft, false); break;
     case 'import-replace': mergeExport(UI.sheet.draft, true); break;
-    case 'test-voice': speak("Let me walk you through the new onboarding flow."); break;
+    case 'set-lang': S.settings.lang = el.dataset.lang; document.documentElement.lang = lang(); save(); render(); break;
+    case 'voice-test': { e.stopPropagation(); const prev = S.settings.voiceSlot; S.settings.voiceSlot = el.dataset.slot; speak('Let me walk you through the new onboarding flow.'); S.settings.voiceSlot = prev; break; }
+    case 'set-voice': S.settings.voiceSlot = el.dataset.slot; save(); render(); break;
     case 'reset-ask': UI.resetAsk = true; render(); break;
     case 'reset-no': UI.resetAsk = false; render(); break;
-    case 'reset-yes': S = initState(); save(); UI.resetAsk = false; TS = null; RV = null; render(); toast('Прогресс сброшен'); break;
+    case 'reset-yes': S = initState(); save(); UI.resetAsk = false; TS = null; RV = null; CS = null; render(); toast(L('Прогресс сброшен', 'Progress reset')); break;
   }
 });
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.write) {
     TS.draft = t.value; const task = findTask(TS.id).task, n = words(t.value);
-    document.getElementById('wc').textContent = `${n} ${plural(n, 'слово', 'слова', 'слов')} · минимум ${task.minWords}`;
+    document.getElementById('wc').textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
     document.getElementById('save-write').disabled = n < task.minWords;
+  }
+  if (t.dataset.cw != null && CS) {
+    const i = Number(t.dataset.cw), sk = currentTest().skills.writing, n = words(t.value);
+    CS.drafts[i] = t.value;
+    document.getElementById('cwc-' + i).textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${sk.parts[i].minWords}`;
+    document.getElementById('cw-submit').disabled = !sk.parts.every((p, k) => words(CS.drafts[k]) >= p.minWords);
   }
   if (t.dataset.aw) { document.getElementById('aw-tr').innerHTML = trHtml(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
   if (t.id === 'set-rate') document.getElementById('rate-val').textContent = Math.round(t.value * 100) + '%';
@@ -907,39 +1172,37 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = t.type === 'checkbox' ? t.checked : k === 'rate' ? Number(t.value) : t.value; save(); }
+  if (t.dataset.tick != null && CS) CS.ticks[t.dataset.tick] = t.checked;
   if (t.id === 'imp-file' && t.files && t.files[0]) { const r = new FileReader(); r.onload = () => importData(String(r.result)); r.readAsText(t.files[0]); }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.gap && !TS.checked) { e.preventDefault(); document.querySelector('[data-act="check"]').click(); }
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.gap && TS && !TS.checked) { e.preventDefault(); document.querySelector('[data-act="check"]').click(); }
   if (e.key === 'Escape' && UI.sheet) { UI.sheet = null; renderSheet(); }
 });
 window.addEventListener('scroll', () => {
   const s = window.scrollY > 30; if (s !== UI.scrolled) { UI.scrolled = s; const n = document.getElementById('nav'); if (n) n.classList.toggle('scrolled', s); }
 }, { passive: true });
 
-/* ---------- packs from the app's own site ---------- */
+/* ---------- packs and tests from the app's own site ---------- */
 async function checkPacks(silent) {
-  if (window.self !== window.top) { if (!silent) toast('Проверка работает в установленной версии'); return; }
+  if (window.self !== window.top) { if (!silent) toast(L('Проверка работает в установленной версии', 'Checking works in the installed app')); return; }
   try {
     const r = await fetch('packs/index.json', { cache: 'no-store' });
     if (!r.ok) throw new Error('index');
     const idx = await r.json();
-    const fresh = (idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id));
-    let added = 0;
-    for (const p of fresh) {
+    const list = [...(idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id)), ...(idx.levelTests || []).filter(p => !S.tests.some(x => x.id === p.id)), ...(idx.results || []).filter(p => !(S.seenResults || []).includes(p.id))];
+    const msgs = [];
+    for (const p of list) {
       const pr = await fetch('packs/' + p.file, { cache: 'no-store' });
       if (!pr.ok) continue;
-      const d = await pr.json();
-      if (d.type === 'study-pack' && !S.packs.some(x => x.id === d.id)) {
-        S.packs.push(d);
-        (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
-        added++;
-      }
+      const m = addContent(await pr.json());
+      if (idx.results && idx.results.includes(p)) S.seenResults = [...(S.seenResults || []), p.id];
+      if (m) msgs.push(m);
     }
     S.lastCheck = today(); save();
-    if (added) { render(); toast(added === 1 ? 'Загружен новый пакет заданий' : 'Загружено пакетов: ' + added); }
-    else if (!silent) { render(); toast('Новых заданий пока нет'); }
-  } catch (e) { if (!silent) toast('Нет связи с сайтом приложения. Попробуйте позже'); }
+    if (msgs.length) { render(); toast(msgs.length === 1 ? msgs[0] : L('Загружено обновлений: ', 'Updates loaded: ') + msgs.length); }
+    else if (!silent) { render(); toast(L('Новых заданий пока нет', 'No new tasks yet')); }
+  } catch (e) { if (!silent) toast(L('Нет связи с сайтом приложения. Попробуйте позже', 'Cannot reach the app site. Try again later')); }
 }
 if ('serviceWorker' in navigator && window.self === window.top && location.protocol === 'https:') {
   try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
@@ -950,11 +1213,13 @@ const ROUTES = { lesson: 'p1-d1-g1', cards: 'p1-d1-g2', quiz: 'p1-d1-g3', dialog
 function applyHash() {
   const h = (location.hash || '').slice(1);
   if (!h) return false;
-  UI.stack = []; TS = null; RV = null; UI.sheet = null;
+  UI.stack = []; TS = null; RV = null; CS = null; UI.sheet = null;
   if (['today', 'english', 'media', 'progress', 'settings'].includes(h)) UI.tab = h;
   else if (h === 'show') { UI.tab = 'media'; UI.stack.push({ v: 'show', id: 'silicon-valley' }); }
   else if (h === 'review') { UI.tab = 'english'; UI.stack.push({ v: 'review' }); }
   else if (h === 'section') { UI.tab = 'english'; UI.stack.push({ v: 'section', sec: 'general' }); }
+  else if (h === 'checks') { UI.tab = 'progress'; UI.stack.push({ v: 'checks' }); }
+  else if (h.startsWith('check-') && SKILLS.includes(h.slice(6))) { UI.tab = 'progress'; UI.stack.push({ v: 'check', skill: h.slice(6) }); }
   else if (ROUTES[h]) { UI.tab = 'today'; startTask(ROUTES[h]); }
   else return false;
   render(); renderSheet(); return true;

@@ -1,0 +1,133 @@
+{
+  "type": "level-test",
+  "id": "level-v1",
+  "version": 1,
+  "title": "Проверка уровня · версия 1",
+  "created": "2026-10-30",
+  "skills": {
+    "grammar": {
+      "title": "Грамматика и лексика",
+      "minutes": 12,
+      "about": "20 вопросов от A2 до C1, сложность растёт. Если не знаете ответа, не угадывайте — выберите наугад только если есть мысль.",
+      "parts": [
+        {"title": "Выберите правильный вариант", "items": [
+          {"q": "We ___ to the cinema last weekend.", "options": ["go", "went", "have gone"], "a": 1, "band": "A2"},
+          {"q": "There isn't ___ milk in the fridge.", "options": ["many", "some", "much"], "a": 2, "band": "A2"},
+          {"q": "Anna is ___ than her sister.", "options": ["taller", "more tall", "tallest"], "a": 0, "band": "A2"},
+          {"q": "It's dark in here. Can you turn ___ the light?", "options": ["on", "in", "up"], "a": 0, "band": "A2"},
+          {"q": "My train ___ at 7 a.m. tomorrow.", "options": ["leave", "leaves", "leaving"], "a": 1, "band": "A2"},
+          {"q": "I've worked at this company ___ three years.", "options": ["since", "for", "during"], "a": 1, "band": "B1"},
+          {"q": "If it rains tomorrow, we ___ at home.", "options": ["stay", "will stay", "would stay"], "a": 1, "band": "B1"},
+          {"q": "The report ___ by the manager yesterday.", "options": ["was written", "wrote", "has written"], "a": 0, "band": "B1"},
+          {"q": "I'm looking forward to ___ from you.", "options": ["hear", "hearing", "heard"], "a": 1, "band": "B1"},
+          {"q": "She asked me where ___.", "options": ["I lived", "did I live", "do I live"], "a": 0, "band": "B1"},
+          {"q": "I'd rather you ___ this to anyone yet.", "options": ["don't mention", "didn't mention", "not mention"], "a": 1, "band": "B2"},
+          {"q": "By next June, I ___ here for ten years.", "options": ["will work", "will have worked", "am working"], "a": 1, "band": "B2"},
+          {"q": "The new rules will ___ effect from Monday.", "options": ["take", "make", "have"], "a": 0, "band": "B2"},
+          {"q": "She ___ the job offer because the salary was too low.", "options": ["turned down", "turned up", "turned over"], "a": 0, "band": "B2"},
+          {"q": "It's high time we ___ the project.", "options": ["start", "started", "will start"], "a": 1, "band": "B2"},
+          {"q": "Not only ___ late, but he also forgot the slides.", "options": ["he was", "was he", "he has been"], "a": 1, "band": "C1"},
+          {"q": "Had I known about the delay, I ___ a later train.", "options": ["would take", "would have taken", "took"], "a": 1, "band": "C1"},
+          {"q": "The proposal was rejected, ___ was hardly surprising.", "options": ["that", "which", "what"], "a": 1, "band": "C1"},
+          {"q": "The results were ___: they could be read in two different ways.", "options": ["ambiguous", "ambitious", "ambient"], "a": 0, "band": "C1"},
+          {"q": "The company ___ its losses on the weak market.", "options": ["blamed", "accused", "charged"], "a": 0, "band": "C1"}
+        ]}
+      ]
+    },
+    "reading": {
+      "title": "Чтение",
+      "minutes": 15,
+      "about": "3 текста разной сложности, по 4 вопроса к каждому. Можно перечитывать текст сколько угодно.",
+      "parts": [
+        {"title": "Текст 1 · Сообщение в рабочем чате", "passage": "Hi everyone,\n\nFrom Monday 9 November the office on the third floor will be closed for repairs for two weeks. During this time, the design team will work on the fifth floor, in the meeting room next to the kitchen.\n\nPlease take your laptops home on Friday evening — there will be no space to leave them. The coffee machine on the fifth floor is broken, but a new one will arrive on Tuesday.\n\nIf you would rather work from home during the repairs, tell your manager by Thursday.\n\nThanks,\nMarta", "items": [
+          {"q": "How long will the repairs take?", "options": ["One week", "Two weeks", "Until Tuesday"], "a": 1, "band": "A2"},
+          {"q": "Where will the design team work?", "options": ["On the third floor", "In a meeting room on the fifth floor", "Only from home"], "a": 1, "band": "A2"},
+          {"q": "What should people do on Friday evening?", "options": ["Take their laptops home", "Tell their manager", "Buy a new coffee machine"], "a": 0, "band": "B1"},
+          {"q": "Working from home during the repairs is…", "options": ["required for everyone", "not allowed", "possible if you tell your manager by Thursday"], "a": 2, "band": "B1"}
+        ]},
+        {"title": "Текст 2 · Статья о дизайнере", "passage": "When Lena started her first job as a product designer, she avoided talking to developers. She was worried they would ask technical questions she couldn't answer.\n\nAfter a difficult project in which several of her screens had to be redesigned at the last minute, she decided to change her approach. She didn't try to become a programmer; instead, she spent an hour a week learning the basics of how web pages are built.\n\nWithin a few months, she noticed that her conversations with developers had become shorter and more productive. She could predict which ideas would be expensive to build and suggest simpler alternatives early.\n\n\"The biggest change wasn't technical,\" she says. \"It was that developers started inviting me to their planning meetings.\" Today Lena recommends that every junior designer spend a little time on the basics — not to write code, but to understand the people who do.", "items": [
+          {"q": "Why did Lena avoid developers at first?", "options": ["She didn't like them", "She was afraid of technical questions", "She was too busy"], "a": 1, "band": "B1"},
+          {"q": "What made her change her approach?", "options": ["A project where screens had to be redone late", "Advice from her manager", "A course she took"], "a": 0, "band": "B1"},
+          {"q": "What was her main aim in learning the basics?", "options": ["To become a developer", "To understand how web pages are built", "To find a better job"], "a": 1, "band": "B2"},
+          {"q": "According to Lena, the most important result was that…", "options": ["she started writing code", "developers began to include her in planning", "she had fewer meetings"], "a": 1, "band": "B2"}
+        ]},
+        {"title": "Текст 3 · Статья о концентрации", "passage": "Most people believe that they are good at multitasking, but research suggests otherwise. What we call multitasking is usually rapid switching between tasks, and every switch carries a cost: it takes time for the brain to fully re-engage with the previous task.\n\nFor short, routine activities this cost is barely noticeable. For complex work, such as writing or designing, it can add up to a significant loss of time and quality.\n\nInterestingly, the problem is not only the interruptions themselves but the expectation of them. Some studies suggest that people perform worse when they merely know a message might arrive, even if it never does.\n\nThis has led some companies to experiment with \"quiet hours\" — fixed periods when no meetings are scheduled and chat notifications are paused. Early results are encouraging, although critics point out that such policies only work if managers follow them too; otherwise, employees feel they must stay available anyway.", "items": [
+          {"q": "What does the writer say about multitasking?", "options": ["It is mostly switching quickly between tasks", "It improves the quality of work", "Most people are good at it"], "a": 0, "band": "B2"},
+          {"q": "The cost of switching is most serious for…", "options": ["routine tasks", "complex tasks such as writing", "short meetings"], "a": 1, "band": "B2"},
+          {"q": "According to the text, performance can drop when people…", "options": ["receive too many messages", "only expect that a message may arrive", "switch off notifications"], "a": 1, "band": "C1"},
+          {"q": "What is the critics' point about quiet hours?", "options": ["They are too expensive", "They only work if managers respect them as well", "They reduce communication in teams"], "a": 1, "band": "C1"}
+        ]}
+      ]
+    },
+    "listening": {
+      "title": "Аудирование",
+      "minutes": 12,
+      "about": "3 части: короткие фразы, диалог, выступление. Слушайте сколько угодно раз, но не открывайте текст — его нет.",
+      "parts": [
+        {"title": "Часть 1 · Короткие фразы", "items": [
+          {"say": "The meeting has been moved from Tuesday to Thursday afternoon.", "q": "When is the meeting now?", "options": ["Tuesday afternoon", "Thursday morning", "Thursday afternoon"], "a": 2, "band": "A2"},
+          {"say": "Could you send me the file by five? I need to check it before I leave.", "q": "Why does the speaker need the file by five?", "options": ["To check it before leaving", "To send it to a client", "To print it"], "a": 0, "band": "A2"},
+          {"say": "I'd love to come, but I've already promised to help my brother move house.", "q": "Will the speaker come?", "options": ["Yes, definitely", "No, because of another plan", "Yes, but later"], "a": 1, "band": "B1"},
+          {"say": "The new version looks great, although the buttons are a bit hard to see on mobile.", "q": "What is the problem with the new version?", "options": ["The colours", "The buttons are hard to see on mobile", "It is too slow"], "a": 1, "band": "B1"}
+        ]},
+        {"title": "Часть 2 · Созвон с клиентом", "lines": [
+          {"s": "Client", "t": "Hi, thanks for joining. I've had a look at the homepage designs. Overall, we really like the direction."},
+          {"s": "Designer", "t": "Great to hear. Is there anything you'd like to change?"},
+          {"s": "Client", "t": "Just one thing. Our sales team feels the pricing section is too far down the page. They'd like people to see it earlier."},
+          {"s": "Designer", "t": "That makes sense. I can move it up, but then the customer stories would drop below it. Is that okay?"},
+          {"s": "Client", "t": "Yes, that's fine. The stories are nice, but pricing is what people ask about first."},
+          {"s": "Designer", "t": "Okay. I'll send an updated version on Wednesday, and if you approve it, we can hand it off to development on Friday."}
+        ], "items": [
+          {"q": "What does the client think of the designs overall?", "options": ["They like them", "They are not happy", "They haven't seen them yet"], "a": 0, "band": "B1"},
+          {"q": "Who wants the pricing section moved?", "options": ["The designer", "The sales team", "The developers"], "a": 1, "band": "B1"},
+          {"q": "What will happen to the customer stories?", "options": ["They will be removed", "They will appear below the pricing", "They will move to a separate page"], "a": 1, "band": "B2"},
+          {"q": "When could the design go to development?", "options": ["On Wednesday", "On Friday, if the client approves it", "Next week"], "a": 1, "band": "B2"}
+        ]},
+        {"title": "Часть 3 · Выступление на встрече", "lines": [
+          {"s": "Speaker", "t": "Good morning, everyone. Today I want to talk about why accessibility should be part of our process from the very beginning, rather than something we check at the end."},
+          {"s": "Speaker", "t": "When accessibility is left until the last stage, fixing problems usually means redesigning components that are already built, which is slow and expensive. By contrast, if we choose accessible colour combinations and clear focus states while we're still sketching, the extra effort is minimal."},
+          {"s": "Speaker", "t": "There's also a common misconception that accessible design only benefits a small group of users. In reality, features like larger tap targets and good contrast help everyone — for example, someone using their phone in bright sunlight."},
+          {"s": "Speaker", "t": "So my proposal is simple: we add three accessibility questions to every design review, starting next sprint."}
+        ], "items": [
+          {"q": "What is the main purpose of the talk?", "options": ["To suggest including accessibility early in the process", "To report on a finished project", "To train developers"], "a": 0, "band": "B2"},
+          {"q": "Why is late accessibility work a problem?", "options": ["Built components have to be redesigned, which is slow and costly", "Users complain about it", "It is not allowed in most companies"], "a": 0, "band": "B2"},
+          {"q": "The speaker mentions bright sunlight to show that…", "options": ["accessible features help everyone", "phones have technical problems", "many users work outdoors"], "a": 0, "band": "C1"},
+          {"q": "What exactly does the speaker propose?", "options": ["Creating a new accessibility team", "Adding three accessibility questions to every design review", "Postponing the next sprint"], "a": 1, "band": "C1"}
+        ]}
+      ]
+    },
+    "writing": {
+      "title": "Письмо",
+      "minutes": 35,
+      "about": "2 задания. Оценивает Claude по критериям CEFR: содержание, достижение цели, организация текста, язык. Результат придёт в следующем пакете.",
+      "parts": [
+        {"title": "Задание 1 · Письмо коллеге (B1)", "prompt": "Your colleague Sam is joining your team next week. Write an email to Sam (80–100 words):\n• welcome Sam to the team;\n• explain what your team is working on now;\n• suggest when and where you could meet in the first week.", "minWords": 70},
+        {"title": "Задание 2 · Эссе-мнение (B2)", "prompt": "Some people think that working from home makes teams less creative. Write an essay (140–190 words) giving your opinion. Support it with reasons and examples from your own experience.", "minWords": 120}
+      ]
+    },
+    "speaking": {
+      "title": "Говорение",
+      "minutes": 10,
+      "about": "Ответьте вслух на 3 вопроса, около минуты на каждый. Потом честно отметьте, что у вас получилось — уровень посчитается по этой самооценке.",
+      "prompts": [
+        {"t": "Talk about your job. What do you do, what do you like about it, and what is difficult?", "band": "B1"},
+        {"t": "Describe a project you are proud of. What was the problem, what did you do, and what was the result?", "band": "B2"},
+        {"t": "Some people say AI tools will replace designers. Do you agree? Give reasons and examples.", "band": "C1"}
+      ],
+      "descriptors": [
+        {"band": "A2", "t": "Я могу простыми фразами рассказать о своей работе и дне."},
+        {"band": "A2", "t": "Я могу задать и ответить на простые вопросы на знакомые темы."},
+        {"band": "A2", "t": "Я могу сказать, что мне нравится и что нет."},
+        {"band": "B1", "t": "Я могу рассказать о прошлом проекте, связывая события словами then, because, so."},
+        {"band": "B1", "t": "Я могу высказать мнение и объяснить его простыми причинами."},
+        {"band": "B1", "t": "Я справляюсь с обычным рабочим разговором, хотя иногда подбираю слова."},
+        {"band": "B2", "t": "Я могу 1–2 минуты говорить на рабочую тему без долгих пауз."},
+        {"band": "B2", "t": "Я могу объяснить плюсы и минусы разных вариантов."},
+        {"band": "B2", "t": "Я могу участвовать в обсуждении с носителями языка и отстаивать свою точку зрения."},
+        {"band": "C1", "t": "Я говорю свободно и спонтанно, почти не ищу слова."},
+        {"band": "C1", "t": "Я меняю стиль речи: формально с клиентом, неформально с коллегами."},
+        {"band": "C1", "t": "Я могу выстроить чёткую, логичную аргументацию на сложную тему."}
+      ]
+    }
+  }
+}

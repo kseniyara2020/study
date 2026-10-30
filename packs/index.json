@@ -6,5 +6,13 @@
    "title": "Неделя 1: make/do, used to, wish и разговор о макетах",
    "created": "2026-10-30"
   }
- ]
+ ],
+ "levelTests": [
+  {
+   "id": "level-v1",
+   "file": "level-v1.json",
+   "version": 1
+  }
+ ],
+ "results": []
 }
