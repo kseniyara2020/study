@@ -1,0 +1,299 @@
+{
+  "type": "study-pack",
+  "version": 1,
+  "id": "pack-001",
+  "title": "Неделя 1: make/do, used to, wish и разговор о макетах",
+  "level": "B1",
+  "created": "2026-10-30",
+  "vocab": [
+    {"id": "g1", "en": "make a decision", "ru": "принять решение", "ex": "We need to make a decision by Friday.", "lvl": "B1", "tag": "general"},
+    {"id": "g2", "en": "do someone a favour", "ru": "оказать услугу, сделать одолжение", "ex": "Could you do me a favour and check this file?", "lvl": "B1", "tag": "general"},
+    {"id": "g3", "en": "make a mistake", "ru": "ошибиться, допустить ошибку", "ex": "Everyone makes mistakes when they start.", "lvl": "A2", "tag": "general"},
+    {"id": "g4", "en": "do research", "ru": "проводить исследование", "ex": "We did some user research before the redesign.", "lvl": "B1", "tag": "general"},
+    {"id": "g5", "en": "make progress", "ru": "продвигаться, делать успехи", "ex": "I'm making real progress with my English.", "lvl": "B1", "tag": "general"},
+    {"id": "g6", "en": "do your best", "ru": "сделать всё возможное", "ex": "Don't worry about the result, just do your best.", "lvl": "B1", "tag": "general"},
+    {"id": "g7", "en": "call off", "ru": "отменить", "ex": "They called off the meeting because the client was ill.", "lvl": "B2", "tag": "general"},
+    {"id": "g8", "en": "put off", "ru": "отложить, откладывать", "ex": "Stop putting off the difficult tasks.", "lvl": "B2", "tag": "general"},
+    {"id": "g9", "en": "come up with", "ru": "придумать, предложить (идею)", "ex": "She came up with a much simpler solution.", "lvl": "B2", "tag": "general"},
+    {"id": "g10", "en": "figure out", "ru": "разобраться, понять", "ex": "I can't figure out why this layout breaks.", "lvl": "B2", "tag": "general"},
+    {"id": "g11", "en": "point out", "ru": "указать, обратить внимание на", "ex": "He pointed out a problem in the checkout flow.", "lvl": "B2", "tag": "general"},
+    {"id": "g12", "en": "carry on", "ru": "продолжать", "ex": "Sorry for interrupting, please carry on.", "lvl": "B1", "tag": "general"},
+    {"id": "g13", "en": "compelling", "ru": "убедительный, захватывающий", "ex": "She made a compelling case for the redesign.", "lvl": "C1", "tag": "general"},
+    {"id": "g14", "en": "compulsory", "ru": "обязательный", "ex": "The training is compulsory for all new employees.", "lvl": "B2", "tag": "general"},
+    {"id": "g15", "en": "sensible", "ru": "разумный, здравый", "ex": "That sounds like a sensible plan.", "lvl": "B1", "tag": "general"},
+    {"id": "g16", "en": "sensitive", "ru": "чувствительный, деликатный", "ex": "Salary is a sensitive topic in our team.", "lvl": "B2", "tag": "general"},
+    {"id": "g17", "en": "eventually", "ru": "в конце концов, со временем", "ex": "We eventually found the cause of the bug.", "lvl": "B1", "tag": "general"},
+    {"id": "g18", "en": "actually", "ru": "на самом деле, вообще-то", "ex": "Actually, the deadline is next week, not tomorrow.", "lvl": "B1", "tag": "general"},
+    {"id": "u1", "en": "stakeholder", "ru": "стейкхолдер, заинтересованное лицо", "ex": "We'll present the concept to the stakeholders on Monday.", "lvl": "C1", "tag": "ux"},
+    {"id": "u2", "en": "wireframe", "ru": "вайрфрейм, схема экрана", "ex": "I sketched a few wireframes for the new dashboard.", "lvl": "pro", "tag": "ux"},
+    {"id": "u3", "en": "pain point", "ru": "болевая точка, проблема пользователя", "ex": "Slow search is the main pain point for our users.", "lvl": "pro", "tag": "ux"},
+    {"id": "u4", "en": "iterate on", "ru": "дорабатывать итерациями", "ex": "Let's test it and iterate on the design.", "lvl": "pro", "tag": "ux"},
+    {"id": "u5", "en": "hand-off", "ru": "передача макетов в разработку", "ex": "The hand-off to developers is planned for Friday.", "lvl": "pro", "tag": "ux"},
+    {"id": "u6", "en": "edge case", "ru": "пограничный, редкий случай", "ex": "What happens in the edge case when the list is empty?", "lvl": "pro", "tag": "ux"},
+    {"id": "u7", "en": "walk someone through", "ru": "показать шаг за шагом, провести по", "ex": "Let me walk you through the new flow.", "lvl": "B2", "tag": "ux"},
+    {"id": "u8", "en": "rationale", "ru": "обоснование, логика решения", "ex": "Can you explain the rationale behind this layout?", "lvl": "C1", "tag": "ux"},
+    {"id": "u9", "en": "trade-off", "ru": "компромисс, выбор с потерями", "ex": "A simpler animation is a good trade-off for the first release.", "lvl": "C1", "tag": "ux"},
+    {"id": "u10", "en": "follow up (on)", "ru": "вернуться к вопросу, напомнить", "ex": "I'm just following up on my last email.", "lvl": "B2", "tag": "ux"},
+    {"id": "u11", "en": "align on", "ru": "согласовать, прийти к общему мнению", "ex": "Let's align on the scope before we start.", "lvl": "pro", "tag": "ux"},
+    {"id": "u12", "en": "deliverable", "ru": "результат работы, то, что сдаём", "ex": "The main deliverable is a clickable prototype.", "lvl": "pro", "tag": "ux"}
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "make или do",
+      "general": [
+        {"id": "p1-d1-g1", "type": "lesson", "title": "make или do", "minutes": 5,
+          "body": [
+            "В русском и «делать», и «сделать» — одно слово. В английском глагол зависит от существительного, и это просто нужно запомнить парами.",
+            "**make** — когда появляется результат: решение, ошибка, план, деньги, прогресс.",
+            "**do** — когда выполняем действие или работу: исследование, задание, одолжение, «всё возможное».",
+            "Если не уверены, учите целую фразу, а не одно слово: не «favour», а «do someone a favour»."
+          ],
+          "examples": [
+            {"en": "We need to make a decision today.", "ru": "Нам нужно принять решение сегодня."},
+            {"en": "I made a mistake in the spacing.", "ru": "Я ошиблась в отступах."},
+            {"en": "Could you do me a favour?", "ru": "Можешь оказать мне услугу?"},
+            {"en": "We did some research first.", "ru": "Сначала мы провели исследование."}
+          ]},
+        {"id": "p1-d1-g2", "type": "cards", "title": "6 сочетаний с make и do", "minutes": 5, "cards": ["g1", "g2", "g3", "g4", "g5", "g6"]},
+        {"id": "p1-d1-g3", "type": "quiz", "title": "make или do: практика", "minutes": 5,
+          "items": [
+            {"q": "It's time to ___ a decision about the logo.", "options": ["do", "make", "take"], "a": 1, "explain": "make a decision — принять решение. Вариант take a decision тоже встречается в британском английском, но make — основной."},
+            {"q": "Could you ___ me a favour and send the file?", "options": ["make", "give", "do"], "a": 2, "explain": "do someone a favour — устойчивое сочетание."},
+            {"q": "Before the redesign we ___ some user research.", "options": ["did", "made", "had"], "a": 0, "explain": "do research — проводить исследование."},
+            {"q": "Don't worry, everyone ___ mistakes.", "options": ["does", "makes", "takes"], "a": 1, "explain": "make a mistake — ошибаться."},
+            {"q": "You're ___ great progress with your English!", "options": ["making", "doing", "having"], "a": 0, "explain": "make progress — продвигаться."},
+            {"q": "Just ___ your best, nobody expects perfection.", "options": ["make", "try", "do"], "a": 2, "explain": "do your best — сделать всё возможное."}
+          ]}
+      ],
+      "ux": [
+        {"id": "p1-d1-u1", "type": "cards", "title": "Слова дизайн-ревью", "minutes": 6, "cards": ["u1", "u2", "u3", "u4", "u5", "u6"]},
+        {"id": "p1-d1-u2", "type": "dialog", "title": "Диалог: ревью вайрфреймов", "minutes": 8,
+          "lines": [
+            {"s": "PM", "t": "Thanks for sharing the wireframes. Before we go further, can you walk me through the main flow?"},
+            {"s": "Designer", "t": "Sure. We start on the dashboard. Users told us the old filters were a real pain point, so I moved them to the top."},
+            {"s": "PM", "t": "Makes sense. What about the edge case when a user has no documents yet?"},
+            {"s": "Designer", "t": "Good point. I haven't designed that state yet. I'll add an empty state and iterate on it before the hand-off."},
+            {"s": "PM", "t": "Great. Let's share it with the stakeholders on Thursday."}
+          ],
+          "items": [
+            {"q": "Why did the designer move the filters to the top?", "options": ["The stakeholders asked for it", "Users found the old filters difficult", "Developers wanted a simpler layout"], "a": 1, "explain": "Users told us the old filters were a real pain point — пользователи жаловались на старые фильтры."},
+            {"q": "What hasn't the designer designed yet?", "options": ["The empty state", "The dashboard", "The filters"], "a": 0, "explain": "I haven't designed that state yet. I'll add an empty state…"},
+            {"q": "When will they show the design to the stakeholders?", "options": ["On Tuesday", "After the hand-off", "On Thursday"], "a": 2, "explain": "Let's share it with the stakeholders on Thursday."}
+          ]}
+      ]
+    },
+    {
+      "day": 2,
+      "title": "used to, be used to, get used to",
+      "general": [
+        {"id": "p1-d2-g1", "type": "lesson", "title": "Три вида used to", "minutes": 6,
+          "body": [
+            "**used to + глагол** — так было раньше, сейчас уже нет: I used to work in an office (раньше работала в офисе).",
+            "**be used to + -ing** — привыкла, для меня это нормально: I'm used to working from home.",
+            "**get used to + -ing** — привыкаю, процесс: I'm getting used to working with a new team.",
+            "Главная ловушка: после be used to и get used to стоит **-ing** или существительное, а не голый глагол. «I'm used to get up» — ошибка."
+          ],
+          "examples": [
+            {"en": "I used to draw by hand.", "ru": "Раньше я рисовала от руки."},
+            {"en": "I'm used to getting feedback.", "ru": "Я привыкла получать обратную связь."},
+            {"en": "You'll get used to it.", "ru": "Ты привыкнешь."},
+            {"en": "We didn't use to have design reviews.", "ru": "Раньше у нас не было дизайн-ревью."}
+          ]},
+        {"id": "p1-d2-g2", "type": "gap", "title": "Впишите правильную форму", "minutes": 6,
+          "items": [
+            {"q": "When I was a child, I ___ (play) the piano.", "a": ["used to play"], "explain": "Привычка в прошлом, которой больше нет: used to + глагол."},
+            {"q": "She is used to ___ (work) late.", "a": ["working"], "explain": "be used to + -ing."},
+            {"q": "I'm not used to ___ (speak) English at work.", "a": ["speaking"], "explain": "be used to + -ing, отрицание делаем через not."},
+            {"q": "Don't worry, you'll get used to ___ (use) Figma variables.", "a": ["using"], "explain": "get used to + -ing."},
+            {"q": "We ___ (not / have) design reviews, but now we have them every week.", "a": ["didn't use to have", "did not use to have", "never used to have"], "explain": "Отрицание: didn't use to (без -d после didn't)."},
+            {"q": "It took me a month to get used to ___ (wake) up at 6.", "a": ["waking"], "explain": "get used to + -ing."}
+          ]},
+        {"id": "p1-d2-g3", "type": "dictation", "title": "Диктант: used to", "minutes": 4,
+          "items": [
+            {"say": "I'm used to working from home.", "a": ["I'm used to working from home", "I am used to working from home"]},
+            {"say": "We used to meet every Monday.", "a": ["We used to meet every Monday"]},
+            {"say": "You'll get used to it soon.", "a": ["You'll get used to it soon", "You will get used to it soon"]}
+          ]}
+      ],
+      "ux": [
+        {"id": "p1-d2-u1", "type": "lesson", "title": "Как презентовать макет", "minutes": 5,
+          "body": [
+            "Хорошая презентация макета звучит как рассказ: цель → что сделано → почему так → где нужна помощь.",
+            "Ниже фразы на каждый шаг. Прослушайте их и повторите вслух: интонацию лучше ставить сразу."
+          ],
+          "examples": [
+            {"en": "Let me walk you through the new checkout flow.", "ru": "Давайте я покажу новый сценарий оплаты шаг за шагом."},
+            {"en": "The main goal here is to reduce drop-offs.", "ru": "Главная цель — сократить отток."},
+            {"en": "I went with cards because they scan better on mobile.", "ru": "Я выбрала карточки, потому что на мобильном их легче просматривать."},
+            {"en": "One trade-off is that we show less data at once.", "ru": "Компромисс в том, что одновременно видно меньше данных."},
+            {"en": "I'd love your feedback on the empty states.", "ru": "Мне очень нужен ваш фидбэк по пустым состояниям."}
+          ]},
+        {"id": "p1-d2-u2", "type": "quiz", "title": "Какая фраза подходит?", "minutes": 4,
+          "items": [
+            {"q": "Вы начинаете показ макета на созвоне.", "options": ["Let me walk you through the flow.", "Let me walk you the flow.", "Let me go you through the flow."], "a": 0, "explain": "walk someone through something — провести кого-то по чему-то."},
+            {"q": "Вы объясняете, почему выбрали вкладки, а не меню.", "options": ["I chose tabs, because reason.", "I went with tabs because they're faster to reach.", "I went to tabs because faster."], "a": 1, "explain": "go with — выбрать вариант. После because нужна полная причина."},
+            {"q": "Вы честно называете минус решения.", "options": ["One trade-off is that the page gets longer.", "One trade is that the page longer.", "The page is bad, sorry."], "a": 0, "explain": "trade-off — компромисс: что мы теряем ради выигрыша."},
+            {"q": "Вы просите фидбэк по конкретной части.", "options": ["Give me feedbacks.", "Any feedbacks?", "I'd love your feedback on the onboarding."], "a": 2, "explain": "feedback неисчисляемое: без -s и без a. Конкретная просьба работает лучше общей."}
+          ]},
+        {"id": "p1-d2-u3", "type": "write", "title": "Сообщение в Slack", "minutes": 6,
+          "prompt": "Напишите продакт-менеджеру в Slack: макеты нового онбординга готовы, вы прикрепили ссылку и просите фидбэк до четверга. Отдельно упомяните, что пустые состояния ещё в работе.",
+          "hint": "Используйте: walk you through, I'd love your feedback on, by Thursday, still working on.",
+          "minWords": 30}
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Фразовые глаголы для работы",
+      "general": [
+        {"id": "p1-d3-g1", "type": "cards", "title": "6 фразовых глаголов", "minutes": 5, "cards": ["g7", "g8", "g9", "g10", "g11", "g12"]},
+        {"id": "p1-d3-g2", "type": "quiz", "title": "Фразовые глаголы: практика", "minutes": 5,
+          "items": [
+            {"q": "The client was ill, so we ___ the meeting.", "options": ["called off", "turned down", "took off"], "a": 0, "explain": "call off — отменить. turn down — отклонить предложение, take off — снять, взлететь."},
+            {"q": "I keep ___ my portfolio update. I should start today.", "options": ["putting on", "putting off", "putting out"], "a": 1, "explain": "put off — откладывать."},
+            {"q": "Our team ___ a great name for the new feature.", "options": ["came up with", "came over", "came across"], "a": 0, "explain": "come up with — придумать. come across — случайно наткнуться."},
+            {"q": "I can't ___ why the grid breaks on tablets.", "options": ["find up", "figure out", "point out"], "a": 1, "explain": "figure out — разобраться."},
+            {"q": "Thanks for ___ that typo in the header!", "options": ["pointing out", "calling off", "carrying on"], "a": 0, "explain": "point out — указать на что-то."},
+            {"q": "Sorry for interrupting. Please ___.", "options": ["put off", "carry on", "come up"], "a": 1, "explain": "carry on — продолжайте."}
+          ]},
+        {"id": "p1-d3-g3", "type": "quiz", "title": "Аудирование: что имелось в виду?", "minutes": 4,
+          "items": [
+            {"say": "We had to put off the launch until March.", "q": "Что случилось с запуском?", "options": ["Его отменили", "Его отложили до марта", "Его провели в марте досрочно"], "a": 1, "explain": "put off — отложить."},
+            {"say": "Can you figure out why the button doesn't work?", "q": "О чём просят?", "options": ["Разобраться, почему не работает кнопка", "Убрать кнопку", "Нарисовать новую кнопку"], "a": 0, "explain": "figure out — разобраться."},
+            {"say": "She came up with a much simpler flow.", "q": "Что сделала коллега?", "options": ["Нашла ошибку в сценарии", "Отказалась от сценария", "Придумала более простой сценарий"], "a": 2, "explain": "come up with — придумать."},
+            {"say": "Sorry to interrupt, please carry on.", "q": "Что просит говорящий?", "options": ["Подождать", "Продолжать", "Повторить"], "a": 1, "explain": "carry on — продолжать."}
+          ]}
+      ],
+      "ux": [
+        {"id": "p1-d3-u1", "type": "lesson", "title": "Давать и принимать фидбэк", "minutes": 5,
+          "body": [
+            "На ревью важно звучать уверенно, но не резко. В английском критику смягчают вопросами и фразами «I'm not sure about…».",
+            "Когда критикуют вас, сначала признайте мысль, потом уточните, потом ответьте или возьмите время."
+          ],
+          "examples": [
+            {"en": "I like how clear the navigation is.", "ru": "Мне нравится, насколько понятная навигация."},
+            {"en": "Have you considered a bottom sheet here?", "ru": "Вы не думали сделать здесь нижнюю шторку?"},
+            {"en": "I'm not sure about the colour of the main button.", "ru": "Я не уверена насчёт цвета главной кнопки."},
+            {"en": "That's a fair point.", "ru": "Справедливое замечание."},
+            {"en": "Could you say more about that?", "ru": "Можете рассказать подробнее?"},
+            {"en": "Let me think about it and follow up tomorrow.", "ru": "Дайте мне подумать, вернусь с ответом завтра."}
+          ]},
+        {"id": "p1-d3-u2", "type": "dialog", "title": "Диалог: разработчик против анимаций", "minutes": 8,
+          "lines": [
+            {"s": "Developer", "t": "I've looked at the new onboarding. The animations look great, but they'll take about two weeks to build."},
+            {"s": "Designer", "t": "That's a fair point. Could you say more about which part is the hardest?"},
+            {"s": "Developer", "t": "Mostly the card transitions. What if we use a simple fade for the first release?"},
+            {"s": "Designer", "t": "I see. The rationale for the transitions was to show progress, but a progress bar could do the same job. Let me think about it and follow up tomorrow."}
+          ],
+          "items": [
+            {"q": "What is the developer's concern?", "options": ["The animations look bad", "The animations will take a long time to build", "The onboarding is too long"], "a": 1, "explain": "…they'll take about two weeks to build."},
+            {"q": "What does the developer suggest?", "options": ["A simple fade for the first release", "Removing the onboarding", "A progress bar"], "a": 0, "explain": "What if we use a simple fade for the first release?"},
+            {"q": "What will the designer do?", "options": ["Agree immediately", "Ask the PM", "Think and reply tomorrow"], "a": 2, "explain": "Let me think about it and follow up tomorrow."}
+          ]}
+      ]
+    },
+    {
+      "day": 4,
+      "title": "wish и деловые письма",
+      "general": [
+        {"id": "p1-d4-g1", "type": "lesson", "title": "wish: сожаление о настоящем и прошлом", "minutes": 6,
+          "body": [
+            "**wish + Past Simple** — жалею о том, что сейчас: I wish I had more time (жаль, что у меня нет времени). С to be часто were: I wish it were Friday.",
+            "**wish + Past Perfect** — жалею о прошлом: I wish I had studied harder (жаль, что я не училась усерднее).",
+            "**wish + could** — не хватает умения сейчас: I wish I could speak fluently.",
+            "**If only** — то же самое, только эмоциональнее: If only we had tested it earlier!",
+            "Подсказка: смотрите на маркер времени. yesterday, last year, at school → Past Perfect."
+          ],
+          "examples": [
+            {"en": "I wish I had more time for English.", "ru": "Жаль, что у меня мало времени на английский."},
+            {"en": "I wish I hadn't said that.", "ru": "Зря я это сказала."},
+            {"en": "I wish I could draw like her.", "ru": "Хотела бы я рисовать, как она."},
+            {"en": "If only we had tested it with users!", "ru": "Если бы мы только протестировали это на пользователях!"}
+          ]},
+        {"id": "p1-d4-g2", "type": "gap", "title": "Впишите форму после wish", "minutes": 6,
+          "items": [
+            {"q": "I wish I ___ (have) more time now.", "a": ["had"], "explain": "Настоящее → Past Simple."},
+            {"q": "I wish I ___ (study) harder at school.", "a": ["had studied"], "explain": "Прошлое (at school) → Past Perfect."},
+            {"q": "She wishes she ___ (not / say) that yesterday.", "a": ["hadn't said", "had not said"], "explain": "yesterday → Past Perfect, отрицание hadn't."},
+            {"q": "I wish I ___ (can) speak English fluently.", "a": ["could"], "explain": "can → could после wish."},
+            {"q": "If only we ___ (test) the design before the launch.", "a": ["had tested"], "explain": "Сожаление о прошлом → Past Perfect."},
+            {"q": "I wish it ___ (not / be) so cold today.", "a": ["wasn't", "weren't", "was not", "were not"], "explain": "Настоящее → Past Simple. Weren't — более формальный вариант."}
+          ]},
+        {"id": "p1-d4-g3", "type": "write", "title": "Три сожаления", "minutes": 4,
+          "prompt": "Напишите 3 предложения о себе: одно с wish + Past Simple (о настоящем) и два с wish + Past Perfect (о прошлом).",
+          "hint": "Например: I wish I had… / I wish I had learnt… / If only I hadn't…",
+          "minWords": 15}
+      ],
+      "ux": [
+        {"id": "p1-d4-u1", "type": "cards", "title": "Слова для созвонов и писем", "minutes": 5, "cards": ["u7", "u8", "u9", "u10", "u11", "u12"]},
+        {"id": "p1-d4-u2", "type": "quiz", "title": "Фразы для писем клиенту", "minutes": 4,
+          "items": [
+            {"q": "Клиент не ответил на прошлое письмо. Вы мягко напоминаете.", "options": ["Why don't you answer?", "Just following up on my email from Monday.", "I wait your answer."], "a": 1, "explain": "follow up on — вежливо вернуться к вопросу."},
+            {"q": "Вы хотите договориться о составе работ.", "options": ["Could we align on the scope this week?", "We must agree the scope now.", "Scope, please."], "a": 0, "explain": "align on — прийти к общему пониманию."},
+            {"q": "Вы прикладываете файл.", "options": ["In attach is the file.", "I attached you the file.", "I've attached the updated mockups."], "a": 2, "explain": "I've attached… — естественно и коротко. Please find attached звучит формальнее, но тоже верно."},
+            {"q": "Вы заканчиваете письмо.", "options": ["Waiting for answer.", "Looking forward to hearing from you.", "Answer me soon."], "a": 1, "explain": "Стандартная вежливая концовка."}
+          ]},
+        {"id": "p1-d4-u3", "type": "write", "title": "Письмо-напоминание клиенту", "minutes": 7,
+          "prompt": "Клиент неделю назад обещал прислать тексты для сайта, и без них вы не можете закончить макеты. Напишите вежливое письмо-напоминание: напомните о текстах, объясните, что от них зависит, и предложите созвон, чтобы согласовать сроки.",
+          "hint": "Используйте: following up on, deliverable, align on, looking forward to hearing from you.",
+          "minWords": 40}
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Слова-двойники и собеседование",
+      "general": [
+        {"id": "p1-d5-g1", "type": "cards", "title": "Слова-двойники B2", "minutes": 5, "cards": ["g13", "g14", "g15", "g16", "g17", "g18"]},
+        {"id": "p1-d5-g2", "type": "quiz", "title": "Не перепутайте", "minutes": 4,
+          "items": [
+            {"q": "Her argument was so ___ that everyone agreed.", "options": ["compulsory", "compelling", "complimentary"], "a": 1, "explain": "compelling — убедительный."},
+            {"q": "English classes are ___ for all students.", "options": ["compulsory", "compelling", "sensible"], "a": 0, "explain": "compulsory — обязательный."},
+            {"q": "Buying a cheaper laptop was a ___ decision.", "options": ["sensitive", "sensible", "eventual"], "a": 1, "explain": "sensible — разумный. Ложный друг: не «сенситивный»."},
+            {"q": "Be careful, it's a ___ topic for him.", "options": ["sensible", "actual", "sensitive"], "a": 2, "explain": "sensitive — деликатный, болезненный."},
+            {"q": "We ___ found the bug after three days.", "options": ["eventually", "actually", "possibly"], "a": 0, "explain": "eventually — в конце концов. Ложный друг: не «возможно»."},
+            {"q": "___, the meeting is tomorrow, not today.", "options": ["Eventually", "Actually", "Actual"], "a": 1, "explain": "actually — на самом деле. Ложный друг: не «актуально»."}
+          ]},
+        {"id": "p1-d5-g3", "type": "quiz", "title": "Мини-проверка недели", "minutes": 5,
+          "items": [
+            {"q": "I'm sorry, I ___ a mistake in the report.", "options": ["did", "made", "had"], "a": 1, "explain": "make a mistake."},
+            {"q": "I'm used to ___ in English now.", "options": ["write", "wrote", "writing"], "a": 2, "explain": "be used to + -ing."},
+            {"q": "I wish I ___ that job offer last year.", "options": ["accepted", "had accepted", "would accept"], "a": 1, "explain": "last year → wish + Past Perfect."},
+            {"q": "The conference was ___ because of the storm.", "options": ["called off", "put on", "figured out"], "a": 0, "explain": "call off — отменить."},
+            {"q": "We ___ have remote days, but now we do.", "options": ["didn't use to", "weren't used to", "didn't used to"], "a": 0, "explain": "Привычка в прошлом: didn't use to + глагол."},
+            {"q": "Can you ___ me a favour?", "options": ["make", "do", "give"], "a": 1, "explain": "do someone a favour."}
+          ]}
+      ],
+      "ux": [
+        {"id": "p1-d5-u1", "type": "lesson", "title": "Tell me about yourself", "minutes": 5,
+          "body": [
+            "Самый частый первый вопрос на собеседовании. Удобная схема: **настоящее → прошлое → будущее**, около минуты.",
+            "Настоящее: кто вы и чем занимаетесь сейчас. Прошлое: 1–2 проекта с результатом. Будущее: почему вам интересна именно эта роль.",
+            "Говорите глаголами действия: I led, I designed, I tested, I improved. И давайте цифры, если они есть."
+          ],
+          "examples": [
+            {"en": "I'm a UX/UI designer with a focus on dashboards and web products.", "ru": "Я UX/UI дизайнер, специализируюсь на дашбордах и веб-продуктах."},
+            {"en": "Recently I designed a dashboard that collects messages from several channels.", "ru": "Недавно я спроектировала дашборд, который собирает сообщения из нескольких каналов."},
+            {"en": "I'm looking for a team where research is part of the process.", "ru": "Я ищу команду, где исследования — часть процесса."}
+          ]},
+        {"id": "p1-d5-u2", "type": "dialog", "title": "Диалог: собеседование", "minutes": 7,
+          "lines": [
+            {"s": "Interviewer", "t": "So, can you tell me a bit about your design process?"},
+            {"s": "Candidate", "t": "Sure. I usually start with research. I talk to users and stakeholders to understand their pain points."},
+            {"s": "Interviewer", "t": "And what happens after that?"},
+            {"s": "Candidate", "t": "Then I make low-fidelity wireframes and test them early. It's much cheaper to change a wireframe than a finished screen."},
+            {"s": "Interviewer", "t": "How do you handle disagreements with developers?"},
+            {"s": "Candidate", "t": "I explain my rationale and listen to theirs. Usually we find a trade-off that works for both the users and the team."}
+          ],
+          "items": [
+            {"q": "How does the candidate start a project?", "options": ["With high-fidelity mockups", "With research", "With a meeting with developers"], "a": 1, "explain": "I usually start with research."},
+            {"q": "Why does she test wireframes early?", "options": ["Users prefer wireframes", "Stakeholders ask for it", "Changes are cheaper at that stage"], "a": 2, "explain": "It's much cheaper to change a wireframe than a finished screen."},
+            {"q": "How does she handle disagreements?", "options": ["She explains her reasons and looks for a compromise", "She asks her manager to decide", "She always follows the developers"], "a": 0, "explain": "I explain my rationale… we find a trade-off."}
+          ]},
+        {"id": "p1-d5-u3", "type": "write", "title": "Ваш ответ: Tell me about yourself", "minutes": 8,
+          "prompt": "Напишите свой ответ на «Tell me about yourself» для собеседования на позицию UX/UI дизайнера: 60–80 слов, по схеме настоящее → прошлое → будущее. Пришлите его в экспорте — проверю по критериям CEFR и подскажу, как звучать естественнее.",
+          "hint": "I'm a… / Recently I… / I'm looking for…",
+          "minWords": 60}
+      ]
+    }
+  ]
+}

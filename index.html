@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-title" content="Учёба">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Мой учебный план</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+/* Layout: iOS grouped lists on a grouped background; bottom tab bar on phone, sidebar from 900px (macOS). */
+:root{
+  --bg:#F2F2F7; --card:#FFFFFF; --card2:#F2F2F7; --side:#EBEBF0;
+  --label:#000000; --label2:rgba(60,60,67,.6); --label3:rgba(60,60,67,.3);
+  --sep:rgba(60,60,67,.29); --fill:rgba(120,120,128,.12); --fill2:rgba(120,120,128,.2);
+  --bar:rgba(249,249,249,.86);
+  --accent:#5856D6; --accent-soft:rgba(88,86,214,.12);
+  --blue:#007AFF; --orange:#FF9500; --pink:#FF2D55; --green:#34C759; --red:#FF3B30; --teal:#30B0C7;
+  --green-soft:rgba(52,199,89,.14); --red-soft:rgba(255,59,48,.12);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#000000; --card:#1C1C1E; --card2:#2C2C2E; --side:#161618;
+  --label:#FFFFFF; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3);
+  --sep:rgba(84,84,88,.65); --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.32);
+  --bar:rgba(22,22,24,.86);
+  --accent:#7D7AFF; --accent-soft:rgba(125,122,255,.18);
+  --blue:#0A84FF; --orange:#FF9F0A; --pink:#FF375F; --green:#30D158; --red:#FF453A; --teal:#40C8E0;
+  --green-soft:rgba(48,209,88,.18); --red-soft:rgba(255,69,58,.18);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#000000; --card:#1C1C1E; --card2:#2C2C2E; --side:#161618;
+  --label:#FFFFFF; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3);
+  --sep:rgba(84,84,88,.65); --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.32);
+  --bar:rgba(22,22,24,.86);
+  --accent:#7D7AFF; --accent-soft:rgba(125,122,255,.18);
+  --blue:#0A84FF; --orange:#FF9F0A; --pink:#FF375F; --green:#30D158; --red:#FF453A; --teal:#40C8E0;
+  --green-soft:rgba(48,209,88,.18); --red-soft:rgba(255,69,58,.18);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--label);font:17px/22px var(--font);letter-spacing:-.41px;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bar)}
+button{font:inherit;color:inherit;letter-spacing:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{flex:none}
+.app{display:flex;min-height:100vh}
+main{flex:1;min-width:0}
+
+/* Sidebar (Mac) */
+.sidebar{display:none}
+@media (min-width:900px){
+  .sidebar{display:flex;flex-direction:column;gap:2px;width:248px;flex:none;position:sticky;top:0;height:100vh;
+    background:var(--side);border-right:.5px solid var(--sep);padding:20px 10px 10px max(10px,env(safe-area-inset-left,0px))}
+  .side-h{font-size:13px;font-weight:600;color:var(--label2);padding:4px 10px 8px}
+  .side-i{display:flex;align-items:center;gap:10px;padding:7px 10px;border:0;background:none;border-radius:8px;text-align:left;font-size:15px;cursor:pointer;color:var(--label)}
+  .side-i svg{color:var(--accent);width:20px;height:20px}
+  .side-i:hover{background:var(--fill)}
+  .side-i.on{background:var(--accent);color:#fff}
+  .side-i.on svg{color:#fff}
+  .tabbar{display:none!important}
+  .content{padding-bottom:48px!important}
+}
+
+/* Nav bar + large title */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:44px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));border-bottom:.5px solid transparent;transition:background .2s,border-color .2s}
+.nav.scrolled,.nav.solid{background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom-color:var(--sep)}
+.nav-t{font-weight:600;font-size:17px;opacity:0;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw}
+.nav.scrolled .nav-t,.nav.solid .nav-t{opacity:1}
+.nav-l{justify-self:start}.nav-r{justify-self:end;display:flex;gap:4px}
+.nav-btn{display:flex;align-items:center;gap:2px;min-height:44px;min-width:44px;padding:0 8px;border:0;background:none;color:var(--accent);cursor:pointer;font-size:17px}
+.nav-btn svg{width:22px;height:22px}
+.content{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 calc(96px + env(safe-area-inset-bottom,0px))}
+.large{font-size:34px;line-height:41px;font-weight:700;letter-spacing:.37px;margin:2px 0 2px;text-wrap:balance}
+.sub{color:var(--label2);font-size:15px;line-height:20px;margin:0 0 18px;letter-spacing:-.24px}
+.sub:first-letter{text-transform:uppercase}
+
+/* Grouped lists */
+.ghead{font-size:13px;line-height:18px;text-transform:uppercase;letter-spacing:.2px;color:var(--label2);margin:26px 16px 7px;display:flex;align-items:center;gap:8px}
+.ghead:first-child{margin-top:8px}
+.gfoot{font-size:13px;line-height:18px;color:var(--label2);margin:7px 16px 0;letter-spacing:-.08px}
+.group{background:var(--card);border-radius:10px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:11px 16px;background:none;border:0;text-align:left;cursor:pointer;position:relative;color:var(--label)}
+button.row:active,a.row:active{background:var(--fill)}
+.row+.row::before{content:"";position:absolute;top:0;left:var(--inset,16px);right:0;height:.5px;background:var(--sep)}
+.group.icons .row{--inset:60px}
+.row-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.row-title{font-size:17px;line-height:22px}
+.row-sub{font-size:13px;line-height:18px;color:var(--label2);letter-spacing:-.08px}
+.row-val{color:var(--label2);font-size:17px;white-space:nowrap}
+.row .chev{color:var(--label3);width:14px;height:14px}
+.row.static{cursor:default}
+.tile{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;color:#fff;flex:none}
+.tile svg{width:18px;height:18px}
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--label3);display:grid;place-items:center;flex:none;color:#fff}
+.check.on{background:var(--green);border-color:var(--green)}
+.check svg{width:14px;height:14px}
+.pill{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:11px;font-size:13px;font-weight:600;letter-spacing:-.08px;background:var(--fill);color:var(--label2);white-space:nowrap}
+.pill.lvl{background:var(--accent-soft);color:var(--accent)}
+.pill.good{background:var(--green-soft);color:var(--green)}
+
+/* Today header strip */
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{background:var(--card);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.stat b{font-size:22px;line-height:26px;font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.stat b svg{width:18px;height:18px;color:var(--orange)}
+.stat span{font-size:13px;color:var(--label2);line-height:16px}
+.daybar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 0 0;background:var(--card);border-radius:10px;padding:4px}
+.daybar .nav-btn{min-width:44px;justify-content:center}
+.daybar .nav-btn:disabled{color:var(--label3);cursor:default}
+.daybar-t{text-align:center;min-width:0}
+.daybar-t b{display:block;font-size:15px;font-weight:600}
+.daybar-t span{display:block;font-size:13px;color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:14px 16px;border:0;border-radius:12px;background:var(--accent);color:#fff;text-align:left;cursor:pointer}
+.banner .row-sub{color:rgba(255,255,255,.8)}
+.banner svg.chev{color:rgba(255,255,255,.7);width:14px;height:14px}
+
+/* Segmented control */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--fill);border-radius:9px;padding:2px;margin:4px 0 4px}
+.seg button{border:0;background:none;border-radius:7px;height:30px;font-size:13px;font-weight:500;cursor:pointer;color:var(--label)}
+.seg button.on{background:var(--card);box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);font-weight:600}
+:root[data-theme="dark"] .seg button.on{background:var(--card2)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg button.on{background:var(--card2)}}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;padding:0 20px;border:0;border-radius:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.sec{background:var(--accent-soft);color:var(--accent)}
+.btn.plain{background:none;color:var(--accent);font-weight:400;min-height:44px}
+.btn.danger{background:var(--red-soft);color:var(--red)}
+.btns{display:flex;gap:10px;margin-top:16px}
+.btns .btn{flex:1}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+
+/* Task screens */
+.tmeta{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.progress{height:4px;background:var(--fill);border-radius:2px;overflow:hidden;margin:4px 0 18px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.qcount{font-size:13px;color:var(--label2);margin-top:8px}
+.panel{background:var(--card);border-radius:12px;padding:16px}
+.q{font-size:20px;line-height:26px;font-weight:600;letter-spacing:.38px;margin:0 0 16px;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:50px;padding:12px 16px;border-radius:12px;border:0;background:var(--card);text-align:left;cursor:pointer;font-size:17px}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--green-soft);color:var(--green);font-weight:600}
+.opt.wrong{background:var(--red-soft);color:var(--red)}
+.opt.dim{opacity:.5}
+.fb{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--card);font-size:15px;line-height:20px;letter-spacing:-.24px}
+.fb b{display:block;margin-bottom:4px;font-size:17px}
+.fb.ok b{color:var(--green)}.fb.no b{color:var(--red)}
+.field{width:100%;min-height:50px;padding:12px 16px;border-radius:12px;border:0;background:var(--card);color:var(--label);font:17px/22px var(--font);letter-spacing:-.41px}
+textarea.field{min-height:180px;resize:vertical}
+.field::placeholder{color:var(--label3)}
+.audio{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:16px}
+.play{width:48px;height:48px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.play svg{width:20px;height:20px}
+.play.small{width:32px;height:32px;background:var(--accent-soft);color:var(--accent)}
+.play.small svg{width:14px;height:14px}
+.audio-t{flex:1;min-width:0}
+.audio-t b{display:block;font-size:15px;font-weight:600}
+.audio-t span{font-size:13px;color:var(--label2)}
+.chip{border:0;background:var(--fill);color:var(--label);height:32px;padding:0 12px;border-radius:16px;font-size:15px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--accent-soft);color:var(--accent)}
+.transcript{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.line{display:flex;gap:10px;font-size:15px;line-height:20px;letter-spacing:-.24px}
+.line b{flex:none;width:86px;color:var(--label2);font-weight:500;font-size:13px;padding-top:1px}
+.lesson p{margin:0 0 12px;font-size:17px;line-height:24px}
+.ex{display:flex;align-items:center;gap:12px}
+.ex .row-title{font-size:16px}
+.flash{background:var(--card);border-radius:16px;min-height:260px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;border:0;width:100%;cursor:pointer}
+.flash .en{font-size:28px;line-height:34px;font-weight:700;letter-spacing:.36px;text-wrap:balance}
+.flash .ru{font-size:19px;line-height:24px;color:var(--label)}
+.flash .exs{font-size:15px;line-height:20px;color:var(--label2);font-style:italic;max-width:34ch}
+.flash .tap{font-size:13px;color:var(--label3)}
+.wc{font-size:13px;color:var(--label2);margin-top:6px;font-variant-numeric:tabular-nums}
+.hint{font-size:15px;color:var(--label2);line-height:20px;margin:0 0 12px}
+.prompt{font-size:17px;line-height:24px;margin:0 0 10px}
+.summary{text-align:center;padding:28px 16px}
+.summary .big{font-size:48px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.4px}
+.summary p{color:var(--label2);margin:6px 0 0}
+
+/* Progress screen */
+.cefr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:14px 0 6px}
+.cefr div{height:30px;border-radius:6px;background:var(--fill);display:grid;place-items:center;font-size:13px;font-weight:600;color:var(--label2)}
+.cefr div.cur{background:var(--accent);color:#fff}
+.cefr div.goal{background:var(--accent-soft);color:var(--accent);outline:1.5px dashed var(--accent);outline-offset:-1.5px}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--label2);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.days14{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;margin-top:12px}
+.days14 i{aspect-ratio:1;max-width:100%;border-radius:4px;background:var(--fill)}
+.days14 i.a1{background:color-mix(in srgb,var(--green) 45%,transparent)}
+.days14 i.a2{background:var(--green)}
+.days14 i.today{outline:1.5px solid var(--label2);outline-offset:1px}
+
+/* Media */
+.poster{width:56px;height:76px;border-radius:8px;flex:none;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-.3px;line-height:16px;text-align:center;
+  background:linear-gradient(160deg,#1E9E5A,#0B5B34)}
+.epi{font-family:var(--mono);font-size:13px;color:var(--label2)}
+.empty{text-align:center;padding:36px 20px;color:var(--label2);font-size:15px;line-height:20px}
+.empty b{display:block;color:var(--label);font-size:17px;margin-bottom:6px}
+.empty svg{width:44px;height:44px;color:var(--label3);margin-bottom:10px}
+.del{border:0;background:none;color:var(--red);font-size:15px;padding:6px;cursor:pointer;min-width:44px;min-height:44px}
+
+/* Settings controls */
+.row select,.row input[type=time]{border:0;background:var(--fill);border-radius:8px;padding:6px 10px;color:var(--label);font:15px var(--font);max-width:52vw}
+.row input[type=range]{width:120px;accent-color:var(--accent)}
+.row input.inline{flex:1;min-width:0;border:0;background:none;color:var(--label);font:17px var(--font);text-align:right;padding:0}
+.row input.inline::placeholder{color:var(--label3)}
+
+/* Tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border-top:.5px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:49px;border:0;background:none;color:var(--label3);font-size:10px;font-weight:500;letter-spacing:.1px;cursor:pointer}
+.tab svg{width:25px;height:25px}
+.tab.on{color:var(--accent)}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+.sheet{width:100%;max-width:560px;max-height:92vh;overflow:auto;background:var(--bg);border-radius:12px 12px 0 0;
+  padding:8px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:up .28s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:700px){.scrim{align-items:center}.sheet{border-radius:14px;max-height:86vh}}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--label3);margin:0 auto 6px}
+.sheet-h{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:44px;margin-bottom:8px}
+.sheet-h b{font-size:17px;font-weight:600}
+.sheet-h .nav-btn:last-child{justify-self:end;font-weight:600}
+.sheet-h .nav-btn:disabled{color:var(--label3)}
+.trbox{background:var(--card);border-radius:12px;padding:14px 16px;margin-top:10px;font-size:15px;line-height:20px}
+.trbox .ru{font-size:17px;font-weight:600;margin-bottom:4px}
+.trbox a{color:var(--accent);text-decoration:none}
+.stack{display:flex;flex-direction:column;gap:10px}
+.lbl{font-size:13px;color:var(--label2);margin:4px 16px -4px}
+.code{width:100%;min-height:200px;font:12px/16px var(--mono);border:0;border-radius:12px;background:var(--card);color:var(--label);padding:12px}
+.toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--label);color:var(--bg);padding:10px 16px;border-radius:20px;font-size:15px;max-width:calc(100% - 32px);animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <nav class="sidebar" id="sidebar" aria-label="Разделы"></nav>
+  <main id="main"></main>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
+<div id="sheet-root"></div>
+<div id="toast-root"></div>
+
+<script type="application/json" id="seed-pack">{"type": "study-pack", "version": 1, "id": "pack-001", "title": "Неделя 1: make/do, used to, wish и разговор о макетах", "level": "B1", "created": "2026-10-30", "vocab": [{"id": "g1", "en": "make a decision", "ru": "принять решение", "ex": "We need to make a decision by Friday.", "lvl": "B1", "tag": "general"}, {"id": "g2", "en": "do someone a favour", "ru": "оказать услугу, сделать одолжение", "ex": "Could you do me a favour and check this file?", "lvl": "B1", "tag": "general"}, {"id": "g3", "en": "make a mistake", "ru": "ошибиться, допустить ошибку", "ex": "Everyone makes mistakes when they start.", "lvl": "A2", "tag": "general"}, {"id": "g4", "en": "do research", "ru": "проводить исследование", "ex": "We did some user research before the redesign.", "lvl": "B1", "tag": "general"}, {"id": "g5", "en": "make progress", "ru": "продвигаться, делать успехи", "ex": "I'm making real progress with my English.", "lvl": "B1", "tag": "general"}, {"id": "g6", "en": "do your best", "ru": "сделать всё возможное", "ex": "Don't worry about the result, just do your best.", "lvl": "B1", "tag": "general"}, {"id": "g7", "en": "call off", "ru": "отменить", "ex": "They called off the meeting because the client was ill.", "lvl": "B2", "tag": "general"}, {"id": "g8", "en": "put off", "ru": "отложить, откладывать", "ex": "Stop putting off the difficult tasks.", "lvl": "B2", "tag": "general"}, {"id": "g9", "en": "come up with", "ru": "придумать, предложить (идею)", "ex": "She came up with a much simpler solution.", "lvl": "B2", "tag": "general"}, {"id": "g10", "en": "figure out", "ru": "разобраться, понять", "ex": "I can't figure out why this layout breaks.", "lvl": "B2", "tag": "general"}, {"id": "g11", "en": "point out", "ru": "указать, обратить внимание на", "ex": "He pointed out a problem in the checkout flow.", "lvl": "B2", "tag": "general"}, {"id": "g12", "en": "carry on", "ru": "продолжать", "ex": "Sorry for interrupting, please carry on.", "lvl": "B1", "tag": "general"}, {"id": "g13", "en": "compelling", "ru": "убедительный, захватывающий", "ex": "She made a compelling case for the redesign.", "lvl": "C1", "tag": "general"}, {"id": "g14", "en": "compulsory", "ru": "обязательный", "ex": "The training is compulsory for all new employees.", "lvl": "B2", "tag": "general"}, {"id": "g15", "en": "sensible", "ru": "разумный, здравый", "ex": "That sounds like a sensible plan.", "lvl": "B1", "tag": "general"}, {"id": "g16", "en": "sensitive", "ru": "чувствительный, деликатный", "ex": "Salary is a sensitive topic in our team.", "lvl": "B2", "tag": "general"}, {"id": "g17", "en": "eventually", "ru": "в конце концов, со временем", "ex": "We eventually found the cause of the bug.", "lvl": "B1", "tag": "general"}, {"id": "g18", "en": "actually", "ru": "на самом деле, вообще-то", "ex": "Actually, the deadline is next week, not tomorrow.", "lvl": "B1", "tag": "general"}, {"id": "u1", "en": "stakeholder", "ru": "стейкхолдер, заинтересованное лицо", "ex": "We'll present the concept to the stakeholders on Monday.", "lvl": "C1", "tag": "ux"}, {"id": "u2", "en": "wireframe", "ru": "вайрфрейм, схема экрана", "ex": "I sketched a few wireframes for the new dashboard.", "lvl": "pro", "tag": "ux"}, {"id": "u3", "en": "pain point", "ru": "болевая точка, проблема пользователя", "ex": "Slow search is the main pain point for our users.", "lvl": "pro", "tag": "ux"}, {"id": "u4", "en": "iterate on", "ru": "дорабатывать итерациями", "ex": "Let's test it and iterate on the design.", "lvl": "pro", "tag": "ux"}, {"id": "u5", "en": "hand-off", "ru": "передача макетов в разработку", "ex": "The hand-off to developers is planned for Friday.", "lvl": "pro", "tag": "ux"}, {"id": "u6", "en": "edge case", "ru": "пограничный, редкий случай", "ex": "What happens in the edge case when the list is empty?", "lvl": "pro", "tag": "ux"}, {"id": "u7", "en": "walk someone through", "ru": "показать шаг за шагом, провести по", "ex": "Let me walk you through the new flow.", "lvl": "B2", "tag": "ux"}, {"id": "u8", "en": "rationale", "ru": "обоснование, логика решения", "ex": "Can you explain the rationale behind this layout?", "lvl": "C1", "tag": "ux"}, {"id": "u9", "en": "trade-off", "ru": "компромисс, выбор с потерями", "ex": "A simpler animation is a good trade-off for the first release.", "lvl": "C1", "tag": "ux"}, {"id": "u10", "en": "follow up (on)", "ru": "вернуться к вопросу, напомнить", "ex": "I'm just following up on my last email.", "lvl": "B2", "tag": "ux"}, {"id": "u11", "en": "align on", "ru": "согласовать, прийти к общему мнению", "ex": "Let's align on the scope before we start.", "lvl": "pro", "tag": "ux"}, {"id": "u12", "en": "deliverable", "ru": "результат работы, то, что сдаём", "ex": "The main deliverable is a clickable prototype.", "lvl": "pro", "tag": "ux"}], "days": [{"day": 1, "title": "make или do", "general": [{"id": "p1-d1-g1", "type": "lesson", "title": "make или do", "minutes": 5, "body": ["В русском и «делать», и «сделать» — одно слово. В английском глагол зависит от существительного, и это просто нужно запомнить парами.", "**make** — когда появляется результат: решение, ошибка, план, деньги, прогресс.", "**do** — когда выполняем действие или работу: исследование, задание, одолжение, «всё возможное».", "Если не уверены, учите целую фразу, а не одно слово: не «favour», а «do someone a favour»."], "examples": [{"en": "We need to make a decision today.", "ru": "Нам нужно принять решение сегодня."}, {"en": "I made a mistake in the spacing.", "ru": "Я ошиблась в отступах."}, {"en": "Could you do me a favour?", "ru": "Можешь оказать мне услугу?"}, {"en": "We did some research first.", "ru": "Сначала мы провели исследование."}]}, {"id": "p1-d1-g2", "type": "cards", "title": "6 сочетаний с make и do", "minutes": 5, "cards": ["g1", "g2", "g3", "g4", "g5", "g6"]}, {"id": "p1-d1-g3", "type": "quiz", "title": "make или do: практика", "minutes": 5, "items": [{"q": "It's time to ___ a decision about the logo.", "options": ["do", "make", "take"], "a": 1, "explain": "make a decision — принять решение. Вариант take a decision тоже встречается в британском английском, но make — основной."}, {"q": "Could you ___ me a favour and send the file?", "options": ["make", "give", "do"], "a": 2, "explain": "do someone a favour — устойчивое сочетание."}, {"q": "Before the redesign we ___ some user research.", "options": ["did", "made", "had"], "a": 0, "explain": "do research — проводить исследование."}, {"q": "Don't worry, everyone ___ mistakes.", "options": ["does", "makes", "takes"], "a": 1, "explain": "make a mistake — ошибаться."}, {"q": "You're ___ great progress with your English!", "options": ["making", "doing", "having"], "a": 0, "explain": "make progress — продвигаться."}, {"q": "Just ___ your best, nobody expects perfection.", "options": ["make", "try", "do"], "a": 2, "explain": "do your best — сделать всё возможное."}]}], "ux": [{"id": "p1-d1-u1", "type": "cards", "title": "Слова дизайн-ревью", "minutes": 6, "cards": ["u1", "u2", "u3", "u4", "u5", "u6"]}, {"id": "p1-d1-u2", "type": "dialog", "title": "Диалог: ревью вайрфреймов", "minutes": 8, "lines": [{"s": "PM", "t": "Thanks for sharing the wireframes. Before we go further, can you walk me through the main flow?"}, {"s": "Designer", "t": "Sure. We start on the dashboard. Users told us the old filters were a real pain point, so I moved them to the top."}, {"s": "PM", "t": "Makes sense. What about the edge case when a user has no documents yet?"}, {"s": "Designer", "t": "Good point. I haven't designed that state yet. I'll add an empty state and iterate on it before the hand-off."}, {"s": "PM", "t": "Great. Let's share it with the stakeholders on Thursday."}], "items": [{"q": "Why did the designer move the filters to the top?", "options": ["The stakeholders asked for it", "Users found the old filters difficult", "Developers wanted a simpler layout"], "a": 1, "explain": "Users told us the old filters were a real pain point — пользователи жаловались на старые фильтры."}, {"q": "What hasn't the designer designed yet?", "options": ["The empty state", "The dashboard", "The filters"], "a": 0, "explain": "I haven't designed that state yet. I'll add an empty state…"}, {"q": "When will they show the design to the stakeholders?", "options": ["On Tuesday", "After the hand-off", "On Thursday"], "a": 2, "explain": "Let's share it with the stakeholders on Thursday."}]}]}, {"day": 2, "title": "used to, be used to, get used to", "general": [{"id": "p1-d2-g1", "type": "lesson", "title": "Три вида used to", "minutes": 6, "body": ["**used to + глагол** — так было раньше, сейчас уже нет: I used to work in an office (раньше работала в офисе).", "**be used to + -ing** — привыкла, для меня это нормально: I'm used to working from home.", "**get used to + -ing** — привыкаю, процесс: I'm getting used to working with a new team.", "Главная ловушка: после be used to и get used to стоит **-ing** или существительное, а не голый глагол. «I'm used to get up» — ошибка."], "examples": [{"en": "I used to draw by hand.", "ru": "Раньше я рисовала от руки."}, {"en": "I'm used to getting feedback.", "ru": "Я привыкла получать обратную связь."}, {"en": "You'll get used to it.", "ru": "Ты привыкнешь."}, {"en": "We didn't use to have design reviews.", "ru": "Раньше у нас не было дизайн-ревью."}]}, {"id": "p1-d2-g2", "type": "gap", "title": "Впишите правильную форму", "minutes": 6, "items": [{"q": "When I was a child, I ___ (play) the piano.", "a": ["used to play"], "explain": "Привычка в прошлом, которой больше нет: used to + глагол."}, {"q": "She is used to ___ (work) late.", "a": ["working"], "explain": "be used to + -ing."}, {"q": "I'm not used to ___ (speak) English at work.", "a": ["speaking"], "explain": "be used to + -ing, отрицание делаем через not."}, {"q": "Don't worry, you'll get used to ___ (use) Figma variables.", "a": ["using"], "explain": "get used to + -ing."}, {"q": "We ___ (not / have) design reviews, but now we have them every week.", "a": ["didn't use to have", "did not use to have", "never used to have"], "explain": "Отрицание: didn't use to (без -d после didn't)."}, {"q": "It took me a month to get used to ___ (wake) up at 6.", "a": ["waking"], "explain": "get used to + -ing."}]}, {"id": "p1-d2-g3", "type": "dictation", "title": "Диктант: used to", "minutes": 4, "items": [{"say": "I'm used to working from home.", "a": ["I'm used to working from home", "I am used to working from home"]}, {"say": "We used to meet every Monday.", "a": ["We used to meet every Monday"]}, {"say": "You'll get used to it soon.", "a": ["You'll get used to it soon", "You will get used to it soon"]}]}], "ux": [{"id": "p1-d2-u1", "type": "lesson", "title": "Как презентовать макет", "minutes": 5, "body": ["Хорошая презентация макета звучит как рассказ: цель → что сделано → почему так → где нужна помощь.", "Ниже фразы на каждый шаг. Прослушайте их и повторите вслух: интонацию лучше ставить сразу."], "examples": [{"en": "Let me walk you through the new checkout flow.", "ru": "Давайте я покажу новый сценарий оплаты шаг за шагом."}, {"en": "The main goal here is to reduce drop-offs.", "ru": "Главная цель — сократить отток."}, {"en": "I went with cards because they scan better on mobile.", "ru": "Я выбрала карточки, потому что на мобильном их легче просматривать."}, {"en": "One trade-off is that we show less data at once.", "ru": "Компромисс в том, что одновременно видно меньше данных."}, {"en": "I'd love your feedback on the empty states.", "ru": "Мне очень нужен ваш фидбэк по пустым состояниям."}]}, {"id": "p1-d2-u2", "type": "quiz", "title": "Какая фраза подходит?", "minutes": 4, "items": [{"q": "Вы начинаете показ макета на созвоне.", "options": ["Let me walk you through the flow.", "Let me walk you the flow.", "Let me go you through the flow."], "a": 0, "explain": "walk someone through something — провести кого-то по чему-то."}, {"q": "Вы объясняете, почему выбрали вкладки, а не меню.", "options": ["I chose tabs, because reason.", "I went with tabs because they're faster to reach.", "I went to tabs because faster."], "a": 1, "explain": "go with — выбрать вариант. После because нужна полная причина."}, {"q": "Вы честно называете минус решения.", "options": ["One trade-off is that the page gets longer.", "One trade is that the page longer.", "The page is bad, sorry."], "a": 0, "explain": "trade-off — компромисс: что мы теряем ради выигрыша."}, {"q": "Вы просите фидбэк по конкретной части.", "options": ["Give me feedbacks.", "Any feedbacks?", "I'd love your feedback on the onboarding."], "a": 2, "explain": "feedback неисчисляемое: без -s и без a. Конкретная просьба работает лучше общей."}]}, {"id": "p1-d2-u3", "type": "write", "title": "Сообщение в Slack", "minutes": 6, "prompt": "Напишите продакт-менеджеру в Slack: макеты нового онбординга готовы, вы прикрепили ссылку и просите фидбэк до четверга. Отдельно упомяните, что пустые состояния ещё в работе.", "hint": "Используйте: walk you through, I'd love your feedback on, by Thursday, still working on.", "minWords": 30}]}, {"day": 3, "title": "Фразовые глаголы для работы", "general": [{"id": "p1-d3-g1", "type": "cards", "title": "6 фразовых глаголов", "minutes": 5, "cards": ["g7", "g8", "g9", "g10", "g11", "g12"]}, {"id": "p1-d3-g2", "type": "quiz", "title": "Фразовые глаголы: практика", "minutes": 5, "items": [{"q": "The client was ill, so we ___ the meeting.", "options": ["called off", "turned down", "took off"], "a": 0, "explain": "call off — отменить. turn down — отклонить предложение, take off — снять, взлететь."}, {"q": "I keep ___ my portfolio update. I should start today.", "options": ["putting on", "putting off", "putting out"], "a": 1, "explain": "put off — откладывать."}, {"q": "Our team ___ a great name for the new feature.", "options": ["came up with", "came over", "came across"], "a": 0, "explain": "come up with — придумать. come across — случайно наткнуться."}, {"q": "I can't ___ why the grid breaks on tablets.", "options": ["find up", "figure out", "point out"], "a": 1, "explain": "figure out — разобраться."}, {"q": "Thanks for ___ that typo in the header!", "options": ["pointing out", "calling off", "carrying on"], "a": 0, "explain": "point out — указать на что-то."}, {"q": "Sorry for interrupting. Please ___.", "options": ["put off", "carry on", "come up"], "a": 1, "explain": "carry on — продолжайте."}]}, {"id": "p1-d3-g3", "type": "quiz", "title": "Аудирование: что имелось в виду?", "minutes": 4, "items": [{"say": "We had to put off the launch until March.", "q": "Что случилось с запуском?", "options": ["Его отменили", "Его отложили до марта", "Его провели в марте досрочно"], "a": 1, "explain": "put off — отложить."}, {"say": "Can you figure out why the button doesn't work?", "q": "О чём просят?", "options": ["Разобраться, почему не работает кнопка", "Убрать кнопку", "Нарисовать новую кнопку"], "a": 0, "explain": "figure out — разобраться."}, {"say": "She came up with a much simpler flow.", "q": "Что сделала коллега?", "options": ["Нашла ошибку в сценарии", "Отказалась от сценария", "Придумала более простой сценарий"], "a": 2, "explain": "come up with — придумать."}, {"say": "Sorry to interrupt, please carry on.", "q": "Что просит говорящий?", "options": ["Подождать", "Продолжать", "Повторить"], "a": 1, "explain": "carry on — продолжать."}]}], "ux": [{"id": "p1-d3-u1", "type": "lesson", "title": "Давать и принимать фидбэк", "minutes": 5, "body": ["На ревью важно звучать уверенно, но не резко. В английском критику смягчают вопросами и фразами «I'm not sure about…».", "Когда критикуют вас, сначала признайте мысль, потом уточните, потом ответьте или возьмите время."], "examples": [{"en": "I like how clear the navigation is.", "ru": "Мне нравится, насколько понятная навигация."}, {"en": "Have you considered a bottom sheet here?", "ru": "Вы не думали сделать здесь нижнюю шторку?"}, {"en": "I'm not sure about the colour of the main button.", "ru": "Я не уверена насчёт цвета главной кнопки."}, {"en": "That's a fair point.", "ru": "Справедливое замечание."}, {"en": "Could you say more about that?", "ru": "Можете рассказать подробнее?"}, {"en": "Let me think about it and follow up tomorrow.", "ru": "Дайте мне подумать, вернусь с ответом завтра."}]}, {"id": "p1-d3-u2", "type": "dialog", "title": "Диалог: разработчик против анимаций", "minutes": 8, "lines": [{"s": "Developer", "t": "I've looked at the new onboarding. The animations look great, but they'll take about two weeks to build."}, {"s": "Designer", "t": "That's a fair point. Could you say more about which part is the hardest?"}, {"s": "Developer", "t": "Mostly the card transitions. What if we use a simple fade for the first release?"}, {"s": "Designer", "t": "I see. The rationale for the transitions was to show progress, but a progress bar could do the same job. Let me think about it and follow up tomorrow."}], "items": [{"q": "What is the developer's concern?", "options": ["The animations look bad", "The animations will take a long time to build", "The onboarding is too long"], "a": 1, "explain": "…they'll take about two weeks to build."}, {"q": "What does the developer suggest?", "options": ["A simple fade for the first release", "Removing the onboarding", "A progress bar"], "a": 0, "explain": "What if we use a simple fade for the first release?"}, {"q": "What will the designer do?", "options": ["Agree immediately", "Ask the PM", "Think and reply tomorrow"], "a": 2, "explain": "Let me think about it and follow up tomorrow."}]}]}, {"day": 4, "title": "wish и деловые письма", "general": [{"id": "p1-d4-g1", "type": "lesson", "title": "wish: сожаление о настоящем и прошлом", "minutes": 6, "body": ["**wish + Past Simple** — жалею о том, что сейчас: I wish I had more time (жаль, что у меня нет времени). С to be часто were: I wish it were Friday.", "**wish + Past Perfect** — жалею о прошлом: I wish I had studied harder (жаль, что я не училась усерднее).", "**wish + could** — не хватает умения сейчас: I wish I could speak fluently.", "**If only** — то же самое, только эмоциональнее: If only we had tested it earlier!", "Подсказка: смотрите на маркер времени. yesterday, last year, at school → Past Perfect."], "examples": [{"en": "I wish I had more time for English.", "ru": "Жаль, что у меня мало времени на английский."}, {"en": "I wish I hadn't said that.", "ru": "Зря я это сказала."}, {"en": "I wish I could draw like her.", "ru": "Хотела бы я рисовать, как она."}, {"en": "If only we had tested it with users!", "ru": "Если бы мы только протестировали это на пользователях!"}]}, {"id": "p1-d4-g2", "type": "gap", "title": "Впишите форму после wish", "minutes": 6, "items": [{"q": "I wish I ___ (have) more time now.", "a": ["had"], "explain": "Настоящее → Past Simple."}, {"q": "I wish I ___ (study) harder at school.", "a": ["had studied"], "explain": "Прошлое (at school) → Past Perfect."}, {"q": "She wishes she ___ (not / say) that yesterday.", "a": ["hadn't said", "had not said"], "explain": "yesterday → Past Perfect, отрицание hadn't."}, {"q": "I wish I ___ (can) speak English fluently.", "a": ["could"], "explain": "can → could после wish."}, {"q": "If only we ___ (test) the design before the launch.", "a": ["had tested"], "explain": "Сожаление о прошлом → Past Perfect."}, {"q": "I wish it ___ (not / be) so cold today.", "a": ["wasn't", "weren't", "was not", "were not"], "explain": "Настоящее → Past Simple. Weren't — более формальный вариант."}]}, {"id": "p1-d4-g3", "type": "write", "title": "Три сожаления", "minutes": 4, "prompt": "Напишите 3 предложения о себе: одно с wish + Past Simple (о настоящем) и два с wish + Past Perfect (о прошлом).", "hint": "Например: I wish I had… / I wish I had learnt… / If only I hadn't…", "minWords": 15}], "ux": [{"id": "p1-d4-u1", "type": "cards", "title": "Слова для созвонов и писем", "minutes": 5, "cards": ["u7", "u8", "u9", "u10", "u11", "u12"]}, {"id": "p1-d4-u2", "type": "quiz", "title": "Фразы для писем клиенту", "minutes": 4, "items": [{"q": "Клиент не ответил на прошлое письмо. Вы мягко напоминаете.", "options": ["Why don't you answer?", "Just following up on my email from Monday.", "I wait your answer."], "a": 1, "explain": "follow up on — вежливо вернуться к вопросу."}, {"q": "Вы хотите договориться о составе работ.", "options": ["Could we align on the scope this week?", "We must agree the scope now.", "Scope, please."], "a": 0, "explain": "align on — прийти к общему пониманию."}, {"q": "Вы прикладываете файл.", "options": ["In attach is the file.", "I attached you the file.", "I've attached the updated mockups."], "a": 2, "explain": "I've attached… — естественно и коротко. Please find attached звучит формальнее, но тоже верно."}, {"q": "Вы заканчиваете письмо.", "options": ["Waiting for answer.", "Looking forward to hearing from you.", "Answer me soon."], "a": 1, "explain": "Стандартная вежливая концовка."}]}, {"id": "p1-d4-u3", "type": "write", "title": "Письмо-напоминание клиенту", "minutes": 7, "prompt": "Клиент неделю назад обещал прислать тексты для сайта, и без них вы не можете закончить макеты. Напишите вежливое письмо-напоминание: напомните о текстах, объясните, что от них зависит, и предложите созвон, чтобы согласовать сроки.", "hint": "Используйте: following up on, deliverable, align on, looking forward to hearing from you.", "minWords": 40}]}, {"day": 5, "title": "Слова-двойники и собеседование", "general": [{"id": "p1-d5-g1", "type": "cards", "title": "Слова-двойники B2", "minutes": 5, "cards": ["g13", "g14", "g15", "g16", "g17", "g18"]}, {"id": "p1-d5-g2", "type": "quiz", "title": "Не перепутайте", "minutes": 4, "items": [{"q": "Her argument was so ___ that everyone agreed.", "options": ["compulsory", "compelling", "complimentary"], "a": 1, "explain": "compelling — убедительный."}, {"q": "English classes are ___ for all students.", "options": ["compulsory", "compelling", "sensible"], "a": 0, "explain": "compulsory — обязательный."}, {"q": "Buying a cheaper laptop was a ___ decision.", "options": ["sensitive", "sensible", "eventual"], "a": 1, "explain": "sensible — разумный. Ложный друг: не «сенситивный»."}, {"q": "Be careful, it's a ___ topic for him.", "options": ["sensible", "actual", "sensitive"], "a": 2, "explain": "sensitive — деликатный, болезненный."}, {"q": "We ___ found the bug after three days.", "options": ["eventually", "actually", "possibly"], "a": 0, "explain": "eventually — в конце концов. Ложный друг: не «возможно»."}, {"q": "___, the meeting is tomorrow, not today.", "options": ["Eventually", "Actually", "Actual"], "a": 1, "explain": "actually — на самом деле. Ложный друг: не «актуально»."}]}, {"id": "p1-d5-g3", "type": "quiz", "title": "Мини-проверка недели", "minutes": 5, "items": [{"q": "I'm sorry, I ___ a mistake in the report.", "options": ["did", "made", "had"], "a": 1, "explain": "make a mistake."}, {"q": "I'm used to ___ in English now.", "options": ["write", "wrote", "writing"], "a": 2, "explain": "be used to + -ing."}, {"q": "I wish I ___ that job offer last year.", "options": ["accepted", "had accepted", "would accept"], "a": 1, "explain": "last year → wish + Past Perfect."}, {"q": "The conference was ___ because of the storm.", "options": ["called off", "put on", "figured out"], "a": 0, "explain": "call off — отменить."}, {"q": "We ___ have remote days, but now we do.", "options": ["didn't use to", "weren't used to", "didn't used to"], "a": 0, "explain": "Привычка в прошлом: didn't use to + глагол."}, {"q": "Can you ___ me a favour?", "options": ["make", "do", "give"], "a": 1, "explain": "do someone a favour."}]}], "ux": [{"id": "p1-d5-u1", "type": "lesson", "title": "Tell me about yourself", "minutes": 5, "body": ["Самый частый первый вопрос на собеседовании. Удобная схема: **настоящее → прошлое → будущее**, около минуты.", "Настоящее: кто вы и чем занимаетесь сейчас. Прошлое: 1–2 проекта с результатом. Будущее: почему вам интересна именно эта роль.", "Говорите глаголами действия: I led, I designed, I tested, I improved. И давайте цифры, если они есть."], "examples": [{"en": "I'm a UX/UI designer with a focus on dashboards and web products.", "ru": "Я UX/UI дизайнер, специализируюсь на дашбордах и веб-продуктах."}, {"en": "Recently I designed a dashboard that collects messages from several channels.", "ru": "Недавно я спроектировала дашборд, который собирает сообщения из нескольких каналов."}, {"en": "I'm looking for a team where research is part of the process.", "ru": "Я ищу команду, где исследования — часть процесса."}]}, {"id": "p1-d5-u2", "type": "dialog", "title": "Диалог: собеседование", "minutes": 7, "lines": [{"s": "Interviewer", "t": "So, can you tell me a bit about your design process?"}, {"s": "Candidate", "t": "Sure. I usually start with research. I talk to users and stakeholders to understand their pain points."}, {"s": "Interviewer", "t": "And what happens after that?"}, {"s": "Candidate", "t": "Then I make low-fidelity wireframes and test them early. It's much cheaper to change a wireframe than a finished screen."}, {"s": "Interviewer", "t": "How do you handle disagreements with developers?"}, {"s": "Candidate", "t": "I explain my rationale and listen to theirs. Usually we find a trade-off that works for both the users and the team."}], "items": [{"q": "How does the candidate start a project?", "options": ["With high-fidelity mockups", "With research", "With a meeting with developers"], "a": 1, "explain": "I usually start with research."}, {"q": "Why does she test wireframes early?", "options": ["Users prefer wireframes", "Stakeholders ask for it", "Changes are cheaper at that stage"], "a": 2, "explain": "It's much cheaper to change a wireframe than a finished screen."}, {"q": "How does she handle disagreements?", "options": ["She explains her reasons and looks for a compromise", "She asks her manager to decide", "She always follows the developers"], "a": 0, "explain": "I explain my rationale… we find a trade-off."}]}, {"id": "p1-d5-u3", "type": "write", "title": "Ваш ответ: Tell me about yourself", "minutes": 8, "prompt": "Напишите свой ответ на «Tell me about yourself» для собеседования на позицию UX/UI дизайнера: 60–80 слов, по схеме настоящее → прошлое → будущее. Пришлите его в экспорте — проверю по критериям CEFR и подскажу, как звучать естественнее.", "hint": "I'm a… / Recently I… / I'm looking for…", "minWords": 60}]}]}</script>
+<script>
+(function(){
+'use strict';
+
+/* ---------- utilities ---------- */
+const SEED = JSON.parse(document.getElementById('seed-pack').textContent);
+const KEY = 'study-app-v1';
+const INTERVALS = [0, 1, 3, 7, 14, 30];
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const today = () => ymd(new Date());
+const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return ymd(d); };
+const fmtDate = (s, o) => parse(s).toLocaleDateString('ru-RU', o || { day: 'numeric', month: 'long', year: 'numeric' });
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;:]+$/g, '').replace(/[.!?,;:]/g, '').replace(/\s+/g, ' ').trim();
+const words = s => (String(s || '').trim().match(/\S+/g) || []).length;
+const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
+
+const I = (p, fill) => `<svg viewBox="0 0 24 24" width="24" height="24" fill="${fill ? 'currentColor' : 'none'}" stroke="${fill ? 'none' : 'currentColor'}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC = {
+  today: I('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),
+  book: I('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>'),
+  tv: I('<rect x="2.5" y="4.5" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17.5V21"/>'),
+  chart: I('<path d="M5 20v-7M12 20V5M19 20v-10"/>'),
+  gear: I('<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>'),
+  chevR: '<svg class="chev" viewBox="0 0 8 14" width="8" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l6 6-6 6"/></svg>',
+  chevL: I('<path d="M15 4l-8 8 8 8"/>'),
+  chevRb: I('<path d="M9 4l8 8-8 8"/>'),
+  check: I('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  plus: I('<path d="M12 5v14M5 12h14"/>'),
+  play: I('<path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/>', true),
+  flame: I('<path d="M12 22c4 0 7-2.8 7-6.8 0-3.4-2.3-5.6-3.6-7.6-.4 1.6-1.3 2.8-2.4 3.4.2-3.3-1.2-6.4-4-9-.3 3.6-2.2 5.6-3.4 7.4A8.3 8.3 0 0 0 5 15.2C5 19.2 8 22 12 22z"/>', true),
+  cards: I('<rect x="3" y="6" width="14" height="15" rx="2.5"/><path d="M7 3h11.5A2.5 2.5 0 0 1 21 5.5V17"/>'),
+  globe: I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/>'),
+  brief: I('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>'),
+  target: I('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
+  bell: I('<path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
+  wave: I('<path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/>'),
+  key: I('<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/>'),
+  up: I('<path d="M12 15V3M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
+  down: I('<path d="M12 3v12M7 10l5 5 5-5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
+  trash: I('<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/>'),
+  box: I('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>'),
+};
+
+/* ---------- state ---------- */
+function initState() {
+  return {
+    version: 1,
+    packs: [SEED],
+    progress: {},
+    cards: {},
+    myWords: [],
+    shows: [{ id: 'silicon-valley', title: 'Silicon Valley', current: 'S1E3', watched: [],
+      episodes: [{ ep: 'S1E3', title: 'Articles of Incorporation' }] }],
+    checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'Входной тест', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
+    settings: { remind: '19:00', mediaNudge: true, voice: '', rate: 0.9, deeplKey: '' },
+    activity: {}
+  };
+}
+function load() { try { const r = localStorage.getItem(KEY); if (!r) return null; const s = JSON.parse(r); return s && s.version === 1 ? s : null; } catch (e) { return null; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+let S = load() || initState();
+
+const UI = { tab: 'today', stack: [], viewDay: null, seg: 'words', sheet: null, resetAsk: false, scrolled: false };
+let TS = null; // task session
+let RV = null; // review session
+
+/* ---------- derived ---------- */
+const SECTIONS = {
+  general: { name: 'Общий английский', short: 'Общий', color: 'var(--blue)', icon: IC.globe, goal: 'B1 → B2' },
+  ux: { name: 'Английский для UX/UI', short: 'UX/UI', color: 'var(--orange)', icon: IC.brief, goal: 'созвоны, ревью, письма, собеседования' }
+};
+function vocabMap() { const m = {}; S.packs.forEach(p => (p.vocab || []).forEach(v => { m[v.id] = v; })); return m; }
+function allTasks() {
+  const out = [];
+  S.packs.forEach(p => (p.days || []).forEach((d, di) => ['general', 'ux'].forEach(sec => (d[sec] || []).forEach(t => out.push({ pack: p, day: d, di, sec, task: t })))));
+  return out;
+}
+function findTask(id) { return allTasks().find(x => x.task.id === id); }
+const isDone = id => !!(S.progress[id] && S.progress[id].done);
+function dayTasks(d) { return [...(d.general || []), ...(d.ux || [])]; }
+function activePack() {
+  const open = S.packs.find(p => (p.days || []).some(d => dayTasks(d).some(t => !isDone(t.id))));
+  return open || S.packs[S.packs.length - 1] || null;
+}
+function currentDayIndex(p) { const i = p.days.findIndex(d => dayTasks(d).some(t => !isDone(t.id))); return i < 0 ? p.days.length - 1 : i; }
+function dueCards() { const t = today(); return Object.keys(S.cards).filter(id => S.cards[id].due <= t); }
+function streak() {
+  let n = 0, d = today();
+  if (!S.activity[d]) d = addDays(d, -1);
+  while (S.activity[d]) { n++; d = addDays(d, -1); }
+  return n;
+}
+function doneCount() { return Object.values(S.progress).filter(p => p.done).length; }
+function typeLabel(t) {
+  if (t.type === 'quiz') return t.items.some(i => i.say) ? 'Аудирование' : 'Тест';
+  return { lesson: 'Урок', gap: 'Упражнение', dictation: 'Диктант', dialog: 'Диалог', cards: 'Новые слова', write: 'Письмо' }[t.type] || 'Задание';
+}
+
+/* ---------- speech ---------- */
+let VOICES = [];
+function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
+try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
+function pickVoice(alt) {
+  if (!VOICES.length) return null;
+  const main = VOICES.find(v => v.voiceURI === S.settings.voice) || VOICES.find(v => /en-US/i.test(v.lang)) || VOICES[0];
+  if (!alt) return main;
+  return VOICES.find(v => v !== main && v.lang === main.lang) || VOICES.find(v => v !== main) || main;
+}
+function speak(text, opts) {
+  opts = opts || {};
+  try {
+    const ss = window.speechSynthesis;
+    if (!ss) { toast('Озвучка недоступна в этом браузере'); return; }
+    if (!opts.queue) ss.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickVoice(opts.alt);
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-US';
+    u.rate = (opts.slow ? 0.7 : 1) * (Number(S.settings.rate) || 0.9);
+    if (opts.alt) u.pitch = 0.9;
+    ss.speak(u);
+  } catch (e) { toast('Не удалось воспроизвести'); }
+}
+function speakDialog(lines, slow) {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const speakers = [];
+  lines.forEach(l => { if (!speakers.includes(l.s)) speakers.push(l.s); });
+  lines.forEach(l => speak(l.t, { queue: true, alt: speakers.indexOf(l.s) === 1, slow }));
+}
+
+/* ---------- actions on data ---------- */
+function touchActivity() { const t = today(); S.activity[t] = (S.activity[t] || 0) + 1; }
+function markDone(id, extra) {
+  S.progress[id] = Object.assign({ done: true, at: today() }, S.progress[id] || {}, extra || {}, { done: true });
+  touchActivity(); save();
+}
+function addCards(ids) { const t = addDays(today(), 1); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; }); }
+
+/* ---------- views ---------- */
+function groupHead(text, extra) { return `<div class="ghead">${text}${extra || ''}</div>`; }
+function taskRow(t) {
+  const p = S.progress[t.id], d = p && p.done;
+  const score = p && p.total ? ` · ${p.score}/${p.total}` : '';
+  return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
+    <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
+    <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${t.minutes} мин${score}</span></span>${IC.chevR}</button>`;
+}
+function secHead(sec, list) {
+  const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
+  return `<div class="ghead"><span class="tile" style="background:${s.color};width:22px;height:22px;border-radius:6px">${s.icon}</span>${s.name}<span style="margin-left:auto">${done}/${list.length}</span></div>`;
+}
+
+function vToday() {
+  const p = activePack();
+  const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+  if (!p) return { title: 'Сегодня', sub: esc(dateStr), body: empty(IC.box, 'Нет пакета заданий', 'Попросите Claude собрать пакет и импортируйте его в Настройках.') };
+  const ci = currentDayIndex(p);
+  const di = UI.viewDay == null ? ci : Math.max(0, Math.min(p.days.length - 1, UI.viewDay));
+  const d = p.days[di];
+  const all = dayTasks(d), mins = all.reduce((a, t) => a + (t.minutes || 0), 0);
+  const due = dueCards().length, st = streak();
+  let h = `<div class="strip">
+      <div class="stat"><b>${IC.flame}${st}</b><span>${plural(st, 'день', 'дня', 'дней')} подряд</span></div>
+      <div class="stat"><b>${all.filter(t => isDone(t.id)).length}/${all.length}</b><span>заданий сегодня</span></div>
+      <div class="stat"><b>${mins}</b><span>минут по плану</span></div></div>`;
+  if (due) h += `<button class="banner" data-act="open-review"><span class="tile" style="background:rgba(255,255,255,.2)">${IC.cards}</span>
+      <span class="row-main"><span class="row-title" style="font-weight:600">Повторить слова</span><span class="row-sub">${due} ${plural(due, 'карточка', 'карточки', 'карточек')} ждут повторения</span></span>${IC.chevR}</button>`;
+  h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="Предыдущий день">${IC.chevL}</button>
+      <div class="daybar-t"><b>День ${d.day} из ${p.days.length}${di === ci ? '' : di < ci ? ' · пройден' : ' · впереди'}</b><span>${esc(d.title)}</span></div>
+      <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="Следующий день">${IC.chevRb}</button></div>`;
+  ['general', 'ux'].forEach(sec => { const list = d[sec] || []; if (list.length) h += secHead(sec, list) + `<div class="group">${list.map(taskRow).join('')}</div>`; });
+  const show = S.shows[0];
+  if (show && S.settings.mediaNudge) {
+    const n = S.myWords.filter(w => w.show === show.id).length;
+    h += groupHead('По желанию') + `<div class="group icons"><button class="row" data-act="open-show" data-id="${show.id}">
+      <span class="tile" style="background:var(--pink)">${IC.tv}</span>
+      <span class="row-main"><span class="row-title">${esc(show.title)} · ${esc(show.current)}</span><span class="row-sub">${n ? n + ' ' + plural(n, 'слово записано', 'слова записано', 'слов записано') : 'Записывайте незнакомые слова во время просмотра'}</span></span>${IC.chevR}</button></div>
+      <div class="gfoot">Медиа не входит в обязательный план и не влияет на серию дней.</div>`;
+  }
+  return { title: 'Сегодня', sub: esc(dateStr), body: h };
+}
+
+function vEnglish() {
+  const tasks = allTasks();
+  let h = groupHead('Ежедневно') + '<div class="group icons">';
+  ['general', 'ux'].forEach(sec => {
+    const list = tasks.filter(x => x.sec === sec), done = list.filter(x => isDone(x.task.id)).length, s = SECTIONS[sec];
+    h += `<button class="row" data-act="open-section" data-sec="${sec}"><span class="tile" style="background:${s.color}">${s.icon}</span>
+      <span class="row-main"><span class="row-title">${s.name}</span><span class="row-sub">${esc(s.goal)}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
+  });
+  h += '</div>' + groupHead('По желанию') + `<div class="group icons"><button class="row" data-act="tab" data-tab="media"><span class="tile" style="background:var(--pink)">${IC.tv}</span>
+      <span class="row-main"><span class="row-title">Медиа</span><span class="row-sub">Сериалы, фильмы, видео</span></span>${IC.chevR}</button></div>`;
+  const due = dueCards().length, total = Object.keys(S.cards).length;
+  h += groupHead('Карточки слов') + `<div class="group icons">
+      <button class="row" data-act="open-review"><span class="tile" style="background:var(--accent)">${IC.cards}</span>
+      <span class="row-main"><span class="row-title">Повторить сейчас</span><span class="row-sub">Интервальное повторение: 1 → 3 → 7 → 14 → 30 дней</span></span><span class="row-val">${due}</span>${IC.chevR}</button>
+      <div class="row static"><span class="tile" style="background:var(--teal)">${IC.box}</span><span class="row-main"><span class="row-title">Всего в повторении</span></span><span class="row-val">${total}</span></div></div>
+      <div class="gfoot">Слова попадают сюда после заданий «Новые слова».</div>`;
+  return { title: 'Английский', body: h };
+}
+
+function vSection(sec) {
+  const s = SECTIONS[sec];
+  let h = '';
+  S.packs.forEach(p => {
+    h += `<div class="ghead">${esc(p.title)}</div>`;
+    p.days.forEach(d => { const list = d[sec] || []; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">День ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
+  });
+  return { title: s.name, back: true, sub: esc(s.goal), body: h };
+}
+
+function vMedia() {
+  let h = groupHead('Полка') + '<div class="group">';
+  S.shows.forEach(sh => {
+    const n = S.myWords.filter(w => w.show === sh.id).length;
+    h += `<button class="row" data-act="open-show" data-id="${sh.id}"><span class="poster">Silicon<br>Valley</span>
+      <span class="row-main"><span class="row-title" style="font-weight:600">${esc(sh.title)}</span><span class="row-sub">Сериал · сейчас <span class="epi">${esc(sh.current)}</span></span><span class="row-sub">${n} ${plural(n, 'слово', 'слова', 'слов')} · просмотрено серий: ${sh.watched.length}</span></span>${IC.chevR}</button>`;
+  });
+  h += '</div><div class="gfoot">Сюда добавляются сериалы, фильмы, видео и подкасты. Новый сериал появится на полке вместе с пакетом от Claude.</div>';
+  h += groupHead('Как это работает') + `<div class="group">
+    <div class="row static"><span class="row-main"><span class="row-title">1. Смотрите с английскими субтитрами</span><span class="row-sub">Без плана и без штрафа за пропуски</span></span></div>
+    <div class="row static"><span class="row-main"><span class="row-title">2. Записывайте непонятное</span><span class="row-sub">Кнопка «+» внутри сериала, перевод появится сразу</span></span></div>
+    <div class="row static"><span class="row-main"><span class="row-title">3. Отметьте серию просмотренной</span><span class="row-sub">Пришлите экспорт — Claude соберёт задания по серии и вашим словам</span></span></div></div>`;
+  return { title: 'Медиа', body: h };
+}
+
+function vShow(id) {
+  const sh = S.shows.find(s => s.id === id);
+  if (!sh) return { title: 'Медиа', back: true, body: empty(IC.tv, 'Сериал не найден', '') };
+  let h = `<div class="seg" role="tablist"><button class="${UI.seg === 'words' ? 'on' : ''}" data-act="seg" data-seg="words">Мои слова</button><button class="${UI.seg === 'tasks' ? 'on' : ''}" data-act="seg" data-seg="tasks">Задания</button></div>`;
+  if (UI.seg === 'words') {
+    const list = S.myWords.filter(w => w.show === id);
+    if (!list.length) h += `<div class="empty">${IC.plus}<b>Пока нет слов</b>Во время просмотра нажмите «+» и запишите слово или фразу, которую не поняли. Перевод покажется сразу, а точное значение в контексте сцены Claude объяснит в задании.</div><button class="btn" data-act="add-word">Добавить слово</button>`;
+    else {
+      const eps = [...new Set(list.map(w => w.ep))].sort().reverse();
+      eps.forEach(ep => {
+        const ws = list.filter(w => w.ep === ep);
+        h += groupHead(`<span class="epi">${esc(ep)}</span>`, `<span style="margin-left:auto">${ws.length}</span>`) + '<div class="group">' + ws.map(w => `<div class="row static">
+          <button class="play small" data-act="speak" data-text="${esc(w.text)}" aria-label="Произнести">${IC.play}</button>
+          <span class="row-main"><span class="row-title">${esc(w.text)}</span><span class="row-sub">${w.ru ? esc(w.ru) : 'Перевод — в задании от Claude'}${w.ctx ? ' · ' + esc(w.ctx) : ''}</span></span>
+          <button class="del" data-act="del-word" data-id="${esc(w.id)}" aria-label="Удалить">${IC.trash}</button></div>`).join('') + '</div>';
+      });
+    }
+  } else {
+    const eps = sh.episodes || [{ ep: sh.current }];
+    h += groupHead('Сезон 1') + '<div class="group">' + eps.map(e => {
+      const w = sh.watched.includes(e.ep), n = S.myWords.filter(x => x.show === id && x.ep === e.ep).length;
+      return `<div class="row static"><span class="check ${w ? 'on' : ''}">${w ? IC.check : ''}</span>
+        <span class="row-main"><span class="row-title"><span class="epi">${esc(e.ep)}</span> ${esc(e.title || '')}</span>
+        <span class="row-sub">${w ? 'Просмотрено · ждёт задания от Claude' : 'Не просмотрено'} · ${n} ${plural(n, 'слово', 'слова', 'слов')}</span></span>
+        ${w ? '' : `<button class="chip on" data-act="watched" data-ep="${esc(e.ep)}">Посмотрела</button>`}</div>`;
+    }).join('') + '</div><div class="gfoot">Задания по серии появятся здесь после импорта пакета. Чтобы Claude их собрал, отправьте экспорт: Настройки → Экспорт.</div>';
+  }
+  return { title: sh.title, back: true, sub: 'Сериал · сейчас ' + esc(sh.current), action: `<button class="nav-btn" data-act="add-word" aria-label="Добавить слово">${IC.plus}</button>`, body: h };
+}
+
+const SKILLS = [['grammar', 'Грамматика и лексика'], ['reading', 'Чтение'], ['listening', 'Аудирование'], ['writing', 'Письмо'], ['speaking', 'Говорение']];
+const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+function latestLevel(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return r; } return null; }
+function vProgress() {
+  const g = latestLevel('grammar'), cur = g ? g.level : 'B1';
+  const ci = LEVELS.indexOf(cur);
+  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>дней подряд</span></div>
+     <div class="stat"><b>${doneCount()}</b><span>заданий выполнено</span></div>
+     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>слов в повторении</span></div></div>`;
+  // 14-day activity
+  const t = today(); let cells = '';
+  for (let i = 13; i >= 0; i--) { const d = addDays(t, -i), a = S.activity[d] || 0; cells += `<i class="${a >= 4 ? 'a2' : a ? 'a1' : ''} ${i === 0 ? 'today' : ''}" title="${fmtDate(d, { day: 'numeric', month: 'short' })}: ${a}"></i>`; }
+  h += groupHead('Активность, 14 дней') + `<div class="panel"><div class="days14">${cells}</div><div class="legend" style="margin-top:10px"><span><i style="background:var(--fill)"></i>нет занятий</span><span><i style="background:color-mix(in srgb,var(--green) 45%,transparent)"></i>1–3 задания</span><span><i style="background:var(--green)"></i>4+</span></div></div>`;
+  h += groupHead('Уровень по CEFR') + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${cur}</b><span class="row-sub">цель: ${LEVELS[ci + 1] || cur}</span></div>
+     <div class="cefr">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : i === ci + 1 ? 'goal' : ''}">${l}</div>`).join('')}</div>
+     <div class="legend"><span><i style="background:var(--accent)"></i>сейчас</span><span><i style="background:var(--accent-soft);outline:1px dashed var(--accent)"></i>цель</span></div></div>`;
+  h += groupHead('По навыкам') + '<div class="group">' + SKILLS.map(([k, n]) => {
+    const r = latestLevel(k);
+    return `<div class="row static"><span class="row-main"><span class="row-title">${n}</span><span class="row-sub">${r ? (r.total ? `${r.score} из ${r.total}` : 'оценка Claude') : k === 'speaking' ? 'самооценка — в контрольной' : 'проверим в контрольной'}</span></span>${r ? `<span class="pill lvl">${r.level}</span>` : '<span class="pill">—</span>'}</div>`;
+  }).join('') + '</div>';
+  const last = S.checks[S.checks.length - 1];
+  const from = addDays(last.date, 28), to = addDays(last.date, 42);
+  h += `<div class="gfoot">Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Задания проверок составляет Claude, в формате этих экзаменов. Письмо оценивает Claude, говорение — самооценка.</div>`;
+  h += groupHead('Проверки') + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
+      <span class="row-main"><span class="row-title">Следующая контрольная</span><span class="row-sub">${fmtDate(from, { day: 'numeric', month: 'long' })} – ${fmtDate(to, { day: 'numeric', month: 'long' })}</span></span><span class="pill">все 5 навыков</span></div>` +
+    S.checks.slice().reverse().map(c => `<div class="row static"><span class="tile" style="background:var(--green)">${IC.check}</span>
+      <span class="row-main"><span class="row-title">${esc(c.kind)}</span><span class="row-sub">${fmtDate(c.date)} · ${Object.keys(c.results).map(k => (SKILLS.find(s => s[0] === k) || [k, k])[1] + ' ' + (c.results[k].total ? c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span><span class="pill lvl">${Object.values(c.results)[0].level}</span></div>`).join('') + '</div>';
+  return { title: 'Прогресс', body: h };
+}
+
+function vSettings() {
+  const st = S.settings;
+  const voiceOpts = VOICES.length ? VOICES.map(v => `<option value="${esc(v.voiceURI)}" ${v.voiceURI === st.voice ? 'selected' : ''}>${esc(v.name)} · ${esc(v.lang)}</option>`).join('') : '<option>Системный голос</option>';
+  let h = groupHead('Напоминания') + `<div class="group icons">
+    <label class="row"><span class="tile" style="background:var(--red)">${IC.bell}</span><span class="row-main"><span class="row-title">Время занятий</span></span><input type="time" id="set-remind" data-set="remind" value="${esc(st.remind)}"></label>
+    <label class="row"><span class="tile" style="background:var(--pink)">${IC.tv}</span><span class="row-main"><span class="row-title">Медиа на экране «Сегодня»</span><span class="row-sub">Мягкое напоминание, без плана</span></span><input type="checkbox" id="set-media" data-set="mediaNudge" ${st.mediaNudge ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+    <div class="gfoot">Ежедневное напоминание присылает приложение «Команды» на iPhone и Mac: автоматизация «Время суток» открывает учебное приложение. Без сервера и бесплатно.</div>`;
+  h += groupHead('Озвучка') + `<div class="group icons">
+    <label class="row"><span class="tile" style="background:var(--teal)">${IC.wave}</span><span class="row-main"><span class="row-title">Голос</span></span><select id="set-voice" data-set="voice">${voiceOpts}</select></label>
+    <label class="row"><span class="tile" style="background:var(--blue)">${IC.play}</span><span class="row-main"><span class="row-title">Скорость</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label>
+    <button class="row" data-act="test-voice"><span class="tile" style="background:var(--green)">${IC.wave}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">Прослушать пример</span></span></button></div>
+    <div class="gfoot">Голоса встроены в iPhone и Mac и работают без интернета. Больше голосов: Настройки iPhone → Универсальный доступ → Устный контент → Голоса.</div>`;
+  h += groupHead('Перевод') + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">Ключ DeepL</span></span><input class="inline" id="set-deepl" data-set="deeplKey" type="password" autocomplete="off" placeholder="не подключён" value="${esc(st.deeplKey)}"></label></div>
+    <div class="gfoot">Бесплатный ключ DeepL заканчивается на «:fx». Без ключа работает встроенный словарь и кнопка Google Translate.</div>`;
+  h += groupHead('Новые задания') + `<div class="group icons">
+    <button class="row" data-act="check-packs"><span class="tile" style="background:var(--accent)">${IC.box}</span><span class="row-main"><span class="row-title">Проверить новые задания</span><span class="row-sub">${S.lastCheck ? 'Последняя проверка: ' + fmtDate(S.lastCheck, { day: 'numeric', month: 'long' }) : 'Загружает пакеты, которые выложил Claude'}</span></span>${IC.chevR}</button></div>
+    <div class="gfoot">Приложение проверяет новые пакеты и при каждом запуске, если есть интернет.</div>`;
+  h += groupHead('Данные') + `<div class="group icons">
+    <button class="row" data-act="export"><span class="tile" style="background:var(--blue)">${IC.up}</span><span class="row-main"><span class="row-title">Экспорт</span><span class="row-sub">Прогресс, слова, ответы — для Claude и второго устройства</span></span>${IC.chevR}</button>
+    <button class="row" data-act="import"><span class="tile" style="background:var(--green)">${IC.down}</span><span class="row-main"><span class="row-title">Импорт</span><span class="row-sub">Пакет заданий или экспорт с другого устройства</span></span>${IC.chevR}</button></div>`;
+  h += groupHead('Пакеты') + '<div class="group">' + S.packs.map(p => {
+    const ts = p.days.flatMap(dayTasks), d = ts.filter(t => isDone(t.id)).length;
+    return `<div class="row static"><span class="row-main"><span class="row-title">${esc(p.title)}</span><span class="row-sub">${p.days.length} ${plural(p.days.length, 'день', 'дня', 'дней')} · уровень ${esc(p.level)} · от ${fmtDate(p.created)}</span></span><span class="row-val">${d}/${ts.length}</span></div>`;
+  }).join('') + '</div>';
+  h += groupHead('Сброс') + (UI.resetAsk
+    ? `<div class="panel"><p style="margin:0 0 12px">Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.</p><div class="btns"><button class="btn sec" data-act="reset-no">Отмена</button><button class="btn danger" data-act="reset-yes">Удалить</button></div></div>`
+    : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">Сбросить прогресс</span></span></button></div>`);
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">Прототип · данные хранятся только на этом устройстве</div>`;
+  return { title: 'Настройки', body: h };
+}
+
+function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(title)}</b>${esc(text)}</div>`; }
+
+/* ---------- task session ---------- */
+function startTask(id) {
+  const x = findTask(id); if (!x) return;
+  const p = S.progress[id] || {};
+  TS = { id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '' };
+  UI.stack.push({ v: 'task', id });
+}
+function vTask(id) {
+  const x = findTask(id); if (!x) return { title: 'Задание', back: true, body: '' };
+  const t = x.task, s = SECTIONS[x.sec];
+  if (!TS || TS.id !== id) startTask(id), UI.stack.pop();
+  const meta = `<div class="tmeta"><span class="pill" style="background:${s.color};color:#fff">${s.short}</span><span class="pill">День ${x.day.day}</span><span class="pill">${typeLabel(t)} · ${t.minutes} мин</span>${isDone(id) ? '<span class="pill good">Выполнено</span>' : ''}</div>`;
+  let body = '';
+  if (t.type === 'lesson') body = tLesson(t);
+  else if (t.type === 'cards') body = tCards(t);
+  else if (t.type === 'write') body = tWrite(t);
+  else body = tItems(t);
+  return { title: t.title, back: true, body: meta + body };
+}
+function tLesson(t) {
+  let h = '<div class="panel lesson">' + t.body.map(p => `<p>${md(p)}</p>`).join('') + '</div>';
+  h += groupHead('Примеры') + '<div class="group">' + t.examples.map(e => `<div class="row static ex">
+     <button class="play small" data-act="speak" data-text="${esc(e.en)}" aria-label="Прослушать">${IC.play}</button>
+     <span class="row-main"><span class="row-title">${esc(e.en)}</span><span class="row-sub">${esc(e.ru)}</span></span></div>`).join('') + '</div>';
+  h += `<div class="actions"><button class="btn" data-act="lesson-done">${isDone(t.id) ? 'Готово' : 'Понятно'}</button></div>`;
+  return h;
+}
+function tCards(t) {
+  const V = vocabMap(), ids = t.cards.filter(id => V[id]);
+  if (TS.finished || TS.i >= ids.length) {
+    return `<div class="summary"><div class="big">${ids.length}</div><p>${plural(ids.length, 'слово', 'слова', 'слов')} добавлено в повторение. Первое повторение — завтра.</p></div><div class="actions"><button class="btn" data-act="back">Готово</button></div>`;
+  }
+  const v = V[ids[TS.i]];
+  let h = `<div class="progress"><i style="width:${(TS.i / ids.length) * 100}%"></i></div>`;
+  h += `<button class="flash" data-act="flip" aria-label="Перевернуть карточку">
+      <span class="pill lvl">${v.lvl === 'pro' ? 'проф. лексика' : esc(v.lvl)}</span>
+      <span class="en">${esc(v.en)}</span>
+      ${TS.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : '<span class="tap">Нажмите, чтобы увидеть перевод</span>'}</button>`;
+  h += `<div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(TS.flipped ? v.ex : v.en)}">${IC.play} ${TS.flipped ? 'Пример' : 'Слово'}</button>
+      <button class="btn" data-act="card-next">${TS.i === ids.length - 1 ? 'Добавить в повторение' : 'Дальше'}</button></div>
+      <div class="qcount" style="text-align:center">${TS.i + 1} из ${ids.length}</div>`;
+  return h;
+}
+function tWrite(t) {
+  const n = words(TS.draft), ok = n >= t.minWords;
+  const p = S.progress[t.id];
+  return `<div class="panel"><p class="prompt">${md(t.prompt)}</p><p class="hint" style="margin:0">${md(t.hint || '')}</p></div>
+    <div class="lbl" style="margin:18px 16px 8px">Ваш текст на английском</div>
+    <textarea class="field" id="write-${esc(t.id)}" data-write="1" placeholder="Start writing here…" spellcheck="true" lang="en">${esc(TS.draft)}</textarea>
+    <div class="wc" id="wc">${n} ${plural(n, 'слово', 'слова', 'слов')} · минимум ${t.minWords}</div>
+    <div class="actions"><button class="btn" data-act="save-write" id="save-write" ${ok ? '' : 'disabled'}>${p && p.done ? 'Сохранить изменения' : 'Сохранить'}</button></div>
+    <div class="gfoot">Текст попадёт в экспорт. Claude проверит его по критериям CEFR: содержание, связность, лексика, грамматика.</div>`;
+}
+function tItems(t) {
+  const items = t.items;
+  if (TS.finished) {
+    const sc = TS.results.filter(Boolean).length;
+    return `<div class="summary"><div class="big">${sc}/${items.length}</div><p>${sc === items.length ? 'Без ошибок.' : sc >= items.length * 0.7 ? 'Хороший результат. Ошибки вернутся в следующих заданиях.' : 'Эту тему Claude повторит в следующем пакете.'}</p></div>
+      <div class="actions"><button class="btn" data-act="back">Готово</button><button class="btn plain" data-act="retry">Пройти ещё раз</button></div>`;
+  }
+  const it = items[TS.i];
+  let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
+  if (t.type === 'dialog') {
+    h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="Прослушать диалог">${IC.play}</button>
+       <div class="audio-t"><b>Прослушайте диалог</b><span>${t.lines.length} реплик · можно слушать сколько угодно</span></div>
+       <button class="chip" data-act="play-dialog" data-slow="1">Медленно</button></div>
+       <button class="chip ${TS.showText ? 'on' : ''}" data-act="toggle-text" style="margin-bottom:${TS.showText ? '0' : '16px'}">${TS.showText ? 'Скрыть текст' : 'Показать текст'}</button>
+       ${TS.showText ? `<div class="panel transcript" style="margin:10px 0 16px">${t.lines.map(l => `<div class="line"><b>${esc(l.s)}</b><span>${esc(l.t)}</span></div>`).join('')}</div>` : ''}`;
+  }
+  if (it.say) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(it.say)}" aria-label="Прослушать">${IC.play}</button>
+       <div class="audio-t"><b>Прослушайте</b><span>${t.type === 'dictation' ? 'и напишите, что услышали' : 'и ответьте на вопрос'}</span></div>
+       <button class="chip" data-act="speak" data-text="${esc(it.say)}" data-slow="1">Медленно</button></div>`;
+  if (t.type === 'gap' || t.type === 'dictation') {
+    if (it.q) h += `<p class="q">${md(it.q)}</p>`;
+    h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" placeholder="${t.type === 'dictation' ? 'Напишите предложение' : 'Ваш ответ'}" value="${esc(TS.input || '')}" ${TS.checked ? 'disabled' : ''}>`;
+    if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">Проверить</button></div>`;
+    else h += fb(TS.ok, (TS.ok ? '' : 'Правильно: <b style="display:inline;font-size:inherit">' + esc(it.a[0]) + '</b>. ') + md(it.explain || '')) + nextBtn(t);
+  } else {
+    h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
+      let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
+      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${c === 'right' ? IC.check : ''}</button>`;
+    }).join('') + '</div>';
+    if (TS.picked !== null) h += fb(TS.picked === it.a, md(it.explain || '')) + nextBtn(t);
+  }
+  h += `<div class="qcount">Вопрос ${TS.i + 1} из ${items.length}</div>`;
+  return h;
+}
+function fb(ok, text) { return `<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Верно' : 'Не совсем'}</b>${text}</div>`; }
+function nextBtn(t) { return `<div class="actions"><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? 'Результат' : 'Дальше'}</button></div>`; }
+
+/* ---------- review ---------- */
+function vReview() {
+  const V = vocabMap();
+  if (!RV) RV = { queue: dueCards().filter(id => V[id]), i: 0, flipped: false, known: 0 };
+  if (!RV.queue.length || RV.i >= RV.queue.length) {
+    const next = Object.values(S.cards).map(c => c.due).sort()[0];
+    const done = RV.queue.length;
+    return { title: 'Повторение', back: true, body: done
+      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>Повторение на сегодня закончено.</p></div><div class="actions"><button class="btn" data-act="back">Готово</button></div>`
+      : empty(IC.cards, 'Всё повторено', next ? 'Следующее повторение: ' + fmtDate(next, { day: 'numeric', month: 'long' }) + '.' : 'Слова появятся после заданий «Новые слова».') };
+  }
+  const v = V[RV.queue[RV.i]];
+  let h = `<div class="progress"><i style="width:${(RV.i / RV.queue.length) * 100}%"></i></div>
+    <button class="flash" data-act="rv-flip"><span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : '<span class="tap">Вспомните перевод и нажмите</span>'}</button>
+    <div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} Слово</button></div>`;
+  if (RV.flipped) h += `<div class="btns"><button class="btn danger" data-act="rv" data-ok="0">Не помню</button><button class="btn" style="background:var(--green)" data-act="rv" data-ok="1">Помню</button></div>`;
+  h += `<div class="qcount" style="text-align:center">${RV.i + 1} из ${RV.queue.length}</div>`;
+  return { title: 'Повторение', back: true, body: h };
+}
+
+/* ---------- sheets ---------- */
+const DICT = { 'pivot': 'сменить направление бизнеса', 'funding': 'финансирование', 'investor': 'инвестор', 'valuation': 'оценка стоимости компании', 'equity': 'доля в компании', 'shares': 'акции, доли', 'stake': 'доля', 'board': 'совет директоров', 'board meeting': 'заседание совета директоров', 'pitch': 'питч, презентация для инвесторов', 'startup': 'стартап', 'launch': 'запуск', 'user base': 'база пользователей', 'acquisition': 'поглощение, покупка компании', 'acquire': 'купить (компанию)', 'incubator': 'инкубатор', 'accelerator': 'акселератор', 'founder': 'основатель', 'co-founder': 'сооснователь', 'ceo': 'генеральный директор', 'cto': 'технический директор', 'term sheet': 'term sheet, предварительное соглашение об инвестициях', 'seed round': 'посевной раунд', 'series a': 'раунд A', 'burn rate': 'скорость расходования денег', 'revenue': 'выручка', 'profit': 'прибыль', 'incorporate': 'зарегистрировать компанию', 'incorporation': 'регистрация компании', 'articles of incorporation': 'учредительные документы', 'lawyer': 'юрист', 'trademark': 'товарный знак', 'compression': 'сжатие', 'algorithm': 'алгоритм', 'app': 'приложение', 'deal': 'сделка', 'offer': 'предложение', 'buy out': 'выкупить', 'sell out': 'продаться', 'awkward': 'неловкий', 'weird': 'странный', 'genius': 'гений', 'douchebag': 'придурок (грубо)', 'disrupt': 'перевернуть рынок', 'disruption': 'революция на рынке', 'scale': 'масштабировать', 'hire': 'нанять', 'fire': 'уволить', 'call off': 'отменить', 'put off': 'отложить', 'figure out': 'разобраться', 'come up with': 'придумать', 'point out': 'указать на', 'carry on': 'продолжать' };
+function lookup(text) { const k = norm(text); if (!k) return null; if (DICT[k]) return DICT[k]; const V = vocabMap(); const v = Object.values(V).find(x => norm(x.en) === k); return v ? v.ru : null; }
+function sheetAddWord() {
+  const sh = S.shows.find(s => s.id === (UI.sheet.show || 'silicon-valley')) || S.shows[0];
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">Отмена</button><b>Новое слово</b><button class="nav-btn" data-act="save-word" id="aw-save" disabled>Готово</button></div>
+    <div class="stack"><input class="field" id="aw-text" data-aw="1" placeholder="Слово или фраза" autocomplete="off" autocapitalize="off" lang="en">
+    <div class="trbox" id="aw-tr">${trHtml('')}</div>
+    <div class="lbl">Серия</div><input class="field" id="aw-ep" value="${esc(sh.current)}" autocomplete="off" style="font-family:var(--mono)">
+    <div class="lbl">Контекст (необязательно)</div><input class="field" id="aw-ctx" placeholder="Кто сказал, о чём сцена" autocomplete="off"></div>`;
+}
+function trHtml(text) {
+  if (!text.trim()) return '<span style="color:var(--label2)">Перевод появится здесь.</span>';
+  const r = lookup(text), gt = 'https://translate.google.com/?sl=en&tl=ru&op=translate&text=' + encodeURIComponent(text.trim());
+  return (r ? `<div class="ru">${esc(r)}</div>` : `<div style="color:var(--label2);margin-bottom:4px">Нет во встроенном словаре. С ключом DeepL переводы появятся сразу.</div>`)
+    + `<a href="${gt}" target="_blank" rel="noopener">Открыть в Google Translate ↗</a>`;
+}
+function buildExport() {
+  const V = vocabMap(), writing = {};
+  Object.entries(S.progress).forEach(([id, p]) => { if (p.answer) writing[id] = p.answer; });
+  return {
+    type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
+    summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id) },
+    progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
+    writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
+    packs: S.packs
+  };
+}
+function sheetExport() {
+  const json = JSON.stringify(buildExport(), null, 1);
+  const framed = window.self !== window.top;
+  return `<div class="sheet-h"><span></span><b>Экспорт</b><button class="nav-btn" data-act="sheet-close">Готово</button></div>
+    <p class="hint" style="margin:0 4px 12px">Скопируйте и вставьте Claude в чат проекта или перенесите на другое устройство (там — Импорт → вставить текст).</p>
+    <textarea class="code" id="exp-text" readonly>${esc(json)}</textarea>
+    <div class="actions"><button class="btn" data-act="copy-export">Скопировать</button>${framed ? '' : '<button class="btn sec" data-act="download-export">Сохранить файл</button>'}</div>
+    <div class="gfoot">${(json.length / 1024).toFixed(1)} КБ · ${S.myWords.length} ${plural(S.myWords.length, 'слово', 'слова', 'слов')} из медиа · ${Object.keys(buildExport().writing).length} письменных ответов</div>`;
+}
+function sheetImport() {
+  const d = UI.sheet.draft;
+  if (d && d.type === 'study-export') return `<div class="sheet-h"><button class="nav-btn" data-act="import" style="justify-self:start">Назад</button><b>Импорт данных</b><span></span></div>
+    <div class="panel"><p style="margin:0 0 6px;font-weight:600">Экспорт от ${esc(new Date(d.exportedAt).toLocaleString('ru-RU'))}</p><p class="hint" style="margin:0">${Object.keys(d.progress || {}).length} заданий · ${(d.myWords || []).length} слов · ${Object.keys(d.cards || {}).length} карточек</p></div>
+    <div class="actions"><button class="btn" data-act="import-merge">Объединить</button><button class="btn sec" data-act="import-replace">Заменить</button></div>
+    <div class="gfoot">«Объединить» сложит слова и выполненные задания с обоих устройств. «Заменить» сделает это устройство копией экспорта.</div>`;
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">Отмена</button><b>Импорт</b><button class="nav-btn" data-act="do-import">Импорт</button></div>
+    <div class="stack"><label class="btn sec" for="imp-file" style="cursor:pointer">Выбрать файл .json</label><input type="file" id="imp-file" accept=".json,application/json" hidden>
+    <div class="lbl">или вставьте текст пакета / экспорта</div><textarea class="code" id="imp-text" placeholder='{"type": "study-pack", …}'></textarea></div>
+    <div class="gfoot">Пакет заданий добавится к текущему плану. Экспорт с другого устройства можно объединить или заменить им данные.</div>`;
+}
+function importData(raw) {
+  let d; try { d = JSON.parse(raw); } catch (e) { toast('Не получилось прочитать файл: это не JSON'); return; }
+  if (d.type === 'study-pack') {
+    if (!Array.isArray(d.days) || !d.id) { toast('В пакете нет дней или id'); return; }
+    if (S.packs.some(p => p.id === d.id)) { toast('Этот пакет уже импортирован'); return; }
+    S.packs.push(d);
+    (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
+    save(); UI.sheet = null; render(); toast('Пакет «' + d.title + '» добавлен'); return;
+  }
+  if (d.type === 'study-export') { UI.sheet = { kind: 'import', draft: d }; renderSheet(); return; }
+  toast('Файл не похож на пакет или экспорт');
+}
+function mergeExport(d, replace) {
+  if (replace) {
+    S = Object.assign(initState(), { packs: d.packs && d.packs.length ? d.packs : S.packs, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings });
+  } else {
+    (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
+    Object.entries(d.progress || {}).forEach(([id, p]) => { const cur = S.progress[id]; if (!cur || (!cur.done && p.done) || ((p.answer || '').length > (cur.answer || '').length)) S.progress[id] = Object.assign({}, cur, p); });
+    Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
+    (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
+    (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
+    (d.checks || []).forEach(c => { if (!S.checks.some(x => x.id === c.id)) S.checks.push(c); });
+    S.checks.sort((a, b) => a.date < b.date ? -1 : 1);
+    Object.entries(d.activity || {}).forEach(([k, v]) => { S.activity[k] = Math.max(S.activity[k] || 0, v); });
+  }
+  save(); UI.sheet = null; UI.stack = []; render(); toast(replace ? 'Данные заменены' : 'Данные объединены');
+}
+
+/* ---------- render ---------- */
+function currentView() {
+  const top = UI.stack[UI.stack.length - 1];
+  if (top) {
+    if (top.v === 'task') return vTask(top.id);
+    if (top.v === 'section') return vSection(top.sec);
+    if (top.v === 'show') return vShow(top.id);
+    if (top.v === 'review') return vReview();
+  }
+  return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
+}
+const TABS = [['today', 'Сегодня', IC.today], ['english', 'Английский', IC.book], ['media', 'Медиа', IC.tv], ['progress', 'Прогресс', IC.chart], ['settings', 'Настройки', IC.gear]];
+function render() {
+  const v = currentView();
+  document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
+      <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>Назад</span></button>` : ''}</div>
+      <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
+    <div class="content"><h1 class="large">${esc(v.title)}</h1>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
+  document.getElementById('tabbar').innerHTML = TABS.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
+  document.getElementById('sidebar').innerHTML = '<div class="side-h">Учёба</div>' + TABS.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
+    + `<div class="side-h" style="margin-top:18px">Скоро</div><div class="side-i" style="color:var(--label3);cursor:default">${IC.target}<span>Психология</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.chart}<span>Развитие</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.brief}<span>Профессия</span></div>`;
+}
+function renderSheet() {
+  const root = document.getElementById('sheet-root');
+  if (!UI.sheet) { root.innerHTML = ''; return; }
+  const k = UI.sheet.kind;
+  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : sheetImport()}</div></div>`;
+  const f = root.querySelector('#aw-text'); if (f) setTimeout(() => f.focus(), 50);
+}
+function go(fn) { fn(); UI.scrolled = false; render(); window.scrollTo(0, 0); }
+let toastT;
+function toast(msg) { const r = document.getElementById('toast-root'); r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toastT); toastT = setTimeout(() => { r.innerHTML = ''; }, 2600); }
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act;
+  if (a === 'scrim') { if (e.target === el) { UI.sheet = null; renderSheet(); } return; }
+  switch (a) {
+    case 'tab': go(() => { UI.tab = el.dataset.tab; UI.stack = []; UI.viewDay = null; UI.resetAsk = false; }); break;
+    case 'back': try { speechSynthesis.cancel(); } catch (er) {} go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') TS = null; if (top && top.v === 'review') RV = null; }); break;
+    case 'day': go(() => { UI.viewDay = Number(el.dataset.d); }); break;
+    case 'open-task': go(() => startTask(el.dataset.id)); break;
+    case 'open-section': go(() => UI.stack.push({ v: 'section', sec: el.dataset.sec })); break;
+    case 'open-show': go(() => { UI.seg = 'words'; UI.stack.push({ v: 'show', id: el.dataset.id }); }); break;
+    case 'open-review': go(() => { RV = null; UI.stack.push({ v: 'review' }); }); break;
+    case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
+    case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
+    case 'toggle-text': TS.showText = !TS.showText; render(); break;
+    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a; render(); break; }
+    case 'check': {
+      const it = findTask(TS.id).task.items[TS.i]; const v = (document.getElementById('gap-input') || {}).value || '';
+      if (!v.trim()) { toast('Сначала впишите ответ'); return; }
+      TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => norm(ans) === norm(v)); TS.results[TS.i] = TS.ok; render(); break;
+    }
+    case 'next': {
+      const t = findTask(TS.id).task;
+      if (TS.i >= t.items.length - 1) { TS.finished = true; const sc = TS.results.filter(Boolean).length; markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc; save(); }
+      else { TS.i++; TS.picked = null; TS.checked = false; TS.input = ''; }
+      render(); window.scrollTo(0, 0); break;
+    }
+    case 'retry': { const id = TS.id; TS = null; startTask(id); UI.stack.pop(); render(); break; }
+    case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast('Урок пройден'); break;
+    case 'flip': TS.flipped = !TS.flipped; render(); break;
+    case 'card-next': {
+      const t = findTask(TS.id).task;
+      if (TS.i >= t.cards.length - 1) { addCards(t.cards); markDone(t.id); TS.finished = true; }
+      else { TS.i++; TS.flipped = false; }
+      render(); break;
+    }
+    case 'save-write': { const t = findTask(TS.id).task; markDone(t.id, { answer: TS.draft, words: words(TS.draft) }); S.progress[t.id].answer = TS.draft; save(); toast('Сохранено — попадёт в экспорт'); render(); break; }
+    case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
+    case 'rv': {
+      const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
+      if (ok) { c.box = Math.min(5, c.box + 1); RV.known++; } else { c.box = 1; c.lapses = (c.lapses || 0) + 1; }
+      c.due = addDays(today(), INTERVALS[c.box]); touchActivity(); save();
+      RV.i++; RV.flipped = false; render(); break;
+    }
+    case 'seg': UI.seg = el.dataset.seg; render(); break;
+    case 'add-word': { const top = UI.stack[UI.stack.length - 1]; UI.sheet = { kind: 'add', show: top && top.v === 'show' ? top.id : 'silicon-valley' }; renderSheet(); break; }
+    case 'save-word': {
+      const text = document.getElementById('aw-text').value.trim(); if (!text) return;
+      const ep = (document.getElementById('aw-ep').value.trim() || 'S1E3').toUpperCase(), ctx = document.getElementById('aw-ctx').value.trim();
+      const show = UI.sheet.show || 'silicon-valley';
+      S.myWords.push({ id: 'w-' + uid(), text, ru: lookup(text) || '', show, ep, ctx, at: today() });
+      const sh = S.shows.find(s => s.id === show); if (sh && !(sh.episodes || []).some(x => x.ep === ep)) (sh.episodes = sh.episodes || []).push({ ep, title: '' });
+      save(); UI.sheet = null; UI.seg = 'words'; renderSheet(); render(); toast('Слово записано'); break;
+    }
+    case 'del-word': S.myWords = S.myWords.filter(w => w.id !== el.dataset.id); save(); render(); toast('Удалено'); break;
+    case 'watched': { const sh = S.shows.find(s => s.id === UI.stack[UI.stack.length - 1].id); if (!sh.watched.includes(el.dataset.ep)) sh.watched.push(el.dataset.ep); save(); render(); toast('Отмечено. Пришлите экспорт Claude'); break; }
+    case 'sheet-close': UI.sheet = null; renderSheet(); break;
+    case 'export': UI.sheet = { kind: 'export' }; renderSheet(); break;
+    case 'copy-export': {
+      const ta = document.getElementById('exp-text');
+      const fallback = () => { ta.focus(); ta.select(); toast('Текст выделен — скопируйте его'); };
+      try { navigator.clipboard.writeText(ta.value).then(() => toast('Скопировано'), fallback); } catch (er) { fallback(); }
+      break;
+    }
+    case 'check-packs': checkPacks(false); break;
+    case 'download-export': {
+      try {
+        const txt = document.getElementById('exp-text').value, name = 'study-export-' + today() + '.json';
+        const file = typeof File === 'function' ? new File([txt], name, { type: 'application/json' }) : null;
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: name }).catch(() => {}); break; }
+      } catch (er) {}
+      try { const b = new Blob([document.getElementById('exp-text').value], { type: 'application/json' }); const u = URL.createObjectURL(b); const l = document.createElement('a'); l.href = u; l.download = 'study-export-' + today() + '.json'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); } catch (er) { toast('Не удалось сохранить файл'); }
+      break;
+    }
+    case 'import': UI.sheet = { kind: 'import' }; renderSheet(); break;
+    case 'do-import': { const v = document.getElementById('imp-text').value.trim(); if (!v) { toast('Выберите файл или вставьте текст'); return; } importData(v); break; }
+    case 'import-merge': mergeExport(UI.sheet.draft, false); break;
+    case 'import-replace': mergeExport(UI.sheet.draft, true); break;
+    case 'test-voice': speak("Let me walk you through the new onboarding flow."); break;
+    case 'reset-ask': UI.resetAsk = true; render(); break;
+    case 'reset-no': UI.resetAsk = false; render(); break;
+    case 'reset-yes': S = initState(); save(); UI.resetAsk = false; TS = null; RV = null; render(); toast('Прогресс сброшен'); break;
+  }
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.write) {
+    TS.draft = t.value; const task = findTask(TS.id).task, n = words(t.value);
+    document.getElementById('wc').textContent = `${n} ${plural(n, 'слово', 'слова', 'слов')} · минимум ${task.minWords}`;
+    document.getElementById('save-write').disabled = n < task.minWords;
+  }
+  if (t.dataset.aw) { document.getElementById('aw-tr').innerHTML = trHtml(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
+  if (t.id === 'set-rate') document.getElementById('rate-val').textContent = Math.round(t.value * 100) + '%';
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = t.type === 'checkbox' ? t.checked : k === 'rate' ? Number(t.value) : t.value; save(); }
+  if (t.id === 'imp-file' && t.files && t.files[0]) { const r = new FileReader(); r.onload = () => importData(String(r.result)); r.readAsText(t.files[0]); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.gap && !TS.checked) { e.preventDefault(); document.querySelector('[data-act="check"]').click(); }
+  if (e.key === 'Escape' && UI.sheet) { UI.sheet = null; renderSheet(); }
+});
+window.addEventListener('scroll', () => {
+  const s = window.scrollY > 30; if (s !== UI.scrolled) { UI.scrolled = s; const n = document.getElementById('nav'); if (n) n.classList.toggle('scrolled', s); }
+}, { passive: true });
+
+/* ---------- packs from the app's own site ---------- */
+async function checkPacks(silent) {
+  if (window.self !== window.top) { if (!silent) toast('Проверка работает в установленной версии'); return; }
+  try {
+    const r = await fetch('packs/index.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('index');
+    const idx = await r.json();
+    const fresh = (idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id));
+    let added = 0;
+    for (const p of fresh) {
+      const pr = await fetch('packs/' + p.file, { cache: 'no-store' });
+      if (!pr.ok) continue;
+      const d = await pr.json();
+      if (d.type === 'study-pack' && !S.packs.some(x => x.id === d.id)) {
+        S.packs.push(d);
+        (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
+        added++;
+      }
+    }
+    S.lastCheck = today(); save();
+    if (added) { render(); toast(added === 1 ? 'Загружен новый пакет заданий' : 'Загружено пакетов: ' + added); }
+    else if (!silent) { render(); toast('Новых заданий пока нет'); }
+  } catch (e) { if (!silent) toast('Нет связи с сайтом приложения. Попробуйте позже'); }
+}
+if ('serviceWorker' in navigator && window.self === window.top && location.protocol === 'https:') {
+  try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+}
+
+render();
+checkPacks(true);
+})();
+</script>
+
+</body>
+</html>
