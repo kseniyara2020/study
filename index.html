@@ -358,6 +358,7 @@ if (!S.tests) S.tests = [SEED_TEST];
 if (!S.tests.some(t => t.id === SEED_TEST.id)) S.tests.unshift(SEED_TEST);
 if (!S.settings.voiceSlot) S.settings.voiceSlot = 'us-f';
 if (!S.settings.lang) S.settings.lang = 'ru';
+delete S.settings.deeplKey; delete S.settings.voice;
 S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
 document.documentElement.lang = lang();
 
@@ -413,14 +414,17 @@ const VOICE_SLOTS = [
 let VOICES = [];
 function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
 try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
+const vBase = v => v.name.toLowerCase().replace(/^(microsoft|apple)\s+/, '').split(/[\s(,\-–]/)[0];
+const vQuality = v => /premium|премиум|высок/i.test(v.name) ? 2 : /enhanced|улучш|расшир/i.test(v.name) ? 1 : 0;
 function voiceFor(slotId) {
   const sl = VOICE_SLOTS.find(s => s.id === slotId); if (!sl) return null;
   const vs = VOICES.filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(sl.lang));
-  for (const p of sl.prefs) {
-    const v = vs.find(v => { const n = v.name.toLowerCase().trim().replace(/\((улучш|расшир)[^)]*\)/, '(enhanced)').replace(/\((премиум|высокое качество)[^)]*\)/, '(premium)'); return p.includes('(') ? n === p : (n === p || n.split(' (')[0] === p && !/premium|enhanced|улучш/i.test(n) || n === p + ' (compact)'); });
-    if (v) return v;
-  }
-  return null;
+  // Google voices in Chrome
+  const g = sl.prefs.filter(p => p.startsWith('google')).map(p => vs.find(v => v.name.toLowerCase() === p)).find(Boolean);
+  const bases = [...new Set(sl.prefs.filter(p => !p.startsWith('google')).map(p => p.split(' (')[0]))];
+  const cands = vs.filter(v => bases.includes(vBase(v)));
+  cands.sort((x, y) => (vQuality(y) - vQuality(x)) || (bases.indexOf(vBase(x)) - bases.indexOf(vBase(y))));
+  return cands[0] || g || null;
 }
 function mainVoice() {
   return voiceFor(S.settings.voiceSlot) || VOICE_SLOTS.map(s => voiceFor(s.id)).find(Boolean) || null;
@@ -769,6 +773,7 @@ function vSettings() {
       <span class="play small" data-act="voice-test" data-slot="${sl.id}" role="button" aria-label="${L('Прослушать', 'Listen')}" style="display:grid;place-items:center">${IC.play}</span>
       <span style="width:22px;color:var(--accent)">${on ? IC.check : ''}</span></button>`;
   }).join('') + `<label class="row"><span class="row-main"><span class="row-title">${L('Скорость', 'Speed')}</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label></div>
+    <div class="gfoot">${L('На устройстве найдены английские голоса', 'English voices on this device')}: ${VOICES.length ? esc(VOICES.slice(0, 14).map(v => v.name + ' · ' + v.lang.replace('_', '-')).join(', ')) : L('пока не загрузились — откройте экран ещё раз', 'not loaded yet — reopen this screen')}</div>
     <div class="gfoot">${L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: iPhone → Настройки → Универсальный доступ → Устный контент → Голоса → Английский. На Mac: Системные настройки → Универсальный доступ → Устный контент.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: iPhone → Settings → Accessibility → Spoken Content → Voices → English. On Mac: System Settings → Accessibility → Spoken Content.')}</div>`;
   h += groupHead(L('Перевод DeepL', 'DeepL translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Адрес переводчика', 'Translator address')}</span></span><input class="inline" id="set-trurl" data-set="trUrl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://….workers.dev" value="${esc(st.trUrl || '')}"></label>
     <button class="row" data-act="tr-test"><span class="tile" style="background:var(--green)">${IC.check}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">${L('Проверить перевод', 'Test translation')}</span><span class="row-sub">${st.trUrl ? L('Переведёт пробную фразу через DeepL', 'Translates a sample phrase via DeepL') : L('Сначала вставьте адрес', 'Paste the address first')}</span></span></button></div>
