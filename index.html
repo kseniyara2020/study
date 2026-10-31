@@ -427,6 +427,27 @@ if (!S.media) S.media = [];
 S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
 document.documentElement.lang = lang();
 if (!S.packs.some(p => p.id === SEED.id)) { addContentEarly(SEED); }
+/* ---------- answer retention: a wrong answer is deleted only after Claude has reviewed it (review file, upTo) AND it is 7+ days old ---------- */
+const KEEP_DAYS = 7;
+function reviewedUpTo() { return (S.reviews || []).reduce((m, r) => r.upTo > m ? r.upTo : m, ''); }
+function mistakeStats() {
+  const up = reviewedUpTo(); let open = 0, done = 0;
+  Object.values(S.progress).forEach(p => (p.wrong || []).forEach(w => { if (up && w.date && w.date <= up) done++; else open++; }));
+  return { open, done };
+}
+function purgeReviewed() {
+  const up = reviewedUpTo(); if (!up) return 0;
+  const cut = new Date(); cut.setDate(cut.getDate() - KEEP_DAYS); const cutoff = ymd(cut);
+  let n = 0;
+  Object.values(S.progress).forEach(p => {
+    if (!p.wrong || !p.wrong.length) return;
+    const keep = p.wrong.filter(w => !(w.date && w.date <= up && w.date <= cutoff));
+    n += p.wrong.length - keep.length;
+    if (keep.length) p.wrong = keep; else delete p.wrong;
+  });
+  return n;
+}
+if (purgeReviewed()) { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 function addContentEarly(d) {
   if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
   S.packs.push(d); (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
@@ -1133,9 +1154,10 @@ function buildExport() {
   Object.entries(S.progress).forEach(([id, p]) => { if (p.answer) writing[id] = p.answer; });
   return {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
-    summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
+    summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
-    mistakes: Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w))),
+    mistakes: Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, reviewedUpTo() && w.date && w.date <= reviewedUpTo() ? { reviewed: true } : {}))),
+    reviews: S.reviews || [],
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
     packs: S.packs, tests: S.tests, media: S.media
   };
@@ -1147,7 +1169,7 @@ function sheetExport() {
     <p class="hint" style="margin:0 4px 12px">${L('Скопируйте и вставьте Claude в чат проекта или перенесите на другое устройство (там — Импорт → вставить текст).', 'Copy it and paste to Claude in the project chat, or move it to your other device (there: Import → paste text).')}</p>
     <textarea class="code" id="exp-text" readonly>${esc(json)}</textarea>
     <div class="actions"><button class="btn" data-act="copy-export">${L('Скопировать', 'Copy')}</button>${framed ? '' : `<button class="btn sec" data-act="download-export">${L('Сохранить файл', 'Save file')}</button>`}</div>
-    <div class="gfoot">${(json.length / 1024).toFixed(1)} KB · ${S.myWords.length} ${P(S.myWords.length, 'слово', 'слова', 'слов', 'word', 'words')} ${L('из медиа', 'from media')} · ${Object.keys(ex.writing).length} ${L('письменных ответов', 'written answers')}</div>`;
+    <div class="gfoot">${(json.length / 1024).toFixed(1)} KB · ${S.myWords.length} ${P(S.myWords.length, 'слово', 'слова', 'слов', 'word', 'words')} ${L('из медиа', 'from media')} · ${Object.keys(ex.writing).length} ${L('письменных ответов', 'written answers')} · ${L('ошибок ждут разбора', 'mistakes to review')}: ${mistakeStats().open}</div>`;
 }
 function sheetImport() {
   const d = UI.sheet.draft;
@@ -1173,13 +1195,18 @@ function addContent(d) {
   if (d.type === 'level-test' && d.skills && d.id && !S.tests.some(t => t.id === d.id)) {
     S.tests.push(d); msg = L('Новая версия теста уровня загружена', 'A new level test version is loaded');
   }
+  if (d.type === 'review' && d.id && d.upTo && !(S.reviews || []).some(r => r.id === d.id)) {
+    S.reviews = [...(S.reviews || []), { id: d.id, date: d.date || today(), upTo: d.upTo, summary: d.summary || '' }];
+    purgeReviewed();
+    msg = L('Claude разобрал ваши ответы до ', 'Claude reviewed your answers up to ') + fmtDate(d.upTo);
+  }
   (d.results || []).forEach(c => { if (c && c.id && c.results && !S.checks.some(x => x.id === c.id)) { S.checks.push(c); S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); msg = msg || L('Получена оценка от Claude', 'A grade from Claude has arrived'); } });
   return msg;
 }
 function importData(raw) {
   let d; try { d = JSON.parse(raw); } catch (e) { toast(L('Не получилось прочитать файл: это не JSON', 'Could not read the file: it is not JSON')); return; }
   if (d.type === 'study-export') { UI.sheet = { kind: 'import', draft: d }; renderSheet(); return; }
-  if (d.type === 'study-pack' || d.type === 'level-test') {
+  if (d.type === 'study-pack' || d.type === 'level-test' || d.type === 'review') {
     const m = addContent(d);
     if (!m) { toast(L('Это уже загружено', 'This is already loaded')); return; }
     save(); UI.sheet = null; render(); renderSheet(); toast(m); return;
@@ -1188,12 +1215,18 @@ function importData(raw) {
 }
 function mergeExport(d, replace) {
   if (replace) {
-    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings });
+    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings, reviews: d.reviews || S.reviews || [] });
   } else {
     (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
     (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
     (d.media || []).forEach(m => { if (!S.media.some(x => x.id === m.id)) S.media.push(m); });
-    Object.entries(d.progress || {}).forEach(([id, p]) => { const cur = S.progress[id]; if (!cur || (!cur.done && p.done) || ((p.answer || '').length > (cur.answer || '').length)) S.progress[id] = Object.assign({}, cur, p); });
+    Object.entries(d.progress || {}).forEach(([id, p]) => {
+      const cur = S.progress[id];
+      const w = [...((cur && cur.wrong) || []), ...(p.wrong || [])], seen = new Set(), wrong = w.filter(x => { const k = [x.date, x.i, x.kind, x.answer].join('|'); if (seen.has(k)) return false; seen.add(k); return true; });
+      if (!cur || (!cur.done && p.done) || ((p.answer || '').length > (cur.answer || '').length)) S.progress[id] = Object.assign({}, cur, p);
+      if (wrong.length) S.progress[id].wrong = wrong;
+    });
+    (d.reviews || []).forEach(r => { if (!(S.reviews || []).some(x => x.id === r.id)) S.reviews = [...(S.reviews || []), r]; });
     Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
     (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
     (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
@@ -1201,7 +1234,7 @@ function mergeExport(d, replace) {
     S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     Object.entries(d.activity || {}).forEach(([k, v]) => { S.activity[k] = Math.max(S.activity[k] || 0, v); });
   }
-  save(); UI.sheet = null; UI.stack = []; render(); renderSheet(); toast(replace ? L('Данные заменены', 'Data replaced') : L('Данные объединены', 'Data merged'));
+  purgeReviewed(); save(); UI.sheet = null; UI.stack = []; render(); renderSheet(); toast(replace ? L('Данные заменены', 'Data replaced') : L('Данные объединены', 'Data merged'));
 }
 
 /* ---------- render ---------- */
@@ -1305,7 +1338,7 @@ function nextItem() {
     TS.finished = true; const sc = TS.results.reduce((a, x) => a + (Number(x) || 0), 0);
     const wrong = (TS.wrong || []).map(w => Object.assign({ date: today() }, w));
     markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc;
-    if (wrong.length) S.progress[t.id].wrong = [...(S.progress[t.id].wrong || []), ...wrong].slice(-60);
+    if (wrong.length) S.progress[t.id].wrong = [...(S.progress[t.id].wrong || []), ...wrong].slice(-500);
     save();
   }
   else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; }
