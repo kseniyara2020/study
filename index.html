@@ -265,6 +265,11 @@ textarea.field{min-height:180px;resize:vertical}
 .sec-bar{display:block;height:6px;border-radius:3px;background:var(--fill);overflow:hidden;margin:6px 0 4px}
 .sec-bar i{display:block;height:100%;border-radius:3px;transition:width .3s}
 .sec-card .row-main{gap:3px}
+.diff{display:flex;flex-direction:column;gap:6px;margin-top:6px;font-size:var(--fs-body);line-height:24px}
+.dlbl{display:inline-block;min-width:92px;font-size:var(--fs-foot);color:var(--label2)}
+.dw-bad{color:var(--red);text-decoration-thickness:1.5px}
+.dw-good{color:var(--green);font-weight:700;background:var(--green-soft);border-radius:4px;padding:0 3px}
+.fb.almost b:first-child{color:var(--orange)}
 .opt.sel{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .passage{white-space:pre-line;font-size:var(--fs-sub);line-height:21px;margin-bottom:16px}
 .notice{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:var(--label);border-radius:var(--radius-card);padding:12px var(--card-pad);margin-bottom:var(--block-gap);font-size:var(--fs-sub);line-height:20px}
@@ -309,6 +314,44 @@ const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").repla
 const SPELL = { favor: 'favour', favors: 'favours', color: 'colour', colors: 'colours', organize: 'organise', organized: 'organised', prioritize: 'prioritise', prioritized: 'prioritised', realize: 'realise', realized: 'realised', center: 'centre', behavior: 'behaviour', analyze: 'analyse', canceled: 'cancelled', canceling: 'cancelling' };
 const loose = s => norm(s).replace(/\bwon't\b/g, 'will not').replace(/\bcan't\b/g, 'cannot').replace(/\bcan not\b/g, 'cannot').replace(/\bshan't\b/g, 'shall not').replace(/n't\b/g, ' not').replace(/'m\b/g, ' am').replace(/'re\b/g, ' are').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/'d\b/g, ' would').replace(/\b(it|he|she|that|there|what|who|let)'s\b/g, '$1 is').replace(/\b[a-z]+\b/g, w => SPELL[w] || w).replace(/\s+/g, ' ').trim();
 const sameText = (a, b) => loose(a) === loose(b);
+const FUNC = new Set(['a', 'an', 'the']);
+function charDist(a, b) {
+  const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[m][n];
+}
+// word-level alignment of answer vs reference; ops: eq / sub / del (extra in answer) / ins (missing from answer)
+function wordDiff(ans, ref) {
+  const A = norm(ans).split(' ').filter(Boolean), R = norm(ref).split(' ').filter(Boolean);
+  const eq = (x, y) => loose(x) === loose(y);
+  const m = A.length, n = R.length, d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) d[i][0] = i; for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (eq(A[i - 1], R[j - 1]) ? 0 : 1));
+  const ops = []; let i = m, j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && d[i][j] === d[i - 1][j - 1] + (eq(A[i - 1], R[j - 1]) ? 0 : 1)) { ops.unshift(eq(A[i - 1], R[j - 1]) ? { t: 'eq', a: A[i - 1], r: R[j - 1] } : { t: 'sub', a: A[i - 1], r: R[j - 1] }); i--; j--; }
+    else if (i > 0 && d[i][j] === d[i - 1][j] + 1) { ops.unshift({ t: 'del', a: A[i - 1] }); i--; }
+    else { ops.unshift({ t: 'ins', r: R[j - 1] }); j--; }
+  }
+  return { dist: d[m][n], ops };
+}
+function bestRef(ans, refs) { let best = null; refs.forEach(r => { const w = wordDiff(ans, r); if (!best || w.dist < best.diff.dist) best = { ref: r, diff: w }; }); return best; }
+// one small slip: a typo in one word, or one missing/extra/wrong short function word
+function almostKind(diff) {
+  const bad = diff.ops.filter(o => o.t !== 'eq');
+  if (bad.length !== 1) return null;
+  const o = bad[0];
+  if (o.t === 'sub' && o.a.length >= 3 && o.r.length >= 3 && charDist(o.a, o.r) <= (o.r.length >= 7 ? 2 : 1)) return 'typo';
+  const w = o.t === 'sub' ? o.r : (o.r || o.a);
+  if (FUNC.has(w) && (o.t !== 'sub' || FUNC.has(o.a))) return 'small';
+  return null;
+}
+function diffHtml(diff) {
+  const you = diff.ops.filter(o => o.t !== 'ins').map(o => o.t === 'eq' ? esc(o.a) : `<s class="dw-bad">${esc(o.a)}</s>`).join(' ') || '—';
+  const ref = diff.ops.filter(o => o.t !== 'del').map(o => o.t === 'eq' ? esc(o.r) : `<b class="dw-good">${esc(o.r)}</b>`).join(' ');
+  return `<div class="diff"><div><span class="dlbl">${L('Ваш ответ', 'Yours')}</span>${you}</div><div><span class="dlbl">${L('Верно', 'Correct')}</span>${ref}</div></div>`;
+}
 const words = s => (String(s || '').trim().match(/\S+/g) || []).length;
 const ruPlural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
 
@@ -880,7 +923,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 30.10 19:51</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 31.10 15:18</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
@@ -963,9 +1006,9 @@ const KIND_HINT = {
 function tItems(t) {
   const items = t.items;
   if (TS.finished) {
-    const sc = TS.results.filter(Boolean).length;
+    const sc = TS.results.reduce((a, x) => a + (Number(x) || 0), 0);
     const msg = sc === items.length ? L('Без ошибок.', 'No mistakes.') : sc >= items.length * 0.8 ? L('Хороший результат. Ошибки вернутся в повторении.', 'Good result. Mistakes will come back in review.') : L('Это правило ещё не стало автоматическим — оно вернётся в следующих днях.', 'This rule is not automatic yet — it will come back in the next days.');
-    return `<div class="summary"><div class="big">${sc}/${items.length}</div><p>${msg}</p></div>
+    return `<div class="summary"><div class="big">${String(sc).replace('.', ',')}/${items.length}</div><p>${msg}</p>${(TS.wrong || []).length ? `<p class="row-sub" style="margin-top:8px">${L('Ошибки сохранены — Claude разберёт их в отчёте после экспорта.', 'Mistakes are saved — Claude will go through them in the report after your export.')}</p>` : ''}</div>
       <div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button><button class="btn plain" data-act="retry">${L('Пройти ещё раз', 'Try again')}</button></div>`;
   }
   const it = items[TS.i], kind = itemKind(t, it);
@@ -992,7 +1035,7 @@ function tItems(t) {
     h += `<div class="tiles answer">${used.length ? used.map((pi, k) => `<button class="tile-w on" data-act="tile-del" data-k="${k}" ${TS.checked ? 'disabled' : ''}>${esc(pool[pi].v)}</button>`).join('') : `<span class="hint" style="margin:0">${L('Нажимайте на слова по порядку', 'Tap the words in order')}</span>`}</div>
       <div class="tiles">${pool.map((x, pi) => `<button class="tile-w" data-act="tile-add" data-pi="${pi}" ${used.includes(pi) || TS.checked ? 'disabled' : ''}>${esc(x.v)}</button>`).join('')}</div>`;
     if (!TS.checked) h += `<div class="btns"><button class="btn sec" data-act="order-reset" ${used.length ? '' : 'disabled'}>${L('Сбросить', 'Reset')}</button><button class="btn" data-act="order-check" ${used.length === toks.length ? '' : 'disabled'}>${L('Проверить', 'Check')}</button></div>`;
-    else h += fb(TS.ok, TS.ok ? md(it.explain || '') : L('Правильно', 'Correct') + ': <b style="display:inline;font-size:inherit">' + esc(it.en) + '</b>' + (it.explain ? '. ' + md(it.explain) : '')) + nextBtn(t);
+    else h += (TS.ok ? fb(true, md(it.explain || '')) : `<div class="fb no"><b>${L('Не совсем', 'Not quite')}</b>${diffHtml(wordDiff(used.map(pi => pool[pi].v).join(' '), it.en))}</div>`) + nextBtn(t);
   } else if (kind === 'gap' || kind === 'dictation' || kind === 'translate' || kind === 'fix') {
     if (kind === 'translate') h += `<p class="q">${esc(it.ru)}</p>`;
     else if (kind === 'fix') h += `<p class="q" style="text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:1.5px">${esc(it.q)}</p>`;
@@ -1002,10 +1045,13 @@ function tItems(t) {
     h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="${kind === 'gap' ? 'off' : 'sentences'}" spellcheck="false" lang="en" placeholder="${ph}" value="${esc(val)}" ${TS.checked ? 'disabled' : ''}>`;
     if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">${L('Проверить', 'Check')}</button></div>`;
     else {
-      const model = esc(it.a[0]);
-      h += fb(TS.ok, (TS.ok ? (it.a.length > 1 && !sameText(TS.input, it.a[0]) ? L('Ещё вариант', 'Also') + ': ' + model + '. ' : '') : L('Правильно', 'Correct') + ': <b style="display:inline;font-size:inherit">' + model + '</b>. ') + md(it.explain || ''));
-      if (!TS.ok && (kind === 'translate' || kind === 'fix')) h += `<div class="btns"><button class="btn sec" data-act="self-ok">${L('У меня тоже верно', 'Mine is correct too')}</button><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? L('Результат', 'Result') : L('Дальше', 'Next')}</button></div>`;
-      else h += nextBtn(t);
+      if (TS.ok) h += fb(true, (it.a.length > 1 && !sameText(TS.input, it.a[0]) ? L('Ещё вариант', 'Also') + ': ' + esc(it.a[0]) + '. ' : '') + md(it.explain || ''));
+      else {
+        const al = TS.almost, d = TS.best.diff;
+        const head = al === 'typo' ? L('Почти верно — опечатка', 'Almost — a typo') : al === 'small' ? L('Почти верно — артикль', 'Almost — an article') : L('Не совсем', 'Not quite');
+        h += `<div class="fb ${al ? 'almost' : 'no'}"><b>${head}</b>${diffHtml(d)}${it.explain ? `<div style="margin-top:8px">${md(it.explain)}</div>` : ''}${(kind === 'translate') ? `<div class="row-sub" style="margin-top:8px">${L('Если ваш вариант тоже возможен — Claude проверит его и скажет в отчёте.', 'If your version is also possible, Claude will check it and tell you in the report.')}</div>` : ''}</div>`;
+      }
+      h += nextBtn(t);
     }
   } else {
     h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
@@ -1089,6 +1135,7 @@ function buildExport() {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
     summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
+    mistakes: Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w))),
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
     packs: S.packs, tests: S.tests, media: S.media
   };
@@ -1247,11 +1294,21 @@ function applyDictation(target, text) {
     const el = document.getElementById('spt-' + i); if (el) { el.value = CS.spoken[i]; }
   }
 }
+function logWrong(t, it, kind, answer, ref, almost) {
+  TS.wrong = TS.wrong || [];
+  TS.wrong.push({ i: TS.i, kind, prompt: it.ru || it.q || it.say || '', answer, ref, almost: almost || undefined });
+}
 function nextItem() {
   try { speechSynthesis.cancel(); } catch (er) {}
   const t = findTask(TS.id).task;
-  if (TS.i >= t.items.length - 1) { TS.finished = true; const sc = TS.results.filter(Boolean).length; markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc; save(); }
-  else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; }
+  if (TS.i >= t.items.length - 1) {
+    TS.finished = true; const sc = TS.results.reduce((a, x) => a + (Number(x) || 0), 0);
+    const wrong = (TS.wrong || []).map(w => Object.assign({ date: today() }, w));
+    markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc;
+    if (wrong.length) S.progress[t.id].wrong = [...(S.progress[t.id].wrong || []), ...wrong].slice(-60);
+    save();
+  }
+  else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; }
   render(); window.scrollTo(0, 0);
 }
 /* ---------- events ---------- */
@@ -1304,23 +1361,28 @@ document.addEventListener('click', e => {
     case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
     case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
     case 'toggle-text': TS.showText = !TS.showText; render(); break;
-    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a; render(); break; }
+    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a ? 1 : 0; if (TS.picked !== it.a) { TS.wrong = TS.wrong || []; TS.wrong.push({ i: TS.i, kind: 'choice', prompt: it.q + (it.say ? ' [' + it.say + ']' : ''), answer: it.options[TS.picked], ref: it.options[it.a] }); } render(); break; }
     case 'check': {
       const t = findTask(TS.id).task, it = t.items[TS.i], kind = itemKind(t, it); const v = (document.getElementById('gap-input') || {}).value || '';
       if (!v.trim()) { toast(L('Сначала впишите ответ', 'Type an answer first')); return; }
       if (kind === 'fix' && sameText(v, it.q)) { toast(L('Предложение не изменилось — исправьте ошибку', 'Nothing changed — fix the mistake')); return; }
-      TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => sameText(ans, v)); TS.results[TS.i] = TS.ok; render(); break;
+      TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => sameText(ans, v));
+      TS.best = TS.ok ? null : bestRef(v, it.a); TS.almost = TS.best ? almostKind(TS.best.diff) : null;
+      TS.results[TS.i] = TS.ok ? 1 : TS.almost ? 0.5 : 0;
+      if (!TS.ok) logWrong(t, it, kind, v, TS.best ? TS.best.ref : it.a[0], TS.almost);
+      render(); break;
     }
-    case 'self-ok': TS.ok = true; TS.results[TS.i] = true; document.querySelector('[data-act="next"]') && document.querySelector('[data-act="next"]').click(); break;
     case 'tile-add': { TS.order = TS.order || []; const pi = Number(el.dataset.pi); if (!TS.order.includes(pi)) TS.order.push(pi); render(); break; }
     case 'tile-del': { TS.order.splice(Number(el.dataset.k), 1); render(); break; }
     case 'order-reset': TS.order = []; render(); break;
     case 'order-check': {
       const t = findTask(TS.id).task, it = t.items[TS.i], pool = seedShuffle(orderTokens(it), it.en);
       const built = (TS.order || []).map(pi => pool[pi].v).join(' ');
-      TS.checked = true; TS.ok = sameText(built, it.en) || (it.alt || []).some(a => sameText(built, a)); TS.results[TS.i] = TS.ok; render(); break;
+      TS.checked = true; TS.ok = sameText(built, it.en) || (it.alt || []).some(a => sameText(built, a)); TS.results[TS.i] = TS.ok ? 1 : 0;
+      if (!TS.ok) logWrong(t, it, 'order', built, it.en, null);
+      render(); break;
     }
-    case 'shadow-done': TS.results[TS.i] = true; nextItem(); break;
+    case 'shadow-done': TS.results[TS.i] = 1; nextItem(); break;
     case 'next': nextItem(); break;
     case 'open-media': go(() => UI.stack.push({ v: 'media-item', id: el.dataset.id })); break;
     case 'open-daysec': go(() => UI.stack.push({ v: 'daysec', sec: el.dataset.sec, di: Number(el.dataset.di) })); break;
