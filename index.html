@@ -265,10 +265,18 @@ textarea.field{min-height:180px;resize:vertical}
 .sec-bar{display:block;height:6px;border-radius:3px;background:var(--fill);overflow:hidden;margin:6px 0 4px}
 .sec-bar i{display:block;height:100%;border-radius:3px;transition:width .3s}
 .sec-card .row-main{gap:3px}
-.diff{display:flex;flex-direction:column;gap:6px;margin-top:6px;font-size:var(--fs-body);line-height:24px}
-.dlbl{display:inline-block;min-width:92px;font-size:var(--fs-foot);color:var(--label2)}
-.dw-bad{color:var(--red);text-decoration-thickness:1.5px}
-.dw-good{color:var(--green);font-weight:700;background:var(--green-soft);border-radius:4px;padding:0 3px}
+.diff{display:flex;flex-direction:column;margin-top:4px}
+.dlbl{display:block;margin-top:10px;font-size:var(--fs-foot);color:var(--label2)}
+.dline{font-size:var(--fs-body);line-height:24px}
+.dw-bad{color:var(--red);font-weight:600}
+.dw-good{color:var(--green);font-weight:700}
+.fb-why{margin-top:2px}.fb-why .dlbl{margin-bottom:2px}
+.fb-tr{margin-top:10px;font-size:var(--fs-sub);color:var(--label2)}
+.fb .rule-btn{margin-top:14px;width:100%}
+.link-btn{background:none;border:0;padding:0;margin-top:10px;color:var(--accent);font:inherit;font-size:var(--fs-sub);cursor:pointer}
+.qfoot{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.qfoot .link-btn{margin-top:8px;font-size:13px}
+.seg-chips{display:flex;gap:8px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px}
 .fb.almost b:first-child{color:var(--orange)}
 .opt.sel{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .passage{white-space:pre-line;font-size:var(--fs-sub);line-height:21px;margin-bottom:16px}
@@ -323,7 +331,8 @@ function charDist(a, b) {
 }
 // word-level alignment of answer vs reference; ops: eq / sub / del (extra in answer) / ins (missing from answer)
 function wordDiff(ans, ref) {
-  const A = norm(ans).split(' ').filter(Boolean), R = norm(ref).split(' ').filter(Boolean);
+  const tok = s => String(s || '').replace(/[’‘`]/g, "'").split(/\s+/).filter(w => w && norm(w));
+  const A = tok(ans), R = tok(ref);
   const eq = (x, y) => loose(x) === loose(y);
   const m = A.length, n = R.length, d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
   for (let i = 0; i <= m; i++) d[i][0] = i; for (let j = 0; j <= n; j++) d[0][j] = j;
@@ -341,17 +350,20 @@ function bestRef(ans, refs) { let best = null; refs.forEach(r => { const w = wor
 function almostKind(diff) {
   const bad = diff.ops.filter(o => o.t !== 'eq');
   if (bad.length !== 1) return null;
-  const o = bad[0];
+  const o0 = bad[0], o = { t: o0.t, a: o0.a && norm(o0.a), r: o0.r && norm(o0.r) };
   if (o.t === 'sub' && o.a.length >= 3 && o.r.length >= 3 && charDist(o.a, o.r) <= (o.r.length >= 7 ? 2 : 1)) return 'typo';
   const w = o.t === 'sub' ? o.r : (o.r || o.a);
   if (FUNC.has(w) && (o.t !== 'sub' || FUNC.has(o.a))) return 'small';
   return null;
 }
+// whole sentences: your answer with wrong words in red, the correct one with changed words in green
 function diffHtml(diff) {
-  const you = diff.ops.filter(o => o.t !== 'ins').map(o => o.t === 'eq' ? esc(o.a) : `<s class="dw-bad">${esc(o.a)}</s>`).join(' ') || '—';
-  const ref = diff.ops.filter(o => o.t !== 'del').map(o => o.t === 'eq' ? esc(o.r) : `<b class="dw-good">${esc(o.r)}</b>`).join(' ');
-  return `<div class="diff"><div><span class="dlbl">${L('Ваш ответ', 'Yours')}</span>${you}</div><div><span class="dlbl">${L('Верно', 'Correct')}</span>${ref}</div></div>`;
+  const you = diff.ops.filter(o => o.t !== 'ins').map(o => o.t === 'eq' ? esc(o.a) : `<span class="dw-bad">${esc(o.a)}</span>`).join(' ') || '—';
+  const ref = diff.ops.filter(o => o.t !== 'del').map(o => o.t === 'eq' ? esc(o.r) : `<span class="dw-good">${esc(o.r)}</span>`).join(' ');
+  return `<div class="diff"><div class="dlbl">${L('Ваш ответ', 'Your answer')}</div><div class="dline">${you}</div><div class="dlbl">${L('Правильно', 'Correct')}</div><div class="dline">${ref}</div></div>`;
 }
+// puts a word into the ___ of a gap sentence and drops the trailing hint "(make/do)"
+function fillGap(q, w) { const x = String(q || '').replace(/\s*\([^)]*\)\s*$/, ''); return /_{2,}/.test(x) ? x.replace(/_{2,}/, w) : null; }
 const words = s => (String(s || '').trim().match(/\S+/g) || []).length;
 const ruPlural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
 
@@ -432,7 +444,7 @@ const KEEP_DAYS = 7;
 function reviewedUpTo() { return (S.reviews || []).reduce((m, r) => r.upTo > m ? r.upTo : m, ''); }
 function mistakeStats() {
   const up = reviewedUpTo(); let open = 0, done = 0;
-  Object.values(S.progress).forEach(p => (p.wrong || []).forEach(w => { if (up && w.date && w.date <= up) done++; else open++; }));
+  [...Object.values(S.progress), ...Object.values(S.inProgress || {})].forEach(p => (p.wrong || []).forEach(w => { if (up && w.date && w.date <= up) done++; else open++; }));
   return { open, done };
 }
 function purgeReviewed() {
@@ -559,7 +571,7 @@ function touchActivity() { const t = today(); S.activity[t] = (S.activity[t] || 
 function markDone(id, extra) {
   const prev = S.progress[id] || {};
   let spent = prev.spent || 0;
-  if (TS && TS.id === id && TS.t0) { spent += Math.min(1800, Math.round((Date.now() - TS.t0) / 1000)); TS.t0 = Date.now(); }
+  if (TS && TS.id === id && TS.t0) { spent += (TS.acc || 0) + Math.min(1800, Math.round((Date.now() - TS.t0) / 1000)); TS.t0 = Date.now(); TS.acc = 0; }
   S.progress[id] = Object.assign({ done: true, at: today() }, prev, extra || {}, { done: true, spent });
   touchActivity(); save();
 }
@@ -570,7 +582,8 @@ function groupHead(text, extra) { return `<div class="ghead">${text}${extra || '
 function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(title)}</b>${esc(text)}</div>`; }
 function taskRow(t) {
   const p = S.progress[t.id], d = p && p.done;
-  const score = p && p.total ? ` · ${p.score}/${p.total}` : '';
+  const ip = (S.inProgress || {})[t.id], c = ip && ipCount(t, ip);
+  const score = ip && c && c.k ? ` · ${L('начато', 'started')} ${c.k} ${L('из', 'of')} ${c.n}` : ip && t.type === 'write' && ip.draft ? ` · ${L('черновик', 'draft')}` : p && p.total ? ` · ${p.score}/${p.total}` : '';
   return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
     <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
     <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${mins(t.minutes)}${score}</span></span>${IC.chevR}</button>`;
@@ -944,15 +957,62 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 31.10 15:18</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 31.10 20:48</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
-/* ---------- task session ---------- */
+/* ---------- rule for a task (shown only after an answer) ---------- */
+function rulesFor(id, it) {
+  if (it && it.rule) { const r = findTask(it.rule); if (r && r.task.type === 'lesson') return [r.task.id]; }
+  const x = findTask(id); if (!x || !x.pack) return [];
+  const all = []; x.pack.days.forEach((d, di) => (d[x.sec] || []).forEach(t => { if (t.type === 'lesson') all.push({ t, di }); }));
+  const own = all.find(l => l.di === x.di);
+  const mixed = !own || /повтор|итог|смешан|вперемешку|различаем|все темы|все правила/i.test(x.task.title);
+  return (mixed ? all.filter(l => l.di <= x.di) : [own]).map(l => l.t.id);
+}
+function sheetRule() {
+  const ls = (UI.sheet.list || []).map(id => findTask(id)).filter(Boolean).map(x => x.task);
+  const k = Math.min(UI.sheet.k || 0, ls.length - 1), t = ls[k];
+  let h = `<div class="sheet-h"><span></span><b>${L('Правило', 'Rule')}</b><button class="nav-btn" data-act="sheet-close">${L('Готово', 'Done')}</button></div>`;
+  if (!t) return h;
+  if (ls.length > 1) h += `<div class="seg-chips">${ls.map((l, i) => `<button class="chip ${i === k ? 'on' : ''}" data-act="rule-tab" data-k="${i}">${esc(l.title)}</button>`).join('')}</div>`;
+  h += `<div class="panel lesson">${(t.body || []).map(p => `<p>${md(p)}</p>`).join('')}</div>`;
+  if ((t.examples || []).length) h += groupHead(L('Примеры', 'Examples')) + '<div class="group">' + t.examples.map(e => `<div class="row static ex">
+     <button class="play small" data-act="speak" data-text="${esc(e.en)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+     <span class="row-main"><span class="row-title">${esc(e.en)}</span><span class="row-sub">${esc(e.ru)}</span></span></div>`).join('') + '</div>';
+  return h;
+}
+// feedback card after an answer: verdict, whole-sentence diff, why, translation, rule button
+function feedback(ok, al, diff, it, extra) {
+  const head = ok ? L('Верно', 'Correct') : al === 'typo' ? L('Почти — опечатка', 'Almost — a typo') : al === 'small' ? L('Почти — артикль', 'Almost — an article') : L('Не совсем', 'Not quite');
+  let h = `<div class="fb ${ok ? 'ok' : al ? 'almost' : 'no'}"><b>${head}</b>`;
+  if (!ok && diff) h += diffHtml(diff);
+  if (extra) h += `<div class="fb-tr">${extra}</div>`;
+  if (it.why) h += `<div class="fb-why"><div class="dlbl">${L('Почему', 'Why')}</div>${md(it.why)}</div>`;
+  if (it.explain) h += `<div class="fb-tr">${md(it.explain)}</div>`;
+  if (TS && rulesFor(TS.id, it).length) h += ok ? `<button class="link-btn" data-act="open-rule">${L('Правило', 'Rule')}</button>` : `<button class="btn sec rule-btn" data-act="open-rule">${L('Правило', 'Rule')}</button>`;
+  return h + '</div>';
+}
+
+/* ---------- task session (saved after every answer, so leaving mid-task loses nothing) ---------- */
+function persistTS() {
+  if (!TS || TS.finished || !findTask(TS.id)) return;
+  const now = Date.now(); TS.acc = (TS.acc || 0) + Math.min(1800, Math.round((now - TS.t0) / 1000)); TS.t0 = now;
+  S.inProgress = S.inProgress || {};
+  S.inProgress[TS.id] = { i: TS.i, results: TS.results, wrong: TS.wrong || [], picked: TS.picked, checked: TS.checked, ok: TS.ok, input: TS.input, order: TS.order || [], best: TS.best || null, almost: TS.almost || null, draft: TS.draft || '', acc: TS.acc, at: today() };
+  save();
+}
+function clearTS(id) { if (S.inProgress && S.inProgress[id]) { delete S.inProgress[id]; save(); } }
+function ipCount(t, ip) { const n = t.items ? t.items.length : t.cards ? t.cards.length : 0; return n ? { k: Math.min(n, (ip.i || 0) + (ip.checked || ip.picked != null ? 1 : 0)), n } : null; }
 function startTask(id) {
   const x = findTask(id); if (!x) return;
   const p = S.progress[id] || {};
-  TS = { t0: Date.now(), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [] };
+  TS = { t0: Date.now(), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [], acc: 0 };
+  const ip = (S.inProgress || {})[id], n = x.task.items ? x.task.items.length : x.task.cards ? x.task.cards.length : 0;
+  if (ip && (!n || (ip.i || 0) < n)) {
+    Object.assign(TS, { i: ip.i || 0, results: ip.results || [], wrong: ip.wrong || [], picked: ip.picked == null ? null : ip.picked, checked: !!ip.checked, ok: !!ip.ok, input: ip.input == null ? null : ip.input, order: ip.order || [], best: ip.best || null, almost: ip.almost || null, acc: ip.acc || 0 });
+    if (ip.draft) TS.draft = ip.draft;
+  }
   UI.stack.push({ v: 'task', id });
 }
 function vTask(id) {
@@ -1056,22 +1116,17 @@ function tItems(t) {
     h += `<div class="tiles answer">${used.length ? used.map((pi, k) => `<button class="tile-w on" data-act="tile-del" data-k="${k}" ${TS.checked ? 'disabled' : ''}>${esc(pool[pi].v)}</button>`).join('') : `<span class="hint" style="margin:0">${L('Нажимайте на слова по порядку', 'Tap the words in order')}</span>`}</div>
       <div class="tiles">${pool.map((x, pi) => `<button class="tile-w" data-act="tile-add" data-pi="${pi}" ${used.includes(pi) || TS.checked ? 'disabled' : ''}>${esc(x.v)}</button>`).join('')}</div>`;
     if (!TS.checked) h += `<div class="btns"><button class="btn sec" data-act="order-reset" ${used.length ? '' : 'disabled'}>${L('Сбросить', 'Reset')}</button><button class="btn" data-act="order-check" ${used.length === toks.length ? '' : 'disabled'}>${L('Проверить', 'Check')}</button></div>`;
-    else h += (TS.ok ? fb(true, md(it.explain || '')) : `<div class="fb no"><b>${L('Не совсем', 'Not quite')}</b>${diffHtml(wordDiff(used.map(pi => pool[pi].v).join(' '), it.en))}</div>`) + nextBtn(t);
+    else h += feedback(TS.ok, null, TS.ok ? null : wordDiff(used.map(pi => pool[pi].v).join(' '), it.en), it) + nextBtn(t);
   } else if (kind === 'gap' || kind === 'dictation' || kind === 'translate' || kind === 'fix') {
     if (kind === 'translate') h += `<p class="q">${esc(it.ru)}</p>`;
-    else if (kind === 'fix') h += `<p class="q" style="text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:1.5px">${esc(it.q)}</p>`;
-    else if (it.q) h += `<p class="q">${md(it.q)}</p>`;
+    else if (it.q && kind !== 'fix') h += `<p class="q">${md(it.q)}</p>`;
     const val = TS.input != null ? TS.input : kind === 'fix' ? it.q : '';
     const ph = kind === 'translate' ? L('Напишите по-английски', 'Write in English') : kind === 'fix' ? '' : kind === 'dictation' ? L('Напишите предложение', 'Type the sentence') : L('Ваш ответ', 'Your answer');
     h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="${kind === 'gap' ? 'off' : 'sentences'}" spellcheck="false" lang="en" placeholder="${ph}" value="${esc(val)}" ${TS.checked ? 'disabled' : ''}>`;
     if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">${L('Проверить', 'Check')}</button></div>`;
     else {
-      if (TS.ok) h += fb(true, (it.a.length > 1 && !sameText(TS.input, it.a[0]) ? L('Ещё вариант', 'Also') + ': ' + esc(it.a[0]) + '. ' : '') + md(it.explain || ''));
-      else {
-        const al = TS.almost, d = TS.best.diff;
-        const head = al === 'typo' ? L('Почти верно — опечатка', 'Almost — a typo') : al === 'small' ? L('Почти верно — артикль', 'Almost — an article') : L('Не совсем', 'Not quite');
-        h += `<div class="fb ${al ? 'almost' : 'no'}"><b>${head}</b>${diffHtml(d)}${it.explain ? `<div style="margin-top:8px">${md(it.explain)}</div>` : ''}${(kind === 'translate') ? `<div class="row-sub" style="margin-top:8px">${L('Если ваш вариант тоже возможен — Claude проверит его и скажет в отчёте.', 'If your version is also possible, Claude will check it and tell you in the report.')}</div>` : ''}</div>`;
-      }
+      if (TS.ok) h += feedback(true, null, null, it, it.a.length > 1 && !sameText(TS.input, it.a[0]) ? L('Ещё вариант', 'Also') + ': ' + esc(it.a[0]) : '');
+      else h += feedback(false, TS.almost, TS.best && TS.best.diff, it, kind === 'translate' ? L('Если ваш вариант тоже возможен — Claude проверит его и скажет в отчёте.', 'If your version is also possible, Claude will check it and tell you in the report.') : '');
       h += nextBtn(t);
     }
   } else {
@@ -1079,9 +1134,12 @@ function tItems(t) {
       let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
       return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${c === 'right' ? IC.check : ''}</button>`;
     }).join('') + '</div>';
-    if (TS.picked !== null) h += fb(TS.picked === it.a, md(it.explain || '')) + nextBtn(t);
+    if (TS.picked !== null) {
+      const ok = TS.picked === it.a, mine = it.options[TS.picked], right = it.options[it.a];
+      h += feedback(ok, null, ok ? null : wordDiff(fillGap(it.q, mine) || mine, fillGap(it.q, right) || right), it) + nextBtn(t);
+    }
   }
-  h += `<div class="qcount">${L('Задание', 'Item')} ${TS.i + 1} ${L('из', 'of')} ${items.length}</div>`;
+  h += `<div class="qfoot"><span class="qcount">${L('Задание', 'Item')} ${TS.i + 1} ${L('из', 'of')} ${items.length}</span>${TS.i > 0 || TS.checked || TS.picked !== null ? `<button class="link-btn" data-act="retry">${L('Начать заново', 'Start over')}</button>` : ''}</div>`;
   return h;
 }
 function fb(ok, text) { return `<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? L('Верно', 'Correct') : L('Не совсем', 'Not quite')}</b>${text}</div>`; }
@@ -1156,8 +1214,8 @@ function buildExport() {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
     summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
-    mistakes: Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, reviewedUpTo() && w.date && w.date <= reviewedUpTo() ? { reviewed: true } : {}))),
-    reviews: S.reviews || [],
+    mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, reviewedUpTo() && w.date && w.date <= reviewedUpTo() ? { reviewed: true } : {})))),
+    reviews: S.reviews || [], inProgress: S.inProgress || {},
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
     packs: S.packs, tests: S.tests, media: S.media
   };
@@ -1215,7 +1273,7 @@ function importData(raw) {
 }
 function mergeExport(d, replace) {
   if (replace) {
-    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings, reviews: d.reviews || S.reviews || [] });
+    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, inProgress: d.inProgress || {}, settings: S.settings, reviews: d.reviews || S.reviews || [] });
   } else {
     (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
     (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
@@ -1268,7 +1326,7 @@ function renderSheet() {
   const root = document.getElementById('sheet-root');
   if (!UI.sheet) { root.innerHTML = ''; return; }
   const k = UI.sheet.kind;
-  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : sheetImport()}</div></div>`;
+  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : k === 'rule' ? sheetRule() : sheetImport()}</div></div>`;
   const f = root.querySelector('#aw-text'); if (f) setTimeout(() => f.focus(), 50);
 }
 function go(fn) { fn(); UI.scrolled = false; render(); window.scrollTo(0, 0); }
@@ -1317,7 +1375,7 @@ function joinText(a, b) { a = (a || '').replace(/\s+$/, ''); if (!a) return b.ch
 function applyDictation(target, text) {
   text = text.replace(/\bi\b/g, 'I').replace(/\bi'(m|ve|ll|d)\b/g, "I'$1");
   if (target === 'write' && TS) {
-    TS.draft = joinText(TS.draft, text); TS.voice = true;
+    TS.draft = joinText(TS.draft, text); TS.voice = true; persistTS();
     const ta = document.querySelector('[data-write]'); if (ta) ta.value = TS.draft;
     const task = findTask(TS.id).task, n = words(TS.draft);
     const wc = document.getElementById('wc'); if (wc) wc.textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
@@ -1329,7 +1387,7 @@ function applyDictation(target, text) {
 }
 function logWrong(t, it, kind, answer, ref, almost) {
   TS.wrong = TS.wrong || [];
-  TS.wrong.push({ i: TS.i, kind, prompt: it.ru || it.q || it.say || '', answer, ref, almost: almost || undefined });
+  TS.wrong.push({ i: TS.i, kind, prompt: it.ru || it.q || it.say || '', answer, ref, almost: almost || undefined, date: today() });
 }
 function nextItem() {
   try { speechSynthesis.cancel(); } catch (er) {}
@@ -1339,9 +1397,10 @@ function nextItem() {
     const wrong = (TS.wrong || []).map(w => Object.assign({ date: today() }, w));
     markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc;
     if (wrong.length) S.progress[t.id].wrong = [...(S.progress[t.id].wrong || []), ...wrong].slice(-500);
+    if (S.inProgress) delete S.inProgress[t.id];
     save();
   }
-  else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; }
+  else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; persistTS(); }
   render(); window.scrollTo(0, 0);
 }
 /* ---------- events ---------- */
@@ -1351,7 +1410,7 @@ document.addEventListener('click', e => {
   if (a === 'scrim') { if (e.target === el) { UI.sheet = null; renderSheet(); } return; }
   switch (a) {
     case 'tab': go(() => { UI.tab = el.dataset.tab; UI.stack = []; UI.viewDay = null; UI.resetAsk = false; }); break;
-    case 'back': try { speechSynthesis.cancel(); } catch (er) {} stopMic(); clearInterval(timerT); go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') TS = null; if (top && top.v === 'review') RV = null; if (top && top.v === 'check') CS = null; }); break;
+    case 'back': try { speechSynthesis.cancel(); } catch (er) {} stopMic(); clearInterval(timerT); go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') { persistTS(); TS = null; } if (top && top.v === 'review') RV = null; if (top && top.v === 'check') CS = null; }); break;
     case 'day': go(() => { UI.viewDay = Number(el.dataset.d); }); break;
     case 'open-task': go(() => startTask(el.dataset.id)); break;
     case 'open-section': go(() => UI.stack.push({ v: 'section', sec: el.dataset.sec })); break;
@@ -1394,16 +1453,17 @@ document.addEventListener('click', e => {
     case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
     case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
     case 'toggle-text': TS.showText = !TS.showText; render(); break;
-    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a ? 1 : 0; if (TS.picked !== it.a) { TS.wrong = TS.wrong || []; TS.wrong.push({ i: TS.i, kind: 'choice', prompt: it.q + (it.say ? ' [' + it.say + ']' : ''), answer: it.options[TS.picked], ref: it.options[it.a] }); } render(); break; }
+    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a ? 1 : 0; if (TS.picked !== it.a) { TS.wrong = TS.wrong || []; TS.wrong.push({ i: TS.i, kind: 'choice', prompt: it.q + (it.say ? ' [' + it.say + ']' : ''), answer: it.options[TS.picked], ref: it.options[it.a], date: today() }); } persistTS(); render(); break; }
     case 'check': {
       const t = findTask(TS.id).task, it = t.items[TS.i], kind = itemKind(t, it); const v = (document.getElementById('gap-input') || {}).value || '';
       if (!v.trim()) { toast(L('Сначала впишите ответ', 'Type an answer first')); return; }
       if (kind === 'fix' && sameText(v, it.q)) { toast(L('Предложение не изменилось — исправьте ошибку', 'Nothing changed — fix the mistake')); return; }
       TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => sameText(ans, v));
-      TS.best = TS.ok ? null : bestRef(v, it.a); TS.almost = TS.best ? almostKind(TS.best.diff) : null;
+      const full = w => (kind === 'gap' && fillGap(it.q, w)) || w, refs = it.a.map(full);
+      TS.best = TS.ok ? null : bestRef(full(v), refs); TS.almost = TS.best ? almostKind(TS.best.diff) : null;
       TS.results[TS.i] = TS.ok ? 1 : TS.almost ? 0.5 : 0;
-      if (!TS.ok) logWrong(t, it, kind, v, TS.best ? TS.best.ref : it.a[0], TS.almost);
-      render(); break;
+      if (!TS.ok) logWrong(t, it, kind, v, TS.best ? it.a[Math.max(0, refs.indexOf(TS.best.ref))] : it.a[0], TS.almost);
+      persistTS(); render(); break;
     }
     case 'tile-add': { TS.order = TS.order || []; const pi = Number(el.dataset.pi); if (!TS.order.includes(pi)) TS.order.push(pi); render(); break; }
     case 'tile-del': { TS.order.splice(Number(el.dataset.k), 1); render(); break; }
@@ -1413,23 +1473,25 @@ document.addEventListener('click', e => {
       const built = (TS.order || []).map(pi => pool[pi].v).join(' ');
       TS.checked = true; TS.ok = sameText(built, it.en) || (it.alt || []).some(a => sameText(built, a)); TS.results[TS.i] = TS.ok ? 1 : 0;
       if (!TS.ok) logWrong(t, it, 'order', built, it.en, null);
-      render(); break;
+      persistTS(); render(); break;
     }
     case 'shadow-done': TS.results[TS.i] = 1; nextItem(); break;
     case 'next': nextItem(); break;
     case 'open-media': go(() => UI.stack.push({ v: 'media-item', id: el.dataset.id })); break;
     case 'open-daysec': go(() => UI.stack.push({ v: 'daysec', sec: el.dataset.sec, di: Number(el.dataset.di) })); break;
     case 'media-seg': UI.mseg = el.dataset.seg; render(); break;
-    case 'retry': { const id = TS.id; TS = null; startTask(id); UI.stack.pop(); render(); break; }
-    case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast(L('Урок пройден', 'Lesson done')); break;
+    case 'retry': { const id = TS.id; clearTS(id); TS = null; startTask(id); UI.stack.pop(); render(); window.scrollTo(0, 0); break; }
+    case 'open-rule': { const t = findTask(TS.id).task, it = (t.items || [])[TS.i]; UI.sheet = { kind: 'rule', list: rulesFor(TS.id, it), k: 0 }; renderSheet(); break; }
+    case 'rule-tab': UI.sheet.k = Number(el.dataset.k); renderSheet(); break;
+    case 'lesson-done': clearTS(TS.id); markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast(L('Урок пройден', 'Lesson done')); break;
     case 'flip': TS.flipped = !TS.flipped; render(); break;
     case 'card-next': {
       const t = findTask(TS.id).task;
-      if (TS.i >= t.cards.length - 1) { addCards(t.cards); markDone(t.id); TS.finished = true; }
-      else { TS.i++; TS.flipped = false; }
+      if (TS.i >= t.cards.length - 1) { addCards(t.cards); markDone(t.id); TS.finished = true; clearTS(t.id); }
+      else { TS.i++; TS.flipped = false; persistTS(); }
       render(); break;
     }
-    case 'save-write': { stopMic(); const t = findTask(TS.id).task; markDone(t.id, { answer: TS.draft, words: words(TS.draft), voice: !!TS.voice }); S.progress[t.id].answer = TS.draft; save(); toast(L('Сохранено — попадёт в экспорт', 'Saved — it goes into your export')); render(); break; }
+    case 'save-write': { stopMic(); const t = findTask(TS.id).task; clearTS(t.id); markDone(t.id, { answer: TS.draft, words: words(TS.draft), voice: !!TS.voice }); S.progress[t.id].answer = TS.draft; save(); toast(L('Сохранено — попадёт в экспорт', 'Saved — it goes into your export')); render(); break; }
     case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
     case 'rv': {
       const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
@@ -1487,10 +1549,12 @@ document.addEventListener('click', e => {
     case 'reset-yes': S = initState(); save(); UI.resetAsk = false; TS = null; RV = null; CS = null; render(); toast(L('Прогресс сброшен', 'Progress reset')); break;
   }
 });
+let draftT;
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && TS) persistTS(); });
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.write) {
-    TS.draft = t.value; const task = findTask(TS.id).task, n = words(t.value);
+    TS.draft = t.value; clearTimeout(draftT); draftT = setTimeout(persistTS, 700); const task = findTask(TS.id).task, n = words(t.value);
     document.getElementById('wc').textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
     document.getElementById('save-write').disabled = n < task.minWords;
   }
