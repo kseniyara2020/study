@@ -1,0 +1,1182 @@
+(function(){
+'use strict';
+
+/* ---------- utilities ---------- */
+const SEED = JSON.parse(document.getElementById('seed-pack').textContent);
+const SEED_TEST = JSON.parse(document.getElementById('seed-test').textContent);
+const KEY = 'study-app-v1';
+const INTERVALS = [0, 1, 3, 7, 14, 30];
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const today = () => ymd(new Date());
+const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return ymd(d); };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;:"«»—–]/g, ' ').replace(/\s+/g, ' ').trim();
+const SPELL = { favor: 'favour', favors: 'favours', color: 'colour', colors: 'colours', organize: 'organise', organized: 'organised', prioritize: 'prioritise', prioritized: 'prioritised', realize: 'realise', realized: 'realised', center: 'centre', behavior: 'behaviour', analyze: 'analyse', canceled: 'cancelled', canceling: 'cancelling' };
+const loose = s => norm(s).replace(/\bwon't\b/g, 'will not').replace(/\bcan't\b/g, 'cannot').replace(/\bcan not\b/g, 'cannot').replace(/\bshan't\b/g, 'shall not').replace(/n't\b/g, ' not').replace(/'m\b/g, ' am').replace(/'re\b/g, ' are').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/'d\b/g, ' would').replace(/\b(it|he|she|that|there|what|who|let)'s\b/g, '$1 is').replace(/\b[a-z]+\b/g, w => SPELL[w] || w).replace(/\s+/g, ' ').trim();
+const sameText = (a, b) => loose(a) === loose(b);
+const words = s => (String(s || '').trim().match(/\S+/g) || []).length;
+const ruPlural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return (m10 === 1 && m100 !== 11) ? a : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? b : c; };
+
+/* ---------- language ---------- */
+const lang = () => (S && S.settings && S.settings.lang) || 'ru';
+const L = (ru, en) => lang() === 'en' ? en : ru;
+const P = (n, r1, r2, r5, e1, en) => lang() === 'en' ? (n === 1 ? e1 : en) : ruPlural(n, r1, r2, r5);
+const loc = () => lang() === 'en' ? 'en-GB' : 'ru-RU';
+const fmtDate = (s, o) => parse(s).toLocaleDateString(loc(), o || { day: 'numeric', month: 'long', year: 'numeric' });
+const fmtShort = s => fmtDate(s, { day: 'numeric', month: 'long' });
+
+const I = (p, fill) => `<svg viewBox="0 0 24 24" width="24" height="24" fill="${fill ? 'currentColor' : 'none'}" stroke="${fill ? 'none' : 'currentColor'}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC = {
+  today: I('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),
+  book: I('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>'),
+  tv: I('<rect x="2.5" y="4.5" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17.5V21"/>'),
+  chart: I('<path d="M5 20v-7M12 20V5M19 20v-10"/>'),
+  gear: I('<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>'),
+  chevR: '<svg class="chev" viewBox="0 0 8 14" width="8" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l6 6-6 6"/></svg>',
+  chevL: I('<path d="M15 4l-8 8 8 8"/>'),
+  chevRb: I('<path d="M9 4l8 8-8 8"/>'),
+  check: I('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  plus: I('<path d="M12 5v14M5 12h14"/>'),
+  play: I('<path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/>', true),
+  flame: I('<path d="M12 22c4 0 7-2.8 7-6.8 0-3.4-2.3-5.6-3.6-7.6-.4 1.6-1.3 2.8-2.4 3.4.2-3.3-1.2-6.4-4-9-.3 3.6-2.2 5.6-3.4 7.4A8.3 8.3 0 0 0 5 15.2C5 19.2 8 22 12 22z"/>', true),
+  cards: I('<rect x="3" y="6" width="14" height="15" rx="2.5"/><path d="M7 3h11.5A2.5 2.5 0 0 1 21 5.5V17"/>'),
+  globe: I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/>'),
+  brief: I('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>'),
+  target: I('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
+  bell: I('<path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
+  wave: I('<path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/>'),
+  key: I('<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/>'),
+  up: I('<path d="M12 15V3M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
+  down: I('<path d="M12 3v12M7 10l5 5 5-5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
+  trash: I('<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/>'),
+  box: I('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>'),
+  lang: I('<path d="M4 5h9M8.5 3v2M6 5c.5 3 2.5 5.5 5.5 7M11 5c-.6 3.4-3 6.3-6.5 8"/><path d="M13 21l4-10 4 10M14.5 17.5h5"/>'),
+  read: I('<path d="M3 5.5C5.5 4 9 4 12 6c3-2 6.5-2 9-.5V19c-2.5-1.5-6-1.5-9 .5-3-2-6.5-2-9-.5z"/><path d="M12 6v13.5"/>'),
+  ear: I('<path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.5"/><path d="M10 9.5a2 2 0 1 1 4 0"/>'),
+  pen: I('<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>'),
+  mic: I('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
+  abc: I('<path d="M3 17l3.5-10L10 17M4.2 13.5h4.6M13 7v10h3.5a2.5 2.5 0 0 0 0-5H13h3a2.5 2.5 0 0 0 0-5z"/>'),
+};
+
+/* ---------- state ---------- */
+function initState() {
+  return {
+    version: 1,
+    packs: [SEED],
+    tests: [SEED_TEST],
+    progress: {},
+    cards: {},
+    myWords: [],
+    shows: [{ id: 'silicon-valley', title: 'Silicon Valley', current: 'S1E3', watched: [],
+      episodes: [{ ep: 'S1E3', title: 'Articles of Incorporation' }] }],
+    checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
+    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.9, trUrl: '', lang: 'ru' },
+    media: (SEED.media || []).slice(),
+    activity: {}
+  };
+}
+function load() { try { const r = localStorage.getItem(KEY); if (!r) return null; const s = JSON.parse(r); return s && s.version === 1 ? s : null; } catch (e) { return null; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+let S = load() || initState();
+if (!S.media) S.media = [];
+// migrations
+if (!S.tests) S.tests = [SEED_TEST];
+if (!S.tests.some(t => t.id === SEED_TEST.id)) S.tests.unshift(SEED_TEST);
+if (!S.settings.voiceSlot) S.settings.voiceSlot = 'us-f';
+if (!S.settings.lang) S.settings.lang = 'ru';
+delete S.settings.deeplKey; delete S.settings.voice;
+if (!S.media) S.media = [];
+S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
+document.documentElement.lang = lang();
+if (!S.packs.some(p => p.id === SEED.id)) { addContentEarly(SEED); }
+function addContentEarly(d) {
+  if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
+  S.packs.push(d); (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+}
+
+const UI = { tab: 'today', stack: [], viewDay: null, seg: 'words', sheet: null, resetAsk: false, scrolled: false };
+let TS = null; // task session
+let RV = null; // review session
+let CS = null; // level check session
+
+/* ---------- derived ---------- */
+const SECTIONS = {
+  general: { name: () => L('Общий английский', 'General English'), short: () => L('Общий', 'General'), color: 'var(--blue)', icon: IC.globe, goal: () => L('B1 → B2', 'B1 → B2') },
+  ux: { name: () => L('Английский для UX/UI', 'English for UX/UI'), short: () => 'UX/UI', color: 'var(--orange)', icon: IC.brief, goal: () => L('созвоны, ревью, письма, собеседования', 'calls, reviews, emails, interviews') },
+  media: { name: () => L('Медиа', 'Media'), short: () => L('Медиа', 'Media'), color: 'var(--pink)', icon: IC.tv, goal: () => '' }
+};
+function vocabMap() { const m = {}; S.packs.forEach(p => (p.vocab || []).forEach(v => { m[v.id] = v; })); return m; }
+function allTasks() {
+  const out = [];
+  S.packs.forEach(p => (p.days || []).forEach((d, di) => ['general', 'ux'].forEach(sec => (d[sec] || []).forEach(t => out.push({ pack: p, day: d, di, sec, task: t })))));
+  (S.media || []).forEach(m => (m.tasks || []).forEach(t => out.push({ pack: null, day: null, di: -1, sec: 'media', item: m, task: t })));
+  return out;
+}
+function findTask(id) { return allTasks().find(x => x.task.id === id); }
+const isDone = id => !!(S.progress[id] && S.progress[id].done);
+function dayTasks(d) { return [...(d.general || []), ...(d.ux || [])]; }
+function activePack() {
+  const open = S.packs.find(p => (p.days || []).some(d => dayTasks(d).some(t => !isDone(t.id))));
+  return open || S.packs[S.packs.length - 1] || null;
+}
+function currentDayIndex(p) { const i = p.days.findIndex(d => dayTasks(d).some(t => !isDone(t.id))); return i < 0 ? p.days.length - 1 : i; }
+function dueCards() { const t = today(); return Object.keys(S.cards).filter(id => S.cards[id].due <= t); }
+function streak() {
+  let n = 0, d = today();
+  if (!S.activity[d]) d = addDays(d, -1);
+  while (S.activity[d]) { n++; d = addDays(d, -1); }
+  return n;
+}
+function doneCount() { return Object.values(S.progress).filter(p => p.done).length; }
+function typeLabel(t) {
+  if (t.type === 'quiz') return t.items.some(i => i.say) ? L('Аудирование', 'Listening') : L('Тест', 'Quiz');
+  return ({ lesson: L('Урок', 'Lesson'), gap: L('Впиши форму', 'Fill in'), dictation: L('Диктант', 'Dictation'), dialog: L('Диалог', 'Dialogue'), cards: L('Новые слова', 'New words'), write: L('Письмо', 'Writing'), translate: L('Перевод', 'Translation'), fix: L('Исправь ошибку', 'Fix the mistake'), order: L('Собери фразу', 'Word order'), shadow: L('Повтори вслух', 'Shadowing'), mix: L('Повторение', 'Review') })[t.type] || L('Задание', 'Task');
+}
+const mins = n => L(n + ' мин', n + ' min');
+
+/* ---------- speech: 4 curated natural voices ---------- */
+const VOICE_SLOTS = [
+  { id: 'gb-f', lang: 'en-gb', ru: 'Британский · женский', en: 'British · female', suggest: 'Serena, Kate',
+    prefs: ['serena (premium)', 'serena (enhanced)', 'kate (enhanced)', 'stephanie (enhanced)', 'martha (enhanced)', 'serena', 'kate', 'stephanie', 'martha', 'google uk english female'] },
+  { id: 'gb-m', lang: 'en-gb', ru: 'Британский · мужской', en: 'British · male', suggest: 'Daniel, Oliver',
+    prefs: ['jamie (premium)', 'jamie (enhanced)', 'oliver (enhanced)', 'daniel (enhanced)', 'arthur (enhanced)', 'daniel', 'oliver', 'arthur', 'jamie', 'google uk english male'] },
+  { id: 'us-f', lang: 'en-us', ru: 'Американский · женский', en: 'American · female', suggest: 'Ava, Samantha',
+    prefs: ['ava (premium)', 'zoe (premium)', 'ava (enhanced)', 'zoe (enhanced)', 'allison (enhanced)', 'samantha (enhanced)', 'susan (enhanced)', 'ava', 'samantha', 'zoe', 'allison', 'susan', 'nicky', 'google us english'] },
+  { id: 'us-m', lang: 'en-us', ru: 'Американский · мужской', en: 'American · male', suggest: 'Evan, Tom',
+    prefs: ['evan (premium)', 'evan (enhanced)', 'nathan (enhanced)', 'tom (enhanced)', 'alex', 'evan', 'nathan', 'tom', 'aaron'] }
+];
+let VOICES = [];
+function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
+try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
+const RU_VOICE = { 'дэниэл': 'daniel', 'дэниел': 'daniel', 'даниэль': 'daniel', 'дэниель': 'daniel', 'кейт': 'kate', 'оливер': 'oliver', 'джейми': 'jamie', 'серена': 'serena', 'сирена': 'serena', 'стефани': 'stephanie', 'марта': 'martha', 'артур': 'arthur', 'саманта': 'samantha', 'ава': 'ava', 'эва': 'ava', 'эйва': 'ava', 'зои': 'zoe', 'зоуи': 'zoe', 'эллисон': 'allison', 'элисон': 'allison', 'сьюзан': 'susan', 'сюзан': 'susan', 'ники': 'nicky', 'никки': 'nicky', 'эван': 'evan', 'нейтан': 'nathan', 'натан': 'nathan', 'том': 'tom', 'алекс': 'alex', 'аарон': 'aaron', 'эрон': 'aaron' };
+const vBase = v => {
+  const uri = String(v.voiceURI || '');
+  if (/^com\.apple\./i.test(uri) && !/eloquence|novelty|ttsbundle/i.test(uri)) { const last = uri.split('.').pop().toLowerCase(); if (/^[a-z]+$/.test(last)) return last; }
+  const first = v.name.toLowerCase().replace(/^(microsoft|apple)\s+/, '').split(/[\s(,\-–]/)[0];
+  return RU_VOICE[first] || first;
+};
+const vQuality = v => { const t = v.name + ' ' + (v.voiceURI || ''); return /premium|премиум|высок/i.test(t) ? 2 : /enhanced|улучш|расшир/i.test(t) ? 1 : 0; };
+function voiceFor(slotId) {
+  const sl = VOICE_SLOTS.find(s => s.id === slotId); if (!sl) return null;
+  const vs = VOICES.filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(sl.lang));
+  // Google voices in Chrome
+  const g = sl.prefs.filter(p => p.startsWith('google')).map(p => vs.find(v => v.name.toLowerCase() === p)).find(Boolean);
+  const bases = [...new Set(sl.prefs.filter(p => !p.startsWith('google')).map(p => p.split(' (')[0]))];
+  const cands = vs.filter(v => bases.includes(vBase(v)));
+  cands.sort((x, y) => (vQuality(y) - vQuality(x)) || (bases.indexOf(vBase(x)) - bases.indexOf(vBase(y))));
+  return cands[0] || g || null;
+}
+function mainVoice() {
+  return voiceFor(S.settings.voiceSlot) || VOICE_SLOTS.map(s => voiceFor(s.id)).find(Boolean) || null;
+}
+function altVoice() {
+  const s = S.settings.voiceSlot || 'us-f';
+  const other = s.slice(0, 3) + (s.endsWith('f') ? 'm' : 'f');
+  return voiceFor(other) || mainVoice();
+}
+function speak(text, opts) {
+  opts = opts || {};
+  try {
+    const ss = window.speechSynthesis;
+    if (!ss) { toast(L('Озвучка недоступна в этом браузере', 'Speech is not available in this browser')); return; }
+    if (!opts.queue) ss.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const v = opts.alt ? altVoice() : mainVoice();
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = (S.settings.voiceSlot || 'us').startsWith('gb') ? 'en-GB' : 'en-US';
+    u.rate = (opts.slow ? 0.7 : 1) * (Number(S.settings.rate) || 0.9);
+    ss.speak(u);
+  } catch (e) { toast(L('Не удалось воспроизвести', 'Could not play audio')); }
+}
+function speakDialog(lines, slow) {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const speakers = [];
+  lines.forEach(l => { if (!speakers.includes(l.s)) speakers.push(l.s); });
+  lines.forEach(l => speak(l.t, { queue: true, alt: speakers.indexOf(l.s) === 1, slow }));
+}
+
+/* ---------- actions on data ---------- */
+function touchActivity() { const t = today(); S.activity[t] = (S.activity[t] || 0) + 1; }
+function markDone(id, extra) {
+  const prev = S.progress[id] || {};
+  let spent = prev.spent || 0;
+  if (TS && TS.id === id && TS.t0) { spent += Math.min(1800, Math.round((Date.now() - TS.t0) / 1000)); TS.t0 = Date.now(); }
+  S.progress[id] = Object.assign({ done: true, at: today() }, prev, extra || {}, { done: true, spent });
+  touchActivity(); save();
+}
+function addCards(ids) { const t = addDays(today(), 1); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; }); }
+
+/* ---------- views: common ---------- */
+function groupHead(text, extra) { return `<div class="ghead">${text}${extra || ''}</div>`; }
+function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(title)}</b>${esc(text)}</div>`; }
+function taskRow(t) {
+  const p = S.progress[t.id], d = p && p.done;
+  const score = p && p.total ? ` · ${p.score}/${p.total}` : '';
+  return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
+    <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
+    <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${mins(t.minutes)}${score}</span></span>${IC.chevR}</button>`;
+}
+function secStats(list) {
+  const done = list.filter(t => isDone(t.id));
+  const plan = list.reduce((a, t) => a + (t.minutes || 0), 0);
+  const spent = Math.round(done.reduce((a, t) => a + ((S.progress[t.id].spent || 0) / 60 || t.minutes || 0), 0));
+  return { done: done.length, total: list.length, plan, spent };
+}
+function secCard(sec, list, di) {
+  const s = SECTIONS[sec], st = secStats(list), pct = st.total ? Math.round(st.done / st.total * 100) : 0;
+  const next = list.find(t => !isDone(t.id));
+  return `<button class="row sec-card" data-act="open-daysec" data-sec="${sec}" data-di="${di}">
+    <span class="tile" style="background:${s.color}">${s.icon}</span>
+    <span class="row-main"><span class="row-title" style="font-weight:600">${s.name()}</span>
+      <span class="row-sub">${st.done}/${st.total} ${L('заданий', 'tasks')} · ${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span>
+      <span class="sec-bar"><i style="width:${pct}%;background:${s.color}"></i></span>
+      <span class="row-sub">${next ? L('Дальше: ', 'Next: ') + esc(next.title) : L('Всё готово на сегодня', 'All done for today')}</span></span>${IC.chevR}</button>`;
+}
+function vDaySec(sec, di) {
+  const p = activePack(), d = p && p.days[di];
+  if (!d) return { title: SECTIONS[sec].name(), back: true, body: '' };
+  const list = d[sec] || [], st = secStats(list), next = list.find(t => !isDone(t.id));
+  let h = `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b>${st.done}/${st.total} ${L('заданий', 'tasks')}</b><span class="row-sub">${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span></div>
+    <span class="sec-bar" style="margin-top:10px"><i style="width:${st.total ? Math.round(st.done / st.total * 100) : 0}%;background:${SECTIONS[sec].color}"></i></span>
+    ${next ? `<div class="actions" style="margin-top:14px"><button class="btn" data-act="open-task" data-id="${esc(next.id)}">${L('Продолжить', 'Continue')}: ${esc(next.title)}</button></div>` : ''}</div>`;
+  h += groupHead(L('Задания дня', 'Today’s tasks')) + `<div class="group">${list.map(taskRow).join('')}</div>`;
+  return { title: SECTIONS[sec].name(), back: true, sub: esc(L('День ', 'Day ') + d.day + ' · ' + d.title), body: h };
+}
+function secHead(sec, list) {
+  const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
+  return `<div class="ghead"><span class="tile" style="background:${s.color};width:22px;height:22px;border-radius:6px">${s.icon}</span>${s.name()}<span style="margin-left:auto">${done}/${list.length}</span></div>`;
+}
+
+/* ---------- Today ---------- */
+function vToday() {
+  const p = activePack();
+  const dateStr = new Date().toLocaleDateString(loc(), { weekday: 'long', day: 'numeric', month: 'long' });
+  if (!p) return { title: L('Сегодня', 'Today'), sub: esc(dateStr), body: empty(IC.box, L('Нет пакета заданий', 'No task pack'), L('Попросите Claude собрать пакет и импортируйте его в Настройках.', 'Ask Claude for a pack and import it in Settings.')) };
+  const ci = currentDayIndex(p);
+  const di = UI.viewDay == null ? ci : Math.max(0, Math.min(p.days.length - 1, UI.viewDay));
+  const d = p.days[di];
+  const all = dayTasks(d), total = all.reduce((a, t) => a + (t.minutes || 0), 0);
+  const due = dueCards().length, st = streak();
+  let h = `<div class="strip">
+      <div class="stat"><b>${IC.flame}${st}</b><span>${P(st, 'день подряд', 'дня подряд', 'дней подряд', 'day in a row', 'days in a row')}</span></div>
+      <div class="stat"><b>${all.filter(t => isDone(t.id)).length}/${all.length}</b><span>${L('заданий сегодня', 'tasks today')}</span></div>
+      <div class="stat"><b>${total}</b><span>${L('минут по плану', 'minutes planned')}</span></div></div>`;
+  if (due) h += `<button class="banner" data-act="open-review"><span class="tile" style="background:rgba(255,255,255,.2)">${IC.cards}</span>
+      <span class="row-main"><span class="row-title" style="font-weight:600">${L('Повторить слова', 'Review words')}</span><span class="row-sub">${due} ${P(due, 'карточка ждёт', 'карточки ждут', 'карточек ждут', 'card is due', 'cards are due')}</span></span>${IC.chevR}</button>`;
+  const state = di === ci ? '' : di < ci ? L(' · пройден', ' · done') : L(' · впереди', ' · ahead');
+  h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
+      <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
+      <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="${L('Следующий день', 'Next day')}">${IC.chevRb}</button></div>`;
+  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + '</div>';
+  const show = S.shows[0];
+  if (show && S.settings.mediaNudge) {
+    const n = S.myWords.filter(w => w.show === show.id).length;
+    h += groupHead(L('По желанию', 'Optional')) + `<div class="group icons"><button class="row" data-act="open-show" data-id="${show.id}">
+      <span class="tile" style="background:var(--pink)">${IC.tv}</span>
+      <span class="row-main"><span class="row-title">${esc(show.title)} · ${esc(show.current)}</span><span class="row-sub">${n ? n + ' ' + P(n, 'слово записано', 'слова записано', 'слов записано', 'word saved', 'words saved') : L('Записывайте незнакомые слова во время просмотра', 'Save unknown words while you watch')}</span></span>${IC.chevR}</button></div>
+      ${(S.media || []).filter(m => (m.tasks || []).some(t => !isDone(t.id))).slice(0, 2).map(m => `<div class="group icons" style="margin-top:8px"><button class="row" data-act="open-media" data-id="${esc(m.id)}"><span class="tile" style="background:${m.topic === 'ux' ? 'var(--orange)' : 'var(--blue)'}">${m.kind === 'podcast' ? IC.ear : IC.read}</span><span class="row-main"><span class="row-title">${esc(m.title)}</span><span class="row-sub">${m.kind === 'podcast' ? L('Подкаст', 'Podcast') : L('Статья', 'Article')} · ${esc(m.level)} · ${mins(m.minutes)}</span></span>${IC.chevR}</button></div>`).join('')}
+      <div class="gfoot">${L('Медиа не входит в обязательный план и не влияет на серию дней.', 'Media is not part of the daily plan and does not affect your streak.')}</div>`;
+  }
+  return { title: L('Сегодня', 'Today'), sub: esc(dateStr), body: h };
+}
+
+/* ---------- English ---------- */
+function vEnglish() {
+  const tasks = allTasks();
+  let h = groupHead(L('Ежедневно', 'Daily')) + '<div class="group icons">';
+  ['general', 'ux'].forEach(sec => {
+    const list = tasks.filter(x => x.sec === sec), done = list.filter(x => isDone(x.task.id)).length, s = SECTIONS[sec];
+    h += `<button class="row" data-act="open-section" data-sec="${sec}"><span class="tile" style="background:${s.color}">${s.icon}</span>
+      <span class="row-main"><span class="row-title">${s.name()}</span><span class="row-sub">${esc(s.goal())}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
+  });
+  h += '</div>' + groupHead(L('По желанию', 'Optional')) + `<div class="group icons"><button class="row" data-act="tab" data-tab="media"><span class="tile" style="background:var(--pink)">${IC.tv}</span>
+      <span class="row-main"><span class="row-title">${L('Медиа', 'Media')}</span><span class="row-sub">${L('Сериалы, фильмы, видео', 'Series, films, videos')}</span></span>${IC.chevR}</button></div>`;
+  const due = dueCards().length, total = Object.keys(S.cards).length;
+  h += groupHead(L('Карточки слов', 'Word cards')) + `<div class="group icons">
+      <button class="row" data-act="open-review"><span class="tile" style="background:var(--accent)">${IC.cards}</span>
+      <span class="row-main"><span class="row-title">${L('Повторить сейчас', 'Review now')}</span><span class="row-sub">${L('Интервальное повторение: 1 → 3 → 7 → 14 → 30 дней', 'Spaced repetition: 1 → 3 → 7 → 14 → 30 days')}</span></span><span class="row-val">${due}</span>${IC.chevR}</button>
+      <div class="row static"><span class="tile" style="background:var(--teal)">${IC.box}</span><span class="row-main"><span class="row-title">${L('Всего в повторении', 'Total in review')}</span></span><span class="row-val">${total}</span></div></div>
+      <div class="gfoot">${L('Слова попадают сюда после заданий «Новые слова».', 'Words get here after “New words” tasks.')}</div>`;
+  return { title: L('Английский', 'English'), body: h };
+}
+function vSection(sec) {
+  const s = SECTIONS[sec];
+  let h = '';
+  S.packs.forEach(p => {
+    h += `<div class="ghead">${esc(p.title)}</div>`;
+    p.days.forEach(d => { const list = d[sec] || []; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">${L('День', 'Day')} ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
+  });
+  return { title: s.name(), back: true, sub: esc(s.goal()), body: h };
+}
+
+/* ---------- Media ---------- */
+function vMedia() {
+  const seg = UI.mseg || 'series';
+  let h = `<div class="seg" role="tablist"><button class="${seg === 'series' ? 'on' : ''}" data-act="media-seg" data-seg="series">${L('Сериалы', 'Series')}</button><button class="${seg === 'article' ? 'on' : ''}" data-act="media-seg" data-seg="article">${L('Статьи', 'Articles')}</button><button class="${seg === 'podcast' ? 'on' : ''}" data-act="media-seg" data-seg="podcast">${L('Подкасты', 'Podcasts')}</button></div>`;
+  if (seg === 'series') {
+    h += '<div class="group" style="margin-top:16px">';
+    S.shows.forEach(sh => {
+      const n = S.myWords.filter(w => w.show === sh.id).length;
+      h += `<button class="row" data-act="open-show" data-id="${sh.id}"><span class="poster">Silicon<br>Valley</span>
+        <span class="row-main"><span class="row-title" style="font-weight:600">${esc(sh.title)}</span><span class="row-sub">${L('Сериал · сейчас', 'Series · now')} <span class="epi">${esc(sh.current)}</span></span><span class="row-sub">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('просмотрено серий', 'episodes watched')}: ${sh.watched.length}</span></span>${IC.chevR}</button>`;
+    });
+    h += `</div><div class="gfoot">${L('Смотрите с английскими субтитрами, записывайте непонятное кнопкой «+», отмечайте серию — Claude соберёт задания по ней.', 'Watch with English subtitles, save unknown words with “+”, mark the episode — Claude builds tasks from it.')}</div>`;
+  } else {
+    const list = (S.media || []).filter(m => m.kind === seg);
+    if (!list.length) h += empty(seg === 'article' ? IC.read : IC.ear, seg === 'article' ? L('Пока нет статей', 'No articles yet') : L('Пока нет подкастов', 'No podcasts yet'), L('Claude добавит их вместе со следующим пакетом.', 'Claude will add them with the next pack.'));
+    else {
+      h += '<div class="group icons" style="margin-top:16px">' + list.map(m => {
+        const ts = m.tasks || [], d = ts.filter(t => isDone(t.id)).length;
+        return `<button class="row" data-act="open-media" data-id="${esc(m.id)}"><span class="tile" style="background:${m.topic === 'ux' ? 'var(--orange)' : 'var(--blue)'}">${seg === 'article' ? IC.read : IC.ear}</span>
+          <span class="row-main"><span class="row-title">${esc(m.title)}</span><span class="row-sub">${esc(m.source)} · ${esc(m.level)} · ${mins(m.minutes)}</span></span><span class="row-val">${d}/${ts.length}</span>${IC.chevR}</button>`;
+      }).join('') + '</div>';
+      h += `<div class="gfoot">${seg === 'article' ? L('Статьи про UX/UI и на общие темы. Читайте по ссылке, задания — здесь. Новые статьи приходят с пакетами.', 'Articles about UX/UI and general topics. Read via the link, do the tasks here. New articles come with packs.') : L('Слушайте выпуск в приложении «Подкасты», задания — здесь. Слова из выпуска запишите — Claude сделает по ним упражнения.', 'Listen in the Podcasts app, do the tasks here. Save words from the episode — Claude will turn them into exercises.')}</div>`;
+    }
+  }
+  return { title: L('Медиа', 'Media'), sub: L('По желанию, без плана', 'Optional, no plan'), body: h };
+}
+function vMediaItem(id) {
+  const m = (S.media || []).find(x => x.id === id);
+  if (!m) return { title: L('Медиа', 'Media'), back: true, body: empty(IC.read, L('Не найдено', 'Not found'), '') };
+  let h = `<div class="tmeta"><span class="pill" style="background:${m.topic === 'ux' ? 'var(--orange)' : 'var(--blue)'};color:#fff">${m.topic === 'ux' ? 'UX/UI' : L('Общая тема', 'General')}</span><span class="pill">${esc(m.level)}</span><span class="pill">${mins(m.minutes)}</span></div>
+    <div class="panel"><p class="prompt" style="margin:0 0 10px">${md(m.about || '')}</p><p class="row-sub" style="margin:0 0 12px">${esc(m.source)}${m.author ? ' · ' + esc(m.author) : ''}${m.published ? ' · ' + esc(m.published) : ''}</p>
+    <a class="btn" href="${esc(m.url)}" target="_blank" rel="noopener" style="text-decoration:none">${m.kind === 'podcast' ? L('Открыть подкаст ↗', 'Open the podcast ↗') : L('Открыть статью ↗', 'Open the article ↗')}</a></div>`;
+  h += groupHead(L('Задания', 'Tasks')) + '<div class="group">' + (m.tasks || []).map(taskRow).join('') + '</div>';
+  if (m.note) h += `<div class="gfoot">${md(m.note)}</div>`;
+  return { title: m.title, back: true, sub: esc(m.kind === 'podcast' ? L('Подкаст', 'Podcast') : L('Статья', 'Article')), body: h };
+}
+function vShow(id) {
+  const sh = S.shows.find(s => s.id === id);
+  if (!sh) return { title: L('Медиа', 'Media'), back: true, body: empty(IC.tv, L('Сериал не найден', 'Series not found'), '') };
+  let h = `<div class="seg" role="tablist"><button class="${UI.seg === 'words' ? 'on' : ''}" data-act="seg" data-seg="words">${L('Мои слова', 'My words')}</button><button class="${UI.seg === 'tasks' ? 'on' : ''}" data-act="seg" data-seg="tasks">${L('Задания', 'Tasks')}</button></div>`;
+  if (UI.seg === 'words') {
+    const list = S.myWords.filter(w => w.show === id);
+    if (!list.length) h += `<div class="empty">${IC.plus}<b>${L('Пока нет слов', 'No words yet')}</b>${L('Во время просмотра нажмите «+» и запишите слово или фразу, которую не поняли. Перевод покажется сразу, а точное значение в контексте сцены Claude объяснит в задании.', 'While watching, tap “+” and save a word or phrase you didn’t understand. The translation appears at once, and Claude explains its meaning in the scene in a task.')}</div><button class="btn" data-act="add-word">${L('Добавить слово', 'Add word')}</button>`;
+    else {
+      const eps = [...new Set(list.map(w => w.ep))].sort().reverse();
+      eps.forEach(ep => {
+        const ws = list.filter(w => w.ep === ep);
+        h += groupHead(`<span class="epi">${esc(ep)}</span>`, `<span style="margin-left:auto">${ws.length}</span>`) + '<div class="group">' + ws.map(w => `<div class="row static">
+          <button class="play small" data-act="speak" data-text="${esc(w.text)}" aria-label="${L('Произнести', 'Play')}">${IC.play}</button>
+          <span class="row-main"><span class="row-title">${esc(w.text)}</span><span class="row-sub">${w.ru ? esc(w.ru) : L('Перевод — в задании от Claude', 'Translation will come in a task from Claude')}${w.ctx ? ' · ' + esc(w.ctx) : ''}</span></span>
+          <button class="del" data-act="del-word" data-id="${esc(w.id)}" aria-label="${L('Удалить', 'Delete')}">${IC.trash}</button></div>`).join('') + '</div>';
+      });
+    }
+  } else {
+    const eps = sh.episodes || [{ ep: sh.current }];
+    h += groupHead(L('Сезон 1', 'Season 1')) + '<div class="group">' + eps.map(e => {
+      const w = sh.watched.includes(e.ep), n = S.myWords.filter(x => x.show === id && x.ep === e.ep).length;
+      return `<div class="row static"><span class="check ${w ? 'on' : ''}">${w ? IC.check : ''}</span>
+        <span class="row-main"><span class="row-title"><span class="epi">${esc(e.ep)}</span> ${esc(e.title || '')}</span>
+        <span class="row-sub">${w ? L('Просмотрено · ждёт задания от Claude', 'Watched · waiting for tasks from Claude') : L('Не просмотрено', 'Not watched')} · ${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')}</span></span>
+        ${w ? '' : `<button class="chip on" data-act="watched" data-ep="${esc(e.ep)}">${L('Посмотрела', 'Watched')}</button>`}</div>`;
+    }).join('') + `</div><div class="gfoot">${L('Задания по серии появятся здесь после импорта пакета. Чтобы Claude их собрал, отправьте экспорт: Настройки → Экспорт.', 'Episode tasks appear here after a pack import. To get them, send Claude an export: Settings → Export.')}</div>`;
+  }
+  return { title: sh.title, back: true, sub: L('Сериал · сейчас ', 'Series · now ') + esc(sh.current), action: `<button class="nav-btn" data-act="add-word" aria-label="${L('Добавить слово', 'Add word')}">${IC.plus}</button>`, body: h };
+}
+
+/* ---------- Level checks ---------- */
+const SKILLS = ['grammar', 'reading', 'listening', 'writing', 'speaking'];
+const SKILL_UI = {
+  grammar: { ru: 'Грамматика и лексика', en: 'Grammar & vocabulary', icon: IC.abc, color: 'var(--blue)' },
+  reading: { ru: 'Чтение', en: 'Reading', icon: IC.read, color: 'var(--green)' },
+  listening: { ru: 'Аудирование', en: 'Listening', icon: IC.ear, color: 'var(--orange)' },
+  writing: { ru: 'Письмо', en: 'Writing', icon: IC.pen, color: 'var(--pink)' },
+  speaking: { ru: 'Говорение', en: 'Speaking', icon: IC.mic, color: 'var(--teal)' }
+};
+const skillName = k => L(SKILL_UI[k].ru, SKILL_UI[k].en);
+const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+const BANDS = ['A2', 'B1', 'B2', 'C1'];
+function currentTest() { return S.tests.slice().sort((a, b) => (b.version || 0) - (a.version || 0))[0]; }
+function latestResult(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return Object.assign({ date: S.checks[i].date, test: S.checks[i].test }, r); } return null; }
+function latestLevel(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r && r.level) return r; } return null; }
+function doneInTest(testId, skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const c = S.checks[i]; if (c.test === testId && c.results[skill]) return Object.assign({ date: c.date }, c.results[skill]); } return null; }
+function overallLevel() {
+  const ls = SKILLS.map(k => latestLevel(k)).filter(Boolean).map(r => LEVELS.indexOf(r.level)).filter(i => i >= 0);
+  if (!ls.length) return { level: 'B1', n: 0 };
+  return { level: LEVELS[Math.floor(ls.reduce((a, b) => a + b, 0) / ls.length)], n: ls.length };
+}
+function levelFromBands(b) {
+  let lvl = 'A1';
+  for (const band of BANDS) {
+    const x = b[band]; if (!x || !x.t) continue;
+    const pass = x.t <= 2 ? x.c >= 1 : x.c / x.t >= 0.6;
+    if (pass) lvl = band; else break;
+  }
+  return lvl;
+}
+function checkKind(c) {
+  return ({ placement: L('Входной тест', 'Placement test'), skill: L('Проверка навыка', 'Skill check'), graded: L('Оценка Claude', 'Graded by Claude') })[c.kind] || esc(c.kind);
+}
+function skillMinutes(t, k) { return (t.skills[k] && t.skills[k].minutes) || 10; }
+
+function vProgress() {
+  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level);
+  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>${L('дней подряд', 'days in a row')}</span></div>
+     <div class="stat"><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
+     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>`;
+  // activity: fills left to right from the first study day
+  const t = today(), first = Object.keys(S.activity).filter(k => S.activity[k]).sort()[0];
+  let start = first || t; if (addDays(start, 13) < t) start = addDays(t, -13);
+  let cells = '', active = 0;
+  for (let i = 0; i < 14; i++) { const d = addDays(start, i), a = d <= t ? (S.activity[d] || 0) : 0; if (a) active++; cells += `<i class="${a ? 'on' : ''}" title="${fmtShort(d)}"></i>`; }
+  h += groupHead(L('Активность, 14 дней', 'Activity, 14 days')) + `<div class="panel"><div class="days14">${cells}</div><div class="row-sub" style="margin-top:10px">${L('Дней с занятиями', 'Study days')}: ${active} ${L('из', 'of')} 14</div></div>`;
+  h += groupHead(L('Уровень по CEFR', 'CEFR level')) + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${ov.level}</b><span class="row-sub">${L('цель', 'goal')}: ${LEVELS[ci + 1] || ov.level}</span></div>
+     <div class="cefr" style="margin-bottom:0">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : ''}">${l}</div>`).join('')}</div>
+     <div class="actions" style="margin-top:16px"><button class="btn" data-act="open-checks">${L('Пройти проверку уровня', 'Take a level check')}</button></div></div>`;
+  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group">' + SKILLS.map(k => {
+    const r = latestResult(k);
+    let sub, pill;
+    if (r && r.pending) { sub = L('на проверке у Claude', 'waiting for Claude'); pill = `<span class="pill">${L('ждёт', 'pending')}</span>`; }
+    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? L('самооценка · ', 'self-assessment · ') : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
+    else { sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k)); pill = '<span class="pill big">—</span>'; }
+    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${pill}${IC.chevR}</button>`;
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо оценивает Claude, говорение — самооценка.', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing is graded by Claude, speaking is a self-assessment.')}</div>`;
+  const last = S.checks[S.checks.length - 1];
+  const from = addDays(last.date, 28), to = addDays(last.date, 42);
+  h += groupHead(L('Проверки', 'Checks')) + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
+      <span class="row-main"><span class="row-title">${L('Следующая контрольная', 'Next full check')}</span><span class="row-sub">${fmtShort(from)} – ${fmtShort(to)}</span></span><span class="pill">${L('5 навыков', '5 skills')}</span></div>` +
+    S.checks.slice().reverse().map(c => {
+      const ks = Object.keys(c.results), r0 = c.results[ks[0]];
+      return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
+      <span class="row-main"><span class="row-title">${checkKind(c)}</span><span class="row-sub">${fmtDate(c.date)} · ${ks.map(k => skillName(k) + (c.results[k].total ? ' ' + c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span>${r0.pending ? `<span class="pill">${L('ждёт', 'pending')}</span>` : `<span class="pill lvl">${r0.level}</span>`}</div>`;
+    }).join('') + '</div>';
+  return { title: L('Прогресс', 'Progress'), body: h };
+}
+
+function vChecks() {
+  const t = currentTest();
+  const total = SKILLS.reduce((a, k) => a + skillMinutes(t, k), 0);
+  const doneAll = SKILLS.every(k => doneInTest(t.id, k));
+  let h = '';
+  if (doneAll) h += `<div class="notice">${IC.check}<span>${L('Все навыки в этой версии пройдены. Новую версию теста Claude выложит к следующей контрольной — она загрузится сама.', 'All skills in this version are done. Claude will publish a new version for the next full check — it will load automatically.')}</span></div>`;
+  h += groupHead(L('Навыки', 'Skills')) + '<div class="group icons">' + SKILLS.map(k => {
+    const d = doneInTest(t.id, k), u = SKILL_UI[k];
+    const sub = d ? (d.pending ? L('отправлено Claude · ', 'sent to Claude · ') : L('пройдено · ', 'done · ') + (d.level ? d.level + ' · ' : '')) + fmtShort(d.date) : mins(skillMinutes(t, k));
+    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="tile" style="background:${u.color}">${u.icon}</span>
+      <span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${d ? `<span class="check on">${IC.check}</span>` : ''}${IC.chevR}</button>`;
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Навыки можно проходить по одному, в разные дни. Задания составлены по формату Cambridge и IELTS, но свои. Когда пройдены все пять — это полная контрольная.', 'You can take the skills one by one, on different days. The tasks follow the Cambridge and IELTS formats but are original. All five together make a full check.')}</div>`;
+  return { title: L('Проверка уровня', 'Level check'), back: true, sub: esc(L('Версия ', 'Version ') + t.version + ' · ≈' + mins(total) + ' ' + L('всего', 'in total')), body: h };
+}
+
+function checkSteps(sk) { const out = []; (sk.parts || []).forEach((p, pi) => (p.items || []).forEach((it, ii) => out.push({ p, it, pi, ii }))); return out; }
+function startCheck(skill) { const t = currentTest(); CS = { skill, test: t.id, started: false, i: 0, answers: [], drafts: [], ticks: {}, phase: 0, result: null }; }
+function vCheck(skill) {
+  const t = currentTest(), sk = t.skills[skill];
+  if (!CS || CS.skill !== skill || CS.test !== t.id) startCheck(skill);
+  const title = skillName(skill);
+  if (!CS.started) return { title, back: true, body: checkIntro(t, skill, sk) };
+  if (CS.result) return { title, back: true, body: checkResult(skill, sk) };
+  if (skill === 'writing') return { title, back: true, body: checkWriting(sk) };
+  if (skill === 'speaking') return { title, back: true, body: checkSpeaking(sk) };
+  return { title, back: true, body: checkChoice(skill, sk) };
+}
+function checkIntro(t, skill, sk) {
+  const d = doneInTest(t.id, skill);
+  const n = skill === 'writing' ? sk.parts.length : skill === 'speaking' ? sk.prompts.length : checkSteps(sk).length;
+  const unit = skill === 'writing' ? P(n, 'задание', 'задания', 'заданий', 'task', 'tasks') : skill === 'speaking' ? P(n, 'вопрос', 'вопроса', 'вопросов', 'prompt', 'prompts') : P(n, 'вопрос', 'вопроса', 'вопросов', 'question', 'questions');
+  let h = `<div class="tmeta"><span class="pill" style="background:${SKILL_UI[skill].color};color:#fff">${L('CEFR A2–C1', 'CEFR A2–C1')}</span><span class="pill">${mins(sk.minutes)}</span><span class="pill">${n} ${unit}</span><span class="pill">${L('версия', 'version')} ${t.version}</span></div>`;
+  if (d) h += `<div class="notice">${IC.check}<span><b>${L('Вы уже проходили эту версию', 'You have taken this version')} ${fmtShort(d.date)}${d.level ? ' · ' + d.level : d.pending ? L(' · на проверке', ' · pending') : ''}.</b> ${L('Новую версию теста Claude выложит к следующей контрольной, она загрузится сама. Повторное прохождение этой версии даст завышенный результат: вопросы уже знакомы.', 'Claude will publish a new version for the next full check, and it will load automatically. Retaking this version gives an inflated result: you have seen the questions.')}</span></div>`;
+  h += `<div class="panel"><p class="prompt" style="margin:0">${md(sk.about)}</p></div>`;
+  h += `<div class="actions"><button class="btn" data-act="check-start">${d ? L('Пройти ещё раз', 'Take again') : L('Начать', 'Start')}</button></div>`;
+  return h;
+}
+function checkChoice(skill, sk) {
+  const steps = checkSteps(sk), st = steps[CS.i], it = st.it, p = st.p, sel = CS.answers[CS.i];
+  let h = `<div class="progress"><i style="width:${(CS.i / steps.length) * 100}%"></i></div>`;
+  h += `<div class="lbl" style="margin:0 0 10px">${esc(p.title)}</div>`;
+  if (p.passage) h += `<div class="panel passage">${esc(p.passage)}</div>`;
+  if (p.lines) h += `<div class="audio"><button class="play" data-act="check-dialog" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+      <div class="audio-t"><b>${L('Прослушайте запись', 'Listen to the recording')}</b><span>${L('Можно слушать сколько угодно раз', 'Listen as many times as you need')}</span></div>
+      <button class="chip" data-act="check-dialog" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
+  if (it.say) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(it.say)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+      <div class="audio-t"><b>${L('Прослушайте', 'Listen')}</b><span>${L('и ответьте на вопрос', 'and answer the question')}</span></div>
+      <button class="chip" data-act="speak" data-text="${esc(it.say)}" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
+  h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => `<button class="opt ${sel === k ? 'sel' : ''}" data-act="check-pick" data-i="${k}"><span>${md(o)}</span>${sel === k ? IC.check : ''}</button>`).join('') + '</div>';
+  h += `<div class="btns">${CS.i > 0 ? `<button class="btn sec" data-act="check-prev">${L('Назад', 'Back')}</button>` : ''}<button class="btn" data-act="check-next" ${sel == null ? 'disabled' : ''}>${CS.i === steps.length - 1 ? L('Завершить', 'Finish') : L('Дальше', 'Next')}</button></div>`;
+  h += `<div class="qcount">${L('Вопрос', 'Question')} ${CS.i + 1} ${L('из', 'of')} ${steps.length}</div>`;
+  return h;
+}
+function finishChoice(skill, sk) {
+  const steps = checkSteps(sk), bands = {};
+  let c = 0; const wrong = [];
+  steps.forEach((st, i) => { const b = st.it.band; bands[b] = bands[b] || { c: 0, t: 0 }; bands[b].t++; if (CS.answers[i] === st.it.a) { bands[b].c++; c++; } else wrong.push(i); });
+  const level = levelFromBands(bands);
+  const res = { score: c, total: steps.length, level, bands, wrong };
+  S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { [skill]: res } });
+  touchActivity(); save(); CS.result = res;
+}
+function checkResult(skill, sk) {
+  const r = CS.result;
+  if (r.pending) return `<div class="summary"><div class="big" style="font-size:34px">${L('Отправлено', 'Submitted')}</div><p>${L('Тексты сохранены. Сделайте экспорт (Настройки → Экспорт) и пришлите его Claude — оценка по CEFR придёт в следующем пакете.', 'Your texts are saved. Make an export (Settings → Export) and send it to Claude — the CEFR grade will come with the next pack.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+  let h = `<div class="summary"><div class="big">${r.level}</div><p>${r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : ''}${skillName(skill)}</p></div>`;
+  if (r.bands) h += groupHead(L('По уровням', 'By level')) + '<div class="group">' + BANDS.filter(b => r.bands[b]).map(b => { const x = r.bands[b]; const ok = x.t <= 2 ? x.c >= 1 : x.c / x.t >= 0.6; return `<div class="row static"><span class="row-main"><span class="row-title">${b}</span></span><span class="row-val">${x.c}/${x.t}</span><span class="pill ${ok ? 'good' : ''}">${ok ? L('пройден', 'passed') : L('не пройден', 'not passed')}</span></div>`; }).join('') + '</div>';
+  if (r.wrong && r.wrong.length) {
+    const steps = checkSteps(sk);
+    h += groupHead(L('Ошибки', 'Mistakes')) + '<div class="group">' + r.wrong.map(i => { const it = steps[i].it, a = CS.answers[i]; return `<div class="row static"><span class="row-main"><span class="row-title">${md(it.q)}</span><span class="row-sub">${L('Ваш ответ', 'Your answer')}: ${esc(it.options[a])} · ${L('верно', 'correct')}: <b>${esc(it.options[it.a])}</b></span></span></div>`; }).join('') + '</div>';
+  }
+  h += `<div class="gfoot">${L('Уровень считается так: уровень засчитан, если верно не меньше 60% вопросов этого уровня и всех уровней ниже.', 'How it is scored: a level counts when at least 60% of its questions and of all lower levels are correct.')}</div>`;
+  h += `<div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+  return h;
+}
+function checkWriting(sk) {
+  let h = '', ok = true;
+  sk.parts.forEach((p, i) => {
+    const n = words(CS.drafts[i]); if (n < p.minWords) ok = false;
+    h += `<div class="lbl" style="margin:${i ? 26 : 0}px 16px 8px">${esc(p.title)}</div><div class="panel"><p class="prompt" style="margin:0;white-space:pre-line">${esc(p.prompt)}</p></div>
+      <textarea class="field" style="margin-top:10px" id="cw-${i}" data-cw="${i}" placeholder="Start writing here…" lang="en" spellcheck="true">${esc(CS.drafts[i] || '')}</textarea>
+      <div class="wc" id="cwc-${i}">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${p.minWords}</div>`;
+  });
+  h += `<div class="actions"><button class="btn" data-act="check-submit-writing" id="cw-submit" ${ok ? '' : 'disabled'}>${L('Отправить на проверку', 'Submit for grading')}</button></div>
+    <div class="gfoot">${L('Критерии: содержание, достижение цели, организация текста, язык. Черновик сохраняется, пока экран открыт.', 'Criteria: content, communicative achievement, organisation, language. Your draft is kept while this screen is open.')}</div>`;
+  return h;
+}
+function checkSpeaking(sk) {
+  if (CS.phase === 0) {
+    let h = `<div class="hint">${L('Прочитайте или прослушайте вопрос и отвечайте вслух около минуты. Можно включить таймер.', 'Read or listen to each prompt and answer aloud for about a minute. You can use the timer.')}</div>`;
+    h += sk.prompts.map((p, i) => `<div class="panel" style="margin-bottom:10px"><div class="lbl" style="margin:0 0 6px">${L('Вопрос', 'Prompt')} ${i + 1}</div><p class="prompt">${esc(p.t)}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="chip" data-act="speak" data-text="${esc(p.t)}">${L('Прослушать', 'Listen')}</button><button class="chip on" data-act="timer" data-i="${i}" id="tm-${i}">${L('Таймер 1:00', 'Timer 1:00')}</button></div>
+      <div style="margin-top:10px">${micButton('sp-' + i)}</div>
+      <textarea class="field" style="min-height:90px;margin-top:8px" id="spt-${i}" data-spt="${i}" lang="en" placeholder="${L('Здесь появится ваш ответ — Claude оценит его по критериям CEFR', 'Your answer appears here — Claude will assess it by CEFR criteria')}">${esc((CS.spoken || [])[i] || '')}</textarea></div>`).join('');
+    h += `<div class="actions"><button class="btn" data-act="speak-next">${L('К самооценке', 'Go to self-assessment')}</button></div>`;
+    return h;
+  }
+  let h = `<div class="hint">${L('Отметьте, что у вас получилось во время ответов. Честность важнее высокого балла.', 'Tick what you managed while answering. Honesty matters more than a high score.')}</div>`;
+  BANDS.forEach(b => {
+    const ds = sk.descriptors.map((d, i) => Object.assign({ i }, d)).filter(d => d.band === b);
+    h += groupHead(b) + '<div class="group">' + ds.map(d => `<label class="row"><input type="checkbox" data-tick="${d.i}" ${CS.ticks[d.i] ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--accent);flex:none"><span class="row-main"><span class="row-title" style="font-size:var(--fs-sub);line-height:20px">${esc(d.t)}</span></span></label>`).join('') + '</div>';
+  });
+  h += `<div class="actions"><button class="btn" data-act="check-submit-speaking">${L('Посчитать уровень', 'Get my level')}</button><button class="btn plain" data-act="speak-back">${L('Назад к вопросам', 'Back to prompts')}</button></div>`;
+  return h;
+}
+
+/* ---------- Settings ---------- */
+function vSettings() {
+  const st = S.settings;
+  let h = groupHead(L('Язык интерфейса', 'App language')) + `<div class="group">` + [['ru', 'Русский', 'Russian'], ['en', 'English', 'English']].map(([k, r, e]) => `<button class="row" data-act="set-lang" data-lang="${k}"><span class="row-main"><span class="row-title">${k === 'ru' ? 'Русский' : 'English'}</span></span>${st.lang === k ? `<span style="color:var(--accent)">${IC.check}</span>` : ''}</button>`).join('') + `</div>
+    <div class="gfoot">${L('Меняется язык меню и кнопок. Объяснения в заданиях остаются на русском, примеры — на английском.', 'Changes menus and buttons. Explanations inside tasks stay in Russian, examples stay in English.')}</div>`;
+  h += groupHead(L('Напоминания', 'Reminders')) + `<div class="group icons">
+    <label class="row"><span class="tile" style="background:var(--red)">${IC.bell}</span><span class="row-main"><span class="row-title">${L('Время занятий', 'Study time')}</span></span><input type="time" id="set-remind" data-set="remind" value="${esc(st.remind)}"></label>
+    <label class="row"><span class="tile" style="background:var(--pink)">${IC.tv}</span><span class="row-main"><span class="row-title">${L('Медиа на экране «Сегодня»', 'Media on the Today screen')}</span><span class="row-sub">${L('Мягкое напоминание, без плана', 'A gentle reminder, no plan')}</span></span><input type="checkbox" id="set-media" data-set="mediaNudge" ${st.mediaNudge ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+    <div class="gfoot">${L('Ежедневное напоминание присылает приложение «Команды» на iPhone и Mac: автоматизация «Время суток» открывает учебное приложение. Без сервера и бесплатно.', 'The daily reminder comes from the Shortcuts app on iPhone and Mac: a “Time of Day” automation opens this app. Free, no server needed.')}</div>`;
+  h += groupHead(L('Озвучка', 'Voice')) + '<div class="group">' + VOICE_SLOTS.map(sl => {
+    const v = voiceFor(sl.id), on = st.voiceSlot === sl.id;
+    return `<button class="row" data-act="set-voice" data-slot="${sl.id}"><span class="row-main"><span class="row-title">${L(sl.ru, sl.en)}</span><span class="row-sub">${v ? esc(v.name) : L('не установлен — скачайте ', 'not installed — download ') + esc(sl.suggest)}</span></span>
+      <span class="play small" data-act="voice-test" data-slot="${sl.id}" role="button" aria-label="${L('Прослушать', 'Listen')}" style="display:grid;place-items:center">${IC.play}</span>
+      <span style="width:22px;color:var(--accent)">${on ? IC.check : ''}</span></button>`;
+  }).join('') + `<label class="row"><span class="row-main"><span class="row-title">${L('Скорость', 'Speed')}</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label></div>
+    <div class="gfoot">${L('На устройстве найдены английские голоса', 'English voices on this device')}: ${VOICES.length ? (() => { const NOV = /^(albert|bad news|bahh|bells|boing|bubbles|cellos|wobble|fred|good news|jester|junior|kathy|organ|superstar|trinoids|whisper|zarvox|ralph|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley|бабушка|дедушка)\b/i; const nat = VOICES.filter(v => !NOV.test(v.name) && !/eloquence|novelty/i.test(v.voiceURI || '')); return VOICES.length + L(' всего, естественные: ', ' total, natural: ') + (nat.length ? esc(nat.map(v => v.name + ' · ' + v.lang.replace('_', '-')).join(', ')) : '—'); })() : L('пока не загрузились — откройте экран ещё раз', 'not loaded yet — reopen this screen')}</div>
+    <div class="gfoot">${L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: iPhone → Настройки → Универсальный доступ → Устный контент → Голоса → Английский. На Mac: Системные настройки → Универсальный доступ → Устный контент.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: iPhone → Settings → Accessibility → Spoken Content → Voices → English. On Mac: System Settings → Accessibility → Spoken Content.')}</div>`;
+  h += groupHead(L('Перевод DeepL', 'DeepL translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Адрес переводчика', 'Translator address')}</span></span><input class="inline" id="set-trurl" data-set="trUrl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://….workers.dev" value="${esc(st.trUrl || '')}"></label>
+    <button class="row" data-act="tr-test"><span class="tile" style="background:var(--green)">${IC.check}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">${L('Проверить перевод', 'Test translation')}</span><span class="row-sub">${st.trUrl ? L('Переведёт пробную фразу через DeepL', 'Translates a sample phrase via DeepL') : L('Сначала вставьте адрес', 'Paste the address first')}</span></span></button></div>
+    <div class="gfoot">${L('Ключ DeepL хранится в вашем Cloudflare Worker, а не в приложении — так его никто не увидит. Без адреса работает встроенный словарь и кнопка Google Translate.', 'Your DeepL key lives in your Cloudflare Worker, not in the app, so nobody can see it. Without an address, the built-in dictionary and the Google Translate button work.')}</div>`;
+  h += groupHead(L('Новые задания', 'New tasks')) + `<div class="group icons">
+    <button class="row" data-act="check-packs"><span class="tile" style="background:var(--accent)">${IC.box}</span><span class="row-main"><span class="row-title">${L('Проверить новые задания', 'Check for new tasks')}</span><span class="row-sub">${S.lastCheck ? L('Последняя проверка: ', 'Last checked: ') + fmtShort(S.lastCheck) : L('Загружает пакеты, которые выложил Claude', 'Loads packs published by Claude')}</span></span>${IC.chevR}</button></div>
+    <div class="gfoot">${L('Приложение проверяет новые пакеты и тесты при каждом запуске, если есть интернет.', 'The app checks for new packs and tests on every launch when online.')}</div>`;
+  h += groupHead(L('Данные', 'Data')) + `<div class="group icons">
+    <button class="row" data-act="export"><span class="tile" style="background:var(--blue)">${IC.up}</span><span class="row-main"><span class="row-title">${L('Экспорт', 'Export')}</span><span class="row-sub">${L('Прогресс, слова, ответы — для Claude и второго устройства', 'Progress, words, answers — for Claude and your other device')}</span></span>${IC.chevR}</button>
+    <button class="row" data-act="import"><span class="tile" style="background:var(--green)">${IC.down}</span><span class="row-main"><span class="row-title">${L('Импорт', 'Import')}</span><span class="row-sub">${L('Пакет заданий или экспорт с другого устройства', 'A task pack or an export from another device')}</span></span>${IC.chevR}</button></div>`;
+  h += groupHead(L('Пакеты', 'Packs')) + '<div class="group">' + S.packs.map(p => {
+    const ts = p.days.flatMap(dayTasks), d = ts.filter(t => isDone(t.id)).length;
+    return `<div class="row static"><span class="row-main"><span class="row-title">${esc(p.title)}</span><span class="row-sub">${p.days.length} ${P(p.days.length, 'день', 'дня', 'дней', 'day', 'days')} · ${L('уровень', 'level')} ${esc(p.level)} · ${fmtDate(p.created)}</span></span><span class="row-val">${d}/${ts.length}</span></div>`;
+  }).join('') + '</div>';
+  h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
+    ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
+    : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} __BUILD__</div>`;
+  return { title: L('Настройки', 'Settings'), body: h };
+}
+
+/* ---------- task session ---------- */
+function startTask(id) {
+  const x = findTask(id); if (!x) return;
+  const p = S.progress[id] || {};
+  TS = { t0: Date.now(), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [] };
+  UI.stack.push({ v: 'task', id });
+}
+function vTask(id) {
+  const x = findTask(id); if (!x) return { title: L('Задание', 'Task'), back: true, body: '' };
+  const t = x.task, s = SECTIONS[x.sec];
+  if (!TS || TS.id !== id) { startTask(id); UI.stack.pop(); }
+  const meta = `<div class="tmeta"><span class="pill" style="background:${s.color};color:#fff">${s.short()}</span>${x.day ? `<span class="pill">${L('День', 'Day')} ${x.day.day}</span>` : x.item ? `<span class="pill">${esc(x.item.title)}</span>` : ''}<span class="pill">${typeLabel(t)} · ${mins(t.minutes)}</span>${isDone(id) ? `<span class="pill good">${L('Выполнено', 'Done')}</span>` : ''}</div>`;
+  let body = '';
+  if (t.type === 'lesson') body = tLesson(t);
+  else if (t.type === 'cards') body = tCards(t);
+  else if (t.type === 'write') body = tWrite(t);
+  else body = tItems(t);
+  return { title: t.title, back: true, body: meta + body };
+}
+function tLesson(t) {
+  let h = '<div class="panel lesson">' + t.body.map(p => `<p>${md(p)}</p>`).join('') + '</div>';
+  h += groupHead(L('Примеры', 'Examples')) + '<div class="group">' + t.examples.map(e => `<div class="row static ex">
+     <button class="play small" data-act="speak" data-text="${esc(e.en)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+     <span class="row-main"><span class="row-title">${esc(e.en)}</span><span class="row-sub">${esc(e.ru)}</span></span></div>`).join('') + '</div>';
+  h += `<div class="actions"><button class="btn" data-act="lesson-done">${isDone(t.id) ? L('Готово', 'Done') : L('Понятно', 'Got it')}</button></div>`;
+  return h;
+}
+function tCards(t) {
+  const V = vocabMap(), ids = t.cards.filter(id => V[id]);
+  if (TS.finished || TS.i >= ids.length) {
+    return `<div class="summary"><div class="big">${ids.length}</div><p>${L(ruPlural(ids.length, 'слово', 'слова', 'слов') + ' добавлено в повторение. Первое повторение — завтра.', 'words added to review. The first review is tomorrow.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+  }
+  const v = V[ids[TS.i]];
+  let h = `<div class="progress"><i style="width:${(TS.i / ids.length) * 100}%"></i></div>`;
+  h += `<button class="flash" data-act="flip" aria-label="${L('Перевернуть карточку', 'Flip card')}">
+      <span class="pill lvl">${v.lvl === 'pro' ? L('проф. лексика', 'work vocabulary') : esc(v.lvl)}</span>
+      <span class="en">${esc(v.en)}</span>
+      ${TS.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Нажмите, чтобы увидеть перевод', 'Tap to see the translation')}</span>`}</button>`;
+  h += `<div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(TS.flipped ? v.ex : v.en)}">${IC.play} ${TS.flipped ? L('Пример', 'Example') : L('Слово', 'Word')}</button>
+      <button class="btn" data-act="card-next">${TS.i === ids.length - 1 ? L('Добавить в повторение', 'Add to review') : L('Дальше', 'Next')}</button></div>
+      <div class="qcount" style="text-align:center">${TS.i + 1} ${L('из', 'of')} ${ids.length}</div>`;
+  return h;
+}
+function tWrite(t) {
+  const n = words(TS.draft), ok = n >= t.minWords;
+  const p = S.progress[t.id];
+  return `<div class="panel"><p class="prompt">${md(t.prompt)}</p><p class="hint" style="margin:0">${md(t.hint || '')}</p></div>
+    <div class="lbl" style="margin:18px 16px 8px">${L('Ваш текст на английском', 'Your text in English')}</div>
+    <textarea class="field" id="write-${esc(t.id)}" data-write="1" placeholder="${L('Пишите или надиктуйте по-английски…', 'Type or dictate in English…')}" spellcheck="true" lang="en">${esc(TS.draft)}</textarea>
+    ${micButton('write')}
+    <div class="wc" id="wc">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${t.minWords}</div>
+    <div class="actions"><button class="btn" data-act="save-write" id="save-write" ${ok ? '' : 'disabled'}>${p && p.done ? L('Сохранить изменения', 'Save changes') : L('Сохранить', 'Save')}</button></div>
+    <div class="gfoot">${L('Текст попадёт в экспорт. Claude проверит его по критериям CEFR: содержание, связность, лексика, грамматика.', 'The text goes into your export. Claude grades it by CEFR criteria: content, coherence, vocabulary, grammar.')}</div>`;
+}
+function itemKind(t, it) {
+  if (it.kind) return it.kind;
+  if (t.type === 'quiz' || t.type === 'dialog') return 'choice';
+  return t.type;
+}
+function seedShuffle(arr, seedStr) {
+  let h = 0; for (const c of seedStr) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const a = arr.map((v, i) => ({ v, i }));
+  for (let i = a.length - 1; i > 0; i--) { h = (h * 1103515245 + 12345) >>> 0; const j = h % (i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  if (a.length > 2 && a.every((x, k) => x.i === k)) a.push(a.shift());
+  return a;
+}
+function orderTokens(it) { return it.en.split(/\s+/).filter(Boolean); }
+const KIND_HINT = {
+  translate: () => L('Переведите на английский', 'Translate into English'),
+  fix: () => L('Найдите и исправьте ошибку', 'Find and fix the mistake'),
+  order: () => L('Соберите предложение', 'Put the words in order'),
+  shadow: () => L('Прослушайте и повторите вслух', 'Listen and repeat aloud'),
+  gap: () => L('Впишите пропущенное', 'Fill in the gap'),
+  dictation: () => L('Напишите, что услышали', 'Type what you hear'),
+  choice: () => ''
+};
+function tItems(t) {
+  const items = t.items;
+  if (TS.finished) {
+    const sc = TS.results.filter(Boolean).length;
+    const msg = sc === items.length ? L('Без ошибок.', 'No mistakes.') : sc >= items.length * 0.8 ? L('Хороший результат. Ошибки вернутся в повторении.', 'Good result. Mistakes will come back in review.') : L('Это правило ещё не стало автоматическим — оно вернётся в следующих днях.', 'This rule is not automatic yet — it will come back in the next days.');
+    return `<div class="summary"><div class="big">${sc}/${items.length}</div><p>${msg}</p></div>
+      <div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button><button class="btn plain" data-act="retry">${L('Пройти ещё раз', 'Try again')}</button></div>`;
+  }
+  const it = items[TS.i], kind = itemKind(t, it);
+  let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
+  if (t.type === 'mix' || t.type === 'translate' || t.type === 'fix' || t.type === 'order' || t.type === 'shadow' || t.type === 'gap') { const hint = KIND_HINT[kind] ? KIND_HINT[kind]() : ''; if (hint) h += `<div class="lbl" style="margin:0 0 10px">${hint}</div>`; }
+  if (t.type === 'dialog') {
+    h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="${L('Прослушать диалог', 'Play dialogue')}">${IC.play}</button>
+       <div class="audio-t"><b>${L('Прослушайте диалог', 'Listen to the dialogue')}</b><span>${t.lines.length} ${L('реплик · можно слушать сколько угодно', 'lines · listen as often as you like')}</span></div>
+       <button class="chip" data-act="play-dialog" data-slow="1">${L('Медленно', 'Slow')}</button></div>
+       <button class="chip ${TS.showText ? 'on' : ''}" data-act="toggle-text" style="margin-bottom:${TS.showText ? '0' : '16px'}">${TS.showText ? L('Скрыть текст', 'Hide text') : L('Показать текст', 'Show text')}</button>
+       ${TS.showText ? `<div class="panel transcript" style="margin:10px 0 16px">${t.lines.map(l => `<div class="line"><b>${esc(l.s)}</b><span>${esc(l.t)}</span></div>`).join('')}</div>` : ''}`;
+  }
+  const sayText = kind === 'shadow' ? it.en : it.say;
+  if (sayText) h += `<div class="audio"><button class="play" data-act="speak" data-text="${esc(sayText)}" aria-label="${L('Прослушать', 'Listen')}">${IC.play}</button>
+       <div class="audio-t"><b>${L('Прослушайте', 'Listen')}</b><span>${kind === 'dictation' ? L('и напишите, что услышали', 'and type what you hear') : kind === 'shadow' ? L('и повторите вслух с той же интонацией', 'and repeat with the same intonation') : L('и ответьте на вопрос', 'and answer the question')}</span></div>
+       <button class="chip" data-act="speak" data-text="${esc(sayText)}" data-slow="1">${L('Медленно', 'Slow')}</button></div>`;
+
+  if (kind === 'shadow') {
+    h += `<div class="panel"><p class="q" style="margin:0 0 6px">${esc(it.en)}</p><p class="hint" style="margin:0">${esc(it.ru || '')}</p></div>
+      <div class="actions"><button class="btn" data-act="shadow-done">${L('Повторила вслух', 'I said it aloud')}</button></div>`;
+  } else if (kind === 'order') {
+    const toks = orderTokens(it), pool = seedShuffle(toks, it.en), used = TS.order || [];
+    h += it.ru ? `<p class="q">${esc(it.ru)}</p>` : '';
+    h += `<div class="tiles answer">${used.length ? used.map((pi, k) => `<button class="tile-w on" data-act="tile-del" data-k="${k}" ${TS.checked ? 'disabled' : ''}>${esc(pool[pi].v)}</button>`).join('') : `<span class="hint" style="margin:0">${L('Нажимайте на слова по порядку', 'Tap the words in order')}</span>`}</div>
+      <div class="tiles">${pool.map((x, pi) => `<button class="tile-w" data-act="tile-add" data-pi="${pi}" ${used.includes(pi) || TS.checked ? 'disabled' : ''}>${esc(x.v)}</button>`).join('')}</div>`;
+    if (!TS.checked) h += `<div class="btns"><button class="btn sec" data-act="order-reset" ${used.length ? '' : 'disabled'}>${L('Сбросить', 'Reset')}</button><button class="btn" data-act="order-check" ${used.length === toks.length ? '' : 'disabled'}>${L('Проверить', 'Check')}</button></div>`;
+    else h += fb(TS.ok, TS.ok ? md(it.explain || '') : L('Правильно', 'Correct') + ': <b style="display:inline;font-size:inherit">' + esc(it.en) + '</b>' + (it.explain ? '. ' + md(it.explain) : '')) + nextBtn(t);
+  } else if (kind === 'gap' || kind === 'dictation' || kind === 'translate' || kind === 'fix') {
+    if (kind === 'translate') h += `<p class="q">${esc(it.ru)}</p>`;
+    else if (kind === 'fix') h += `<p class="q" style="text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:1.5px">${esc(it.q)}</p>`;
+    else if (it.q) h += `<p class="q">${md(it.q)}</p>`;
+    const val = TS.input != null ? TS.input : kind === 'fix' ? it.q : '';
+    const ph = kind === 'translate' ? L('Напишите по-английски', 'Write in English') : kind === 'fix' ? '' : kind === 'dictation' ? L('Напишите предложение', 'Type the sentence') : L('Ваш ответ', 'Your answer');
+    h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="${kind === 'gap' ? 'off' : 'sentences'}" spellcheck="false" lang="en" placeholder="${ph}" value="${esc(val)}" ${TS.checked ? 'disabled' : ''}>`;
+    if (!TS.checked) h += `<div class="actions"><button class="btn" data-act="check">${L('Проверить', 'Check')}</button></div>`;
+    else {
+      const model = esc(it.a[0]);
+      h += fb(TS.ok, (TS.ok ? (it.a.length > 1 && !sameText(TS.input, it.a[0]) ? L('Ещё вариант', 'Also') + ': ' + model + '. ' : '') : L('Правильно', 'Correct') + ': <b style="display:inline;font-size:inherit">' + model + '</b>. ') + md(it.explain || ''));
+      if (!TS.ok && (kind === 'translate' || kind === 'fix')) h += `<div class="btns"><button class="btn sec" data-act="self-ok">${L('У меня тоже верно', 'Mine is correct too')}</button><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? L('Результат', 'Result') : L('Дальше', 'Next')}</button></div>`;
+      else h += nextBtn(t);
+    }
+  } else {
+    h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
+      let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
+      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${c === 'right' ? IC.check : ''}</button>`;
+    }).join('') + '</div>';
+    if (TS.picked !== null) h += fb(TS.picked === it.a, md(it.explain || '')) + nextBtn(t);
+  }
+  h += `<div class="qcount">${L('Задание', 'Item')} ${TS.i + 1} ${L('из', 'of')} ${items.length}</div>`;
+  return h;
+}
+function fb(ok, text) { return `<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? L('Верно', 'Correct') : L('Не совсем', 'Not quite')}</b>${text}</div>`; }
+function nextBtn(t) { return `<div class="actions"><button class="btn" data-act="next">${TS.i === t.items.length - 1 ? L('Результат', 'Result') : L('Дальше', 'Next')}</button></div>`; }
+
+/* ---------- review ---------- */
+function vReview() {
+  const V = vocabMap();
+  if (!RV) RV = { queue: dueCards().filter(id => V[id]), i: 0, flipped: false, known: 0 };
+  const title = L('Повторение', 'Review');
+  if (!RV.queue.length || RV.i >= RV.queue.length) {
+    const next = Object.values(S.cards).map(c => c.due).sort()[0];
+    const done = RV.queue.length;
+    return { title, back: true, body: done
+      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>${L('Повторение на сегодня закончено.', 'Today’s review is done.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`
+      : empty(IC.cards, L('Всё повторено', 'All caught up'), next ? L('Следующее повторение: ', 'Next review: ') + fmtShort(next) + '.' : L('Слова появятся после заданий «Новые слова».', 'Words appear after “New words” tasks.')) };
+  }
+  const v = V[RV.queue[RV.i]];
+  let h = `<div class="progress"><i style="width:${(RV.i / RV.queue.length) * 100}%"></i></div>
+    <button class="flash" data-act="rv-flip"><span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Вспомните перевод и нажмите', 'Recall the translation and tap')}</span>`}</button>
+    <div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} ${L('Слово', 'Word')}</button></div>`;
+  if (RV.flipped) h += `<div class="btns"><button class="btn danger" data-act="rv" data-ok="0">${L('Не помню', 'Forgot')}</button><button class="btn" style="background:var(--green)" data-act="rv" data-ok="1">${L('Помню', 'Remembered')}</button></div>`;
+  h += `<div class="qcount" style="text-align:center">${RV.i + 1} ${L('из', 'of')} ${RV.queue.length}</div>`;
+  return { title, back: true, body: h };
+}
+
+/* ---------- sheets ---------- */
+const DICT = { 'pivot': 'сменить направление бизнеса', 'funding': 'финансирование', 'investor': 'инвестор', 'valuation': 'оценка стоимости компании', 'equity': 'доля в компании', 'shares': 'акции, доли', 'stake': 'доля', 'board': 'совет директоров', 'board meeting': 'заседание совета директоров', 'pitch': 'питч, презентация для инвесторов', 'startup': 'стартап', 'launch': 'запуск', 'user base': 'база пользователей', 'acquisition': 'поглощение, покупка компании', 'acquire': 'купить (компанию)', 'incubator': 'инкубатор', 'accelerator': 'акселератор', 'founder': 'основатель', 'co-founder': 'сооснователь', 'ceo': 'генеральный директор', 'cto': 'технический директор', 'term sheet': 'term sheet, предварительное соглашение об инвестициях', 'seed round': 'посевной раунд', 'series a': 'раунд A', 'burn rate': 'скорость расходования денег', 'revenue': 'выручка', 'profit': 'прибыль', 'incorporate': 'зарегистрировать компанию', 'incorporation': 'регистрация компании', 'articles of incorporation': 'учредительные документы', 'lawyer': 'юрист', 'trademark': 'товарный знак', 'compression': 'сжатие', 'algorithm': 'алгоритм', 'app': 'приложение', 'deal': 'сделка', 'offer': 'предложение', 'buy out': 'выкупить', 'sell out': 'продаться', 'awkward': 'неловкий', 'weird': 'странный', 'genius': 'гений', 'douchebag': 'придурок (грубо)', 'disrupt': 'перевернуть рынок', 'disruption': 'революция на рынке', 'scale': 'масштабировать', 'hire': 'нанять', 'fire': 'уволить', 'call off': 'отменить', 'put off': 'отложить', 'figure out': 'разобраться', 'come up with': 'придумать', 'point out': 'указать на', 'carry on': 'продолжать' };
+function lookup(text) { const k = norm(text); if (!k) return null; if (DICT[k]) return DICT[k]; const V = vocabMap(); const v = Object.values(V).find(x => norm(x.en) === k); return v ? v.ru : null; }
+function sheetAddWord() {
+  const sh = S.shows.find(s => s.id === (UI.sheet.show || 'silicon-valley')) || S.shows[0];
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">${L('Отмена', 'Cancel')}</button><b>${L('Новое слово', 'New word')}</b><button class="nav-btn" data-act="save-word" id="aw-save" disabled>${L('Готово', 'Done')}</button></div>
+    <div class="stack"><input class="field" id="aw-text" data-aw="1" placeholder="${L('Слово или фраза', 'Word or phrase')}" autocomplete="off" autocapitalize="off" lang="en">
+    <div class="trbox" id="aw-tr">${trHtml('')}</div>
+    <div class="lbl">${L('Серия', 'Episode')}</div><input class="field" id="aw-ep" value="${esc(sh.current)}" autocomplete="off" style="font-family:var(--mono)">
+    <div class="lbl">${L('Контекст (необязательно)', 'Context (optional)')}</div><input class="field" id="aw-ctx" placeholder="${L('Кто сказал, о чём сцена', 'Who said it, what the scene is about')}" autocomplete="off"></div>`;
+}
+function trHtml(text, dl) {
+  if (!text.trim()) return `<span style="color:var(--label2)">${L('Перевод появится здесь.', 'The translation appears here.')}</span>`;
+  const r = lookup(text), gt = 'https://translate.google.com/?sl=en&tl=ru&op=translate&text=' + encodeURIComponent(text.trim());
+  const hasDl = !!(S.settings.trUrl || '').trim();
+  let top;
+  if (dl && dl.ru) top = `<div class="ru">${esc(dl.ru)}</div><div class="row-sub" style="margin-bottom:6px">DeepL${r && norm(r) !== norm(dl.ru) ? ' · ' + L('словарь', 'dictionary') + ': ' + esc(r) : ''}</div>`;
+  else if (r) top = `<div class="ru">${esc(r)}</div><div class="row-sub" style="margin-bottom:6px">${dl && dl.loading ? L('DeepL: перевожу…', 'DeepL: translating…') : L('словарь', 'dictionary')}</div>`;
+  else if (dl && dl.loading) top = `<div style="color:var(--label2);margin-bottom:4px">${L('DeepL: перевожу…', 'DeepL: translating…')}</div>`;
+  else if (dl && dl.error) top = `<div style="color:var(--red);margin-bottom:4px">${L('DeepL не ответил', 'DeepL did not respond')}: ${esc(dl.error)}</div>`;
+  else top = `<div style="color:var(--label2);margin-bottom:4px">${hasDl ? '' : L('Нет во встроенном словаре. Подключите DeepL в Настройках — переводы будут появляться сразу.', 'Not in the built-in dictionary. Connect DeepL in Settings for instant translations.')}</div>`;
+  return top + `<a href="${gt}" target="_blank" rel="noopener">${L('Открыть в Google Translate ↗', 'Open in Google Translate ↗')}</a>`;
+}
+let trTimer = null, trSeq = 0;
+async function deeplTranslate(text) {
+  const u = (S.settings.trUrl || '').trim(); if (!u) return null;
+  const r = await fetch(u, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  if (!r.ok || !j.ru) throw new Error(j.error || ('HTTP ' + r.status));
+  return j.ru;
+}
+function liveTranslate(text) {
+  const box = () => document.getElementById('aw-tr');
+  clearTimeout(trTimer); const seq = ++trSeq;
+  if (!text.trim() || !(S.settings.trUrl || '').trim()) { UI.awTr = null; if (box()) box().innerHTML = trHtml(text); return; }
+  if (box()) box().innerHTML = trHtml(text, { loading: true });
+  trTimer = setTimeout(async () => {
+    try { const ru = await deeplTranslate(text.trim()); if (seq !== trSeq) return; UI.awTr = { k: norm(text), ru }; if (box()) box().innerHTML = trHtml(text, { ru }); }
+    catch (e) { if (seq !== trSeq) return; UI.awTr = null; if (box()) box().innerHTML = trHtml(text, { error: e.message }); }
+  }, 550);
+}
+function buildExport() {
+  const V = vocabMap(), writing = {};
+  Object.entries(S.progress).forEach(([id, p]) => { if (p.answer) writing[id] = p.answer; });
+  return {
+    type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
+    summary: { streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
+    progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
+    writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
+    packs: S.packs, tests: S.tests, media: S.media
+  };
+}
+function sheetExport() {
+  const ex = buildExport(), json = JSON.stringify(ex, null, 1);
+  const framed = window.self !== window.top;
+  return `<div class="sheet-h"><span></span><b>${L('Экспорт', 'Export')}</b><button class="nav-btn" data-act="sheet-close">${L('Готово', 'Done')}</button></div>
+    <p class="hint" style="margin:0 4px 12px">${L('Скопируйте и вставьте Claude в чат проекта или перенесите на другое устройство (там — Импорт → вставить текст).', 'Copy it and paste to Claude in the project chat, or move it to your other device (there: Import → paste text).')}</p>
+    <textarea class="code" id="exp-text" readonly>${esc(json)}</textarea>
+    <div class="actions"><button class="btn" data-act="copy-export">${L('Скопировать', 'Copy')}</button>${framed ? '' : `<button class="btn sec" data-act="download-export">${L('Сохранить файл', 'Save file')}</button>`}</div>
+    <div class="gfoot">${(json.length / 1024).toFixed(1)} KB · ${S.myWords.length} ${P(S.myWords.length, 'слово', 'слова', 'слов', 'word', 'words')} ${L('из медиа', 'from media')} · ${Object.keys(ex.writing).length} ${L('письменных ответов', 'written answers')}</div>`;
+}
+function sheetImport() {
+  const d = UI.sheet.draft;
+  if (d && d.type === 'study-export') return `<div class="sheet-h"><button class="nav-btn" data-act="import" style="justify-self:start">${L('Назад', 'Back')}</button><b>${L('Импорт данных', 'Import data')}</b><span></span></div>
+    <div class="panel"><p style="margin:0 0 6px;font-weight:600">${L('Экспорт от', 'Export from')} ${esc(new Date(d.exportedAt).toLocaleString(loc()))}</p><p class="hint" style="margin:0">${Object.keys(d.progress || {}).length} ${L('заданий', 'tasks')} · ${(d.myWords || []).length} ${L('слов', 'words')} · ${Object.keys(d.cards || {}).length} ${L('карточек', 'cards')}</p></div>
+    <div class="actions"><button class="btn" data-act="import-merge">${L('Объединить', 'Merge')}</button><button class="btn sec" data-act="import-replace">${L('Заменить', 'Replace')}</button></div>
+    <div class="gfoot">${L('«Объединить» сложит слова и выполненные задания с обоих устройств. «Заменить» сделает это устройство копией экспорта.', '“Merge” combines words and finished tasks from both devices. “Replace” makes this device a copy of the export.')}</div>`;
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">${L('Отмена', 'Cancel')}</button><b>${L('Импорт', 'Import')}</b><button class="nav-btn" data-act="do-import">${L('Импорт', 'Import')}</button></div>
+    <div class="stack"><label class="btn sec" for="imp-file" style="cursor:pointer">${L('Выбрать файл .json', 'Choose a .json file')}</label><input type="file" id="imp-file" accept=".json,application/json" hidden>
+    <div class="lbl">${L('или вставьте текст пакета / экспорта', 'or paste the text of a pack / export')}</div><textarea class="code" id="imp-text" placeholder='{"type": "study-pack", …}'></textarea></div>
+    <div class="gfoot">${L('Пакет заданий добавится к текущему плану. Экспорт с другого устройства можно объединить или заменить им данные.', 'A task pack is added to your plan. An export from another device can be merged or used to replace data.')}</div>`;
+}
+// adds a pack or a level test (and any graded results inside it); returns a short message or null
+function addContent(d) {
+  let msg = null;
+  if (d.type === 'study-pack' && Array.isArray(d.days) && d.id && !S.packs.some(p => p.id === d.id)) {
+    if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
+    S.packs.push(d);
+    (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
+    (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
+    msg = L('Пакет «', 'Pack “') + d.title + L('» добавлен', '” added');
+  }
+  if (d.type === 'level-test' && d.skills && d.id && !S.tests.some(t => t.id === d.id)) {
+    S.tests.push(d); msg = L('Новая версия теста уровня загружена', 'A new level test version is loaded');
+  }
+  (d.results || []).forEach(c => { if (c && c.id && c.results && !S.checks.some(x => x.id === c.id)) { S.checks.push(c); S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); msg = msg || L('Получена оценка от Claude', 'A grade from Claude has arrived'); } });
+  return msg;
+}
+function importData(raw) {
+  let d; try { d = JSON.parse(raw); } catch (e) { toast(L('Не получилось прочитать файл: это не JSON', 'Could not read the file: it is not JSON')); return; }
+  if (d.type === 'study-export') { UI.sheet = { kind: 'import', draft: d }; renderSheet(); return; }
+  if (d.type === 'study-pack' || d.type === 'level-test') {
+    const m = addContent(d);
+    if (!m) { toast(L('Это уже загружено', 'This is already loaded')); return; }
+    save(); UI.sheet = null; render(); renderSheet(); toast(m); return;
+  }
+  toast(L('Файл не похож на пакет или экспорт', 'The file is not a pack or an export'));
+}
+function mergeExport(d, replace) {
+  if (replace) {
+    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, settings: S.settings });
+  } else {
+    (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
+    (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
+    (d.media || []).forEach(m => { if (!S.media.some(x => x.id === m.id)) S.media.push(m); });
+    Object.entries(d.progress || {}).forEach(([id, p]) => { const cur = S.progress[id]; if (!cur || (!cur.done && p.done) || ((p.answer || '').length > (cur.answer || '').length)) S.progress[id] = Object.assign({}, cur, p); });
+    Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
+    (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
+    (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
+    (d.checks || []).forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; if (!S.checks.some(x => x.id === c.id)) S.checks.push(c); });
+    S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+    Object.entries(d.activity || {}).forEach(([k, v]) => { S.activity[k] = Math.max(S.activity[k] || 0, v); });
+  }
+  save(); UI.sheet = null; UI.stack = []; render(); renderSheet(); toast(replace ? L('Данные заменены', 'Data replaced') : L('Данные объединены', 'Data merged'));
+}
+
+/* ---------- render ---------- */
+function currentView() {
+  const top = UI.stack[UI.stack.length - 1];
+  if (top) {
+    if (top.v === 'task') return vTask(top.id);
+    if (top.v === 'section') return vSection(top.sec);
+    if (top.v === 'show') return vShow(top.id);
+    if (top.v === 'review') return vReview();
+    if (top.v === 'checks') return vChecks();
+    if (top.v === 'check') return vCheck(top.skill);
+    if (top.v === 'media-item') return vMediaItem(top.id);
+    if (top.v === 'daysec') return vDaySec(top.sec, top.di);
+  }
+  return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
+}
+function tabs() { return [['today', L('Сегодня', 'Today'), IC.today], ['english', L('Английский', 'English'), IC.book], ['media', L('Медиа', 'Media'), IC.tv], ['progress', L('Прогресс', 'Progress'), IC.chart], ['settings', L('Настройки', 'Settings'), IC.gear]]; }
+function render() {
+  const v = currentView();
+  document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
+      <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>${L('Назад', 'Back')}</span></button>` : ''}</div>
+      <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
+    <div class="content"><h1 class="large">${esc(v.title)}</h1>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
+  const T = tabs();
+  document.getElementById('tabbar').innerHTML = T.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
+  document.getElementById('sidebar').innerHTML = `<div class="side-h">${L('Учёба', 'Study')}</div>` + T.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
+    + `<div class="side-h" style="margin-top:18px">${L('Скоро', 'Coming soon')}</div><div class="side-i" style="color:var(--label3);cursor:default">${IC.target}<span>${L('Психология', 'Psychology')}</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.chart}<span>${L('Развитие', 'Growth')}</span></div><div class="side-i" style="color:var(--label3);cursor:default">${IC.brief}<span>${L('Профессия', 'Career')}</span></div>`;
+}
+function renderSheet() {
+  const root = document.getElementById('sheet-root');
+  if (!UI.sheet) { root.innerHTML = ''; return; }
+  const k = UI.sheet.kind;
+  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : sheetImport()}</div></div>`;
+  const f = root.querySelector('#aw-text'); if (f) setTimeout(() => f.focus(), 50);
+}
+function go(fn) { fn(); UI.scrolled = false; render(); window.scrollTo(0, 0); }
+let toastT;
+function toast(msg) { const r = document.getElementById('toast-root'); r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toastT); toastT = setTimeout(() => { r.innerHTML = ''; }, 2600); }
+let timerT = null;
+function runTimer(i) {
+  clearInterval(timerT); let left = 60;
+  document.querySelectorAll('[data-act="timer"]').forEach(b => { b.textContent = L('Таймер 1:00', 'Timer 1:00'); });
+  const el = document.getElementById('tm-' + i);
+  timerT = setInterval(() => { left--; const b = document.getElementById('tm-' + i); if (!b) { clearInterval(timerT); return; } b.textContent = left > 0 ? '0:' + pad(left) : L('Время вышло', 'Time is up'); if (left <= 0) clearInterval(timerT); }, 1000);
+  if (el) el.textContent = '1:00';
+}
+
+/* ---------- voice input (speech recognition) ---------- */
+let REC = null, recTarget = null;
+const SR = () => window.SpeechRecognition || window.webkitSpeechRecognition;
+function micLang() { return (S.settings.voiceSlot || 'us').startsWith('gb') ? 'en-GB' : 'en-US'; }
+function micButton(target) {
+  const on = REC && recTarget === target;
+  return `<div class="mic-row"><button class="chip ${on ? 'rec' : 'on'}" data-act="mic" data-target="${target}" id="mic-${target}">${IC.mic}<span>${on ? L('Остановить', 'Stop') : L('Надиктовать', 'Dictate')}</span></button><span class="row-sub" id="mic-live-${target}">${L('Говорите по-английски — текст появится в поле', 'Speak English — the text appears in the field')}</span></div>`;
+}
+function micFallback() {
+  toast(L('Распознавание недоступно здесь. Нажмите микрофон на английской клавиатуре (iPhone) или дважды Fn (Mac).', 'Speech recognition is not available here. Use the mic on the English keyboard (iPhone) or press Fn twice (Mac).'));
+}
+function stopMic() { try { REC && REC.stop(); } catch (e) {} }
+function toggleMic(target) {
+  if (REC) { const was = recTarget; stopMic(); if (was === target) return; }
+  const C = SR(); if (!C) { micFallback(); return; }
+  let r; try { r = new C(); } catch (e) { micFallback(); return; }
+  r.lang = micLang(); r.continuous = true; r.interimResults = true;
+  r.onresult = e => {
+    let fin = '', live = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) { const t = e.results[i][0].transcript; if (e.results[i].isFinal) fin += t; else live += t; }
+    const liveEl = document.getElementById('mic-live-' + target); if (liveEl) liveEl.textContent = live || L('Слушаю…', 'Listening…');
+    if (fin.trim()) applyDictation(target, fin.trim());
+  };
+  r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') micFallback(); else if (e.error !== 'no-speech' && e.error !== 'aborted') toast(L('Ошибка распознавания: ', 'Recognition error: ') + e.error); };
+  r.onend = () => { REC = null; recTarget = null; const b = document.getElementById('mic-' + target); if (b) { b.classList.remove('rec'); b.classList.add('on'); b.querySelector('span').textContent = L('Надиктовать', 'Dictate'); } const le = document.getElementById('mic-live-' + target); if (le) le.textContent = L('Можно продолжить диктовку или поправить текст руками', 'Continue dictating or edit the text by hand'); };
+  try { r.start(); } catch (e) { micFallback(); return; }
+  REC = r; recTarget = target;
+  const b = document.getElementById('mic-' + target); if (b) { b.classList.add('rec'); b.classList.remove('on'); b.querySelector('span').textContent = L('Остановить', 'Stop'); }
+  const le = document.getElementById('mic-live-' + target); if (le) le.textContent = L('Слушаю…', 'Listening…');
+}
+function joinText(a, b) { a = (a || '').replace(/\s+$/, ''); if (!a) return b.charAt(0).toUpperCase() + b.slice(1); return a + (/[.!?]$/.test(a) ? ' ' + b.charAt(0).toUpperCase() + b.slice(1) : ' ' + b); }
+function applyDictation(target, text) {
+  text = text.replace(/\bi\b/g, 'I').replace(/\bi'(m|ve|ll|d)\b/g, "I'$1");
+  if (target === 'write' && TS) {
+    TS.draft = joinText(TS.draft, text); TS.voice = true;
+    const ta = document.querySelector('[data-write]'); if (ta) ta.value = TS.draft;
+    const task = findTask(TS.id).task, n = words(TS.draft);
+    const wc = document.getElementById('wc'); if (wc) wc.textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
+    const sb = document.getElementById('save-write'); if (sb) sb.disabled = n < task.minWords;
+  } else if (target.startsWith('sp-') && CS) {
+    const i = Number(target.slice(3)); CS.spoken = CS.spoken || []; CS.spoken[i] = joinText(CS.spoken[i], text);
+    const el = document.getElementById('spt-' + i); if (el) { el.value = CS.spoken[i]; }
+  }
+}
+function nextItem() {
+  try { speechSynthesis.cancel(); } catch (er) {}
+  const t = findTask(TS.id).task;
+  if (TS.i >= t.items.length - 1) { TS.finished = true; const sc = TS.results.filter(Boolean).length; markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc; save(); }
+  else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; }
+  render(); window.scrollTo(0, 0);
+}
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act;
+  if (a === 'scrim') { if (e.target === el) { UI.sheet = null; renderSheet(); } return; }
+  switch (a) {
+    case 'tab': go(() => { UI.tab = el.dataset.tab; UI.stack = []; UI.viewDay = null; UI.resetAsk = false; }); break;
+    case 'back': try { speechSynthesis.cancel(); } catch (er) {} stopMic(); clearInterval(timerT); go(() => { const top = UI.stack.pop(); if (top && top.v === 'task') TS = null; if (top && top.v === 'review') RV = null; if (top && top.v === 'check') CS = null; }); break;
+    case 'day': go(() => { UI.viewDay = Number(el.dataset.d); }); break;
+    case 'open-task': go(() => startTask(el.dataset.id)); break;
+    case 'open-section': go(() => UI.stack.push({ v: 'section', sec: el.dataset.sec })); break;
+    case 'open-show': go(() => { UI.seg = 'words'; UI.stack.push({ v: 'show', id: el.dataset.id }); }); break;
+    case 'open-review': go(() => { RV = null; UI.stack.push({ v: 'review' }); }); break;
+    case 'open-checks': go(() => UI.stack.push({ v: 'checks' })); break;
+    case 'open-check': go(() => { CS = null; UI.stack.push({ v: 'check', skill: el.dataset.skill }); }); break;
+    case 'check-start': CS.started = true; CS.i = 0; CS.answers = []; go(() => {}); break;
+    case 'check-pick': CS.answers[CS.i] = Number(el.dataset.i); render(); break;
+    case 'check-prev': CS.i = Math.max(0, CS.i - 1); go(() => {}); break;
+    case 'check-next': {
+      const sk = currentTest().skills[CS.skill], n = checkSteps(sk).length;
+      try { speechSynthesis.cancel(); } catch (er) {}
+      if (CS.i >= n - 1) finishChoice(CS.skill, sk); else CS.i++;
+      go(() => {}); break;
+    }
+    case 'check-dialog': { const sk = currentTest().skills[CS.skill], st = checkSteps(sk)[CS.i]; speakDialog(st.p.lines, !!el.dataset.slow); break; }
+    case 'check-submit-writing': {
+      const sk = currentTest().skills.writing;
+      const answers = sk.parts.map((p, i) => ({ task: p.title, text: CS.drafts[i] || '', words: words(CS.drafts[i]) }));
+      const res = { pending: true, answers };
+      S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { writing: res } });
+      touchActivity(); save(); CS.result = res; go(() => {}); break;
+    }
+    case 'timer': runTimer(el.dataset.i); break;
+    case 'mic': toggleMic(el.dataset.target); break;
+    case 'speak-next': stopMic(); clearInterval(timerT); try { speechSynthesis.cancel(); } catch (er) {} CS.phase = 1; go(() => {}); break;
+    case 'speak-back': CS.phase = 0; go(() => {}); break;
+    case 'check-submit-speaking': {
+      const sk = currentTest().skills.speaking, bands = {};
+      sk.descriptors.forEach((d, i) => { bands[d.band] = bands[d.band] || { c: 0, t: 0 }; bands[d.band].t++; if (CS.ticks[i]) bands[d.band].c++; });
+      let level = 'A1';
+      for (const b of BANDS) { const x = bands[b]; if (x && x.c >= 2) level = b; else break; }
+      const ticked = Object.keys(CS.ticks).filter(k => CS.ticks[k]).length;
+      const spoken = (CS.spoken || []).map((t, i) => t ? { prompt: sk.prompts[i].t, text: t, words: words(t) } : null).filter(Boolean);
+      const res = { level, score: ticked, total: sk.descriptors.length, bands, self: true, spoken };
+      S.checks.push({ id: 'chk-' + uid(), date: today(), kind: 'skill', test: CS.test, results: { speaking: res } });
+      touchActivity(); save(); CS.result = res; go(() => {}); break;
+    }
+    case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
+    case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
+    case 'toggle-text': TS.showText = !TS.showText; render(); break;
+    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a; render(); break; }
+    case 'check': {
+      const t = findTask(TS.id).task, it = t.items[TS.i], kind = itemKind(t, it); const v = (document.getElementById('gap-input') || {}).value || '';
+      if (!v.trim()) { toast(L('Сначала впишите ответ', 'Type an answer first')); return; }
+      if (kind === 'fix' && sameText(v, it.q)) { toast(L('Предложение не изменилось — исправьте ошибку', 'Nothing changed — fix the mistake')); return; }
+      TS.input = v; TS.checked = true; TS.ok = it.a.some(ans => sameText(ans, v)); TS.results[TS.i] = TS.ok; render(); break;
+    }
+    case 'self-ok': TS.ok = true; TS.results[TS.i] = true; document.querySelector('[data-act="next"]') && document.querySelector('[data-act="next"]').click(); break;
+    case 'tile-add': { TS.order = TS.order || []; const pi = Number(el.dataset.pi); if (!TS.order.includes(pi)) TS.order.push(pi); render(); break; }
+    case 'tile-del': { TS.order.splice(Number(el.dataset.k), 1); render(); break; }
+    case 'order-reset': TS.order = []; render(); break;
+    case 'order-check': {
+      const t = findTask(TS.id).task, it = t.items[TS.i], pool = seedShuffle(orderTokens(it), it.en);
+      const built = (TS.order || []).map(pi => pool[pi].v).join(' ');
+      TS.checked = true; TS.ok = sameText(built, it.en) || (it.alt || []).some(a => sameText(built, a)); TS.results[TS.i] = TS.ok; render(); break;
+    }
+    case 'shadow-done': TS.results[TS.i] = true; nextItem(); break;
+    case 'next': nextItem(); break;
+    case 'open-media': go(() => UI.stack.push({ v: 'media-item', id: el.dataset.id })); break;
+    case 'open-daysec': go(() => UI.stack.push({ v: 'daysec', sec: el.dataset.sec, di: Number(el.dataset.di) })); break;
+    case 'media-seg': UI.mseg = el.dataset.seg; render(); break;
+    case 'retry': { const id = TS.id; TS = null; startTask(id); UI.stack.pop(); render(); break; }
+    case 'lesson-done': markDone(TS.id); go(() => { UI.stack.pop(); TS = null; }); toast(L('Урок пройден', 'Lesson done')); break;
+    case 'flip': TS.flipped = !TS.flipped; render(); break;
+    case 'card-next': {
+      const t = findTask(TS.id).task;
+      if (TS.i >= t.cards.length - 1) { addCards(t.cards); markDone(t.id); TS.finished = true; }
+      else { TS.i++; TS.flipped = false; }
+      render(); break;
+    }
+    case 'save-write': { stopMic(); const t = findTask(TS.id).task; markDone(t.id, { answer: TS.draft, words: words(TS.draft), voice: !!TS.voice }); S.progress[t.id].answer = TS.draft; save(); toast(L('Сохранено — попадёт в экспорт', 'Saved — it goes into your export')); render(); break; }
+    case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
+    case 'rv': {
+      const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
+      if (ok) { c.box = Math.min(5, c.box + 1); RV.known++; } else { c.box = 1; c.lapses = (c.lapses || 0) + 1; }
+      c.due = addDays(today(), INTERVALS[c.box]); touchActivity(); save();
+      RV.i++; RV.flipped = false; render(); break;
+    }
+    case 'seg': UI.seg = el.dataset.seg; render(); break;
+    case 'add-word': { const top = UI.stack[UI.stack.length - 1]; UI.sheet = { kind: 'add', show: top && top.v === 'show' ? top.id : 'silicon-valley' }; renderSheet(); break; }
+    case 'save-word': {
+      const text = document.getElementById('aw-text').value.trim(); if (!text) return;
+      const ep = (document.getElementById('aw-ep').value.trim() || 'S1E3').toUpperCase(), ctx = document.getElementById('aw-ctx').value.trim();
+      const show = UI.sheet.show || 'silicon-valley';
+      const dl = UI.awTr && UI.awTr.k === norm(text) ? UI.awTr.ru : '';
+      S.myWords.push({ id: 'w-' + uid(), text, ru: dl || lookup(text) || '', src: dl ? 'deepl' : 'dict', show, ep, ctx, at: today() }); UI.awTr = null;
+      const sh = S.shows.find(s => s.id === show); if (sh && !(sh.episodes || []).some(x => x.ep === ep)) (sh.episodes = sh.episodes || []).push({ ep, title: '' });
+      save(); UI.sheet = null; UI.seg = 'words'; renderSheet(); render(); toast(L('Слово записано', 'Word saved')); break;
+    }
+    case 'del-word': S.myWords = S.myWords.filter(w => w.id !== el.dataset.id); save(); render(); toast(L('Удалено', 'Deleted')); break;
+    case 'watched': { const sh = S.shows.find(s => s.id === UI.stack[UI.stack.length - 1].id); if (!sh.watched.includes(el.dataset.ep)) sh.watched.push(el.dataset.ep); save(); render(); toast(L('Отмечено. Пришлите экспорт Claude', 'Marked. Send Claude an export')); break; }
+    case 'sheet-close': UI.sheet = null; renderSheet(); break;
+    case 'export': UI.sheet = { kind: 'export' }; renderSheet(); break;
+    case 'copy-export': {
+      const ta = document.getElementById('exp-text');
+      const fallback = () => { ta.focus(); ta.select(); toast(L('Текст выделен — скопируйте его', 'Text selected — copy it')); };
+      try { navigator.clipboard.writeText(ta.value).then(() => toast(L('Скопировано', 'Copied')), fallback); } catch (er) { fallback(); }
+      break;
+    }
+    case 'check-packs': checkPacks(false); break;
+    case 'tr-test': {
+      const inp = document.getElementById('set-trurl'); if (inp) { S.settings.trUrl = inp.value.trim(); save(); }
+      if (!S.settings.trUrl) { toast(L('Сначала вставьте адрес переводчика', 'Paste the translator address first')); break; }
+      toast(L('Перевожу…', 'Translating…'));
+      deeplTranslate('Let me walk you through the new flow.').then(ru => toast('DeepL: ' + ru), er => toast(L('Не работает: ', 'Not working: ') + er.message));
+      break;
+    }
+    case 'download-export': {
+      try {
+        const txt = document.getElementById('exp-text').value, name = 'study-export-' + today() + '.json';
+        const file = typeof File === 'function' ? new File([txt], name, { type: 'application/json' }) : null;
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: name }).catch(() => {}); break; }
+      } catch (er) {}
+      try { const b = new Blob([document.getElementById('exp-text').value], { type: 'application/json' }); const u = URL.createObjectURL(b); const l = document.createElement('a'); l.href = u; l.download = 'study-export-' + today() + '.json'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); } catch (er) { toast(L('Не удалось сохранить файл', 'Could not save the file')); }
+      break;
+    }
+    case 'import': UI.sheet = { kind: 'import' }; renderSheet(); break;
+    case 'do-import': { const v = document.getElementById('imp-text').value.trim(); if (!v) { toast(L('Выберите файл или вставьте текст', 'Choose a file or paste text')); return; } importData(v); break; }
+    case 'import-merge': mergeExport(UI.sheet.draft, false); break;
+    case 'import-replace': mergeExport(UI.sheet.draft, true); break;
+    case 'set-lang': S.settings.lang = el.dataset.lang; document.documentElement.lang = lang(); save(); render(); break;
+    case 'voice-test': { e.stopPropagation(); const prev = S.settings.voiceSlot; S.settings.voiceSlot = el.dataset.slot; speak('Let me walk you through the new onboarding flow.'); S.settings.voiceSlot = prev; break; }
+    case 'set-voice': S.settings.voiceSlot = el.dataset.slot; save(); render(); break;
+    case 'reset-ask': UI.resetAsk = true; render(); break;
+    case 'reset-no': UI.resetAsk = false; render(); break;
+    case 'reset-yes': S = initState(); save(); UI.resetAsk = false; TS = null; RV = null; CS = null; render(); toast(L('Прогресс сброшен', 'Progress reset')); break;
+  }
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.write) {
+    TS.draft = t.value; const task = findTask(TS.id).task, n = words(t.value);
+    document.getElementById('wc').textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
+    document.getElementById('save-write').disabled = n < task.minWords;
+  }
+  if (t.dataset.cw != null && CS) {
+    const i = Number(t.dataset.cw), sk = currentTest().skills.writing, n = words(t.value);
+    CS.drafts[i] = t.value;
+    document.getElementById('cwc-' + i).textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${sk.parts[i].minWords}`;
+    document.getElementById('cw-submit').disabled = !sk.parts.every((p, k) => words(CS.drafts[k]) >= p.minWords);
+  }
+  if (t.dataset.spt != null && CS) { CS.spoken = CS.spoken || []; CS.spoken[Number(t.dataset.spt)] = t.value; }
+  if (t.dataset.aw) { liveTranslate(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
+  if (t.id === 'set-rate') document.getElementById('rate-val').textContent = Math.round(t.value * 100) + '%';
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = t.type === 'checkbox' ? t.checked : k === 'rate' ? Number(t.value) : t.value; save(); }
+  if (t.dataset.tick != null && CS) CS.ticks[t.dataset.tick] = t.checked;
+  if (t.id === 'imp-file' && t.files && t.files[0]) { const r = new FileReader(); r.onload = () => importData(String(r.result)); r.readAsText(t.files[0]); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.gap && TS && !TS.checked) { e.preventDefault(); document.querySelector('[data-act="check"]').click(); }
+  if (e.key === 'Escape' && UI.sheet) { UI.sheet = null; renderSheet(); }
+});
+window.addEventListener('scroll', () => {
+  const s = window.scrollY > 30; if (s !== UI.scrolled) { UI.scrolled = s; const n = document.getElementById('nav'); if (n) n.classList.toggle('scrolled', s); }
+}, { passive: true });
+
+/* ---------- packs and tests from the app's own site ---------- */
+async function checkPacks(silent) {
+  if (window.self !== window.top) { if (!silent) toast(L('Проверка работает в установленной версии', 'Checking works in the installed app')); return; }
+  try {
+    const r = await fetch('packs/index.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('index');
+    const idx = await r.json();
+    const list = [...(idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id)), ...(idx.levelTests || []).filter(p => !S.tests.some(x => x.id === p.id)), ...(idx.results || []).filter(p => !(S.seenResults || []).includes(p.id))];
+    const msgs = [];
+    for (const p of list) {
+      const pr = await fetch('packs/' + p.file, { cache: 'no-store' });
+      if (!pr.ok) continue;
+      const m = addContent(await pr.json());
+      if (idx.results && idx.results.includes(p)) S.seenResults = [...(S.seenResults || []), p.id];
+      if (m) msgs.push(m);
+    }
+    S.lastCheck = today(); save();
+    if (msgs.length) { render(); toast(msgs.length === 1 ? msgs[0] : L('Загружено обновлений: ', 'Updates loaded: ') + msgs.length); }
+    else if (!silent) { render(); toast(L('Новых заданий пока нет', 'No new tasks yet')); }
+  } catch (e) { if (!silent) toast(L('Нет связи с сайтом приложения. Попробуйте позже', 'Cannot reach the app site. Try again later')); }
+}
+if ('serviceWorker' in navigator && window.self === window.top && location.protocol === 'https:') {
+  try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+}
+
+/* ---------- direct links to screens (for design import: html.to.design etc.) ---------- */
+const ROUTES = { lesson: 'p2-d1-g1', choice: 'p2-d1-g2', meaning: 'p2-d1-g3', gap: 'p2-d1-g4', order: 'p2-d1-g5', fix: 'p2-d1-g6', translate: 'p2-d1-g7', shadow: 'p2-d1-g8', cards: 'p2-d1-g9', write: 'p2-d1-g10', dialog: 'p2-d1-u8', mix: 'p2-d2-g9' };
+function applyHash() {
+  const h = (location.hash || '').slice(1);
+  if (!h) return false;
+  UI.stack = []; TS = null; RV = null; CS = null; UI.sheet = null;
+  if (['today', 'english', 'media', 'progress', 'settings'].includes(h)) UI.tab = h;
+  else if (h === 'show') { UI.tab = 'media'; UI.stack.push({ v: 'show', id: 'silicon-valley' }); }
+  else if (h === 'review') { UI.tab = 'english'; UI.stack.push({ v: 'review' }); }
+  else if (h === 'section') { UI.tab = 'english'; UI.stack.push({ v: 'section', sec: 'general' }); }
+  else if (h === 'articles') { UI.tab = 'media'; UI.mseg = 'article'; }
+  else if (h === 'article' && S.media[0]) { UI.tab = 'media'; UI.stack.push({ v: 'media-item', id: S.media[0].id }); }
+  else if (h === 'checks') { UI.tab = 'progress'; UI.stack.push({ v: 'checks' }); }
+  else if (h.startsWith('check-') && SKILLS.includes(h.slice(6))) { UI.tab = 'progress'; UI.stack.push({ v: 'check', skill: h.slice(6) }); }
+  else if (ROUTES[h]) { UI.tab = 'today'; startTask(ROUTES[h]); }
+  else return false;
+  render(); renderSheet(); return true;
+}
+window.addEventListener('hashchange', applyHash);
+
+if (!applyHash()) render();
+checkPacks(true);
+})();
