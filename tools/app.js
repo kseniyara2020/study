@@ -131,6 +131,7 @@ if (!S.tests.some(t => t.id === SEED_TEST.id)) S.tests.unshift(SEED_TEST);
 if (!S.settings.voiceSlot) S.settings.voiceSlot = 'us-f';
 if (!S.settings.lang) S.settings.lang = 'ru';
 delete S.settings.deeplKey; delete S.settings.voice;
+if (!S.verdicts || Array.isArray(S.verdicts)) S.verdicts = {};
 if (!S.media) S.media = [];
 S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
 document.documentElement.lang = lang();
@@ -279,10 +280,44 @@ function empty(icon, title, text) { return `<div class="empty">${icon}<b>${esc(t
 function taskRow(t) {
   const p = S.progress[t.id], d = p && p.done;
   const ip = (S.inProgress || {})[t.id], c = ip && ipCount(t, ip);
-  const score = ip && c && c.k ? ` · ${L('начато', 'started')} ${c.k} ${L('из', 'of')} ${c.n}` : ip && t.type === 'write' && ip.draft ? ` · ${L('черновик', 'draft')}` : p && p.total ? ` · ${p.score}/${p.total}` : '';
+  const rv = S.verdicts[t.id] || {};
+  const nOpen = p && p.open ? p.open.length : 0, nRev = p && p.open ? p.open.filter(o => rv[o.i]).length : 0;
+  const score = ip && c && c.k ? ` · ${L('начато', 'started')} ${c.k} ${L('из', 'of')} ${c.n}` : ip && t.type === 'write' && ip.draft ? ` · ${L('черновик', 'draft')}` : (p && p.total ? ` · ${fmtScore(p.score)}/${p.total}` : '') + (nOpen ? (nRev === nOpen ? L(' · проверено', ' · checked') : L(' · на проверке', ' · being checked')) : '') + (p && p.answer ? (rv.text ? L(' · проверено', ' · checked') : L(' · на проверке', ' · being checked')) : '');
   return `<button class="row" data-act="open-task" data-id="${esc(t.id)}">
     <span class="check ${d ? 'on' : ''}">${d ? IC.check : ''}</span>
     <span class="row-main"><span class="row-title">${esc(t.title)}</span><span class="row-sub">${typeLabel(t)} · ${mins(t.minutes)}${score}</span></span>${IC.chevR}</button>`;
+}
+function reviewStats() {
+  const st = { pending: 0, reviewed: 0, ok: 0, almost: 0, wrong: 0, texts: 0, textsDone: 0 };
+  Object.entries(S.progress).forEach(([id, p]) => {
+    const rv = S.verdicts[id] || {};
+    (p.open || []).forEach(o => { const r = rv[o.i]; if (!r) st.pending++; else { st.reviewed++; st[r.verdict === 'ok' ? 'ok' : r.verdict === 'almost' ? 'almost' : 'wrong']++; } });
+    if (p.answer) { st.texts++; if (rv.text) st.textsDone++; else st.pending++; }
+  });
+  return st;
+}
+function reviewCard() {
+  const st = reviewStats();
+  if (!st.pending && !st.reviewed && !st.texts) return '';
+  const acc = st.reviewed ? Math.round((st.ok + st.almost * 0.5) / st.reviewed * 100) : 0;
+  return `<button class="row sec-card" data-act="open-reviews"><span class="tile" style="background:var(--accent)">${IC.check}</span>
+    <span class="row-main"><span class="row-title" style="font-weight:600">${L('Проверка Claude', 'Claude’s review')}</span>
+    <span class="row-sub">${st.reviewed ? `${L('Переводы', 'Translations')}: ${acc}% · ✓ ${st.ok} · ≈ ${st.almost} · ✗ ${st.wrong}` : L('Пока ничего не проверено', 'Nothing checked yet')}${st.textsDone ? ` · ${L('тексты', 'texts')}: ${st.textsDone}` : ''}</span>
+    ${st.reviewed ? `<span class="sec-bar"><i style="width:${acc}%;background:var(--accent)"></i></span>` : ''}
+    <span class="row-sub">${st.pending ? `${st.pending} ${L('ждут проверки — сделайте экспорт', 'waiting — make an export')}` : L('Всё проверено', 'All checked')}</span></span>${IC.chevR}</button>`;
+}
+function vReviews() {
+  const rows = Object.entries(S.progress).filter(([, p]) => (p.open || []).length || p.answer).map(([id, p]) => ({ id, p, x: findTask(id) })).filter(r => r.x).sort((a, b) => (b.p.at || '').localeCompare(a.p.at || ''));
+  if (!rows.length) return { title: L('Проверка Claude', 'Claude’s review'), back: true, body: empty(IC.check, L('Пока нечего проверять', 'Nothing to check yet'), L('Здесь появятся ваши переводы и тексты с оценкой Claude.', 'Your translations and texts with Claude’s assessment will appear here.')) };
+  let h = '';
+  rows.forEach(({ id, p, x }) => {
+    const rv = S.verdicts[id] || {};
+    h += groupHead(`${esc(x.task.title)}`, `<span style="margin-left:auto">${fmtShort(p.at)}</span>`) + '<div class="group">';
+    (p.open || []).slice().sort((a, b) => a.i - b.i).forEach(o => { h += reviewRow(o, rv[o.i]); });
+    if (p.answer) h += `<button class="row" data-act="open-task" data-id="${esc(id)}"><span class="row-main"><span class="row-title">${L('Ваш текст', 'Your text')}</span><span class="row-sub">${esc(p.answer.slice(0, 90))}${p.answer.length > 90 ? '…' : ''}</span>${rv.text && rv.text.comment ? `<span class="row-sub">${esc(rv.text.comment.slice(0, 120))}</span>` : ''}</span>${rv.text && rv.text.level ? `<span class="pill lvl">${esc(rv.text.level)}</span>` : verdictPill(rv.text)}${IC.chevR}</button>`;
+    h += '</div>';
+  });
+  return { title: L('Проверка Claude', 'Claude’s review'), back: true, sub: L('Переводы и тексты с оценкой', 'Translations and texts with assessment'), body: h };
 }
 function secStats(list) {
   const done = list.filter(t => isDone(t.id));
@@ -335,7 +370,7 @@ function vToday() {
   h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
       <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
       <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="${L('Следующий день', 'Next day')}">${IC.chevRb}</button></div>`;
-  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + '</div>';
+  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + reviewCard() + '</div>';
   const show = S.shows[0];
   if (show && S.settings.mediaNudge) {
     const n = S.myWords.filter(w => w.show === show.id).length;
@@ -695,7 +730,7 @@ function persistTS() {
   if (!TS || TS.finished || !findTask(TS.id)) return;
   const now = Date.now(); TS.acc = (TS.acc || 0) + Math.min(1800, Math.round((now - TS.t0) / 1000)); TS.t0 = now;
   S.inProgress = S.inProgress || {};
-  S.inProgress[TS.id] = { i: TS.i, results: TS.results, wrong: TS.wrong || [], picked: TS.picked, checked: TS.checked, ok: TS.ok, input: TS.input, order: TS.order || [], best: TS.best || null, almost: TS.almost || null, draft: TS.draft || '', acc: TS.acc, at: today() };
+  S.inProgress[TS.id] = { i: TS.i, results: TS.results, wrong: TS.wrong || [], picked: TS.picked, checked: TS.checked, ok: TS.ok, input: TS.input, order: TS.order || [], best: TS.best || null, almost: TS.almost || null, draft: TS.draft || '', acc: TS.acc, open: TS.open || [], at: today() };
   save();
 }
 function clearTS(id) { if (S.inProgress && S.inProgress[id]) { delete S.inProgress[id]; save(); } }
@@ -703,10 +738,10 @@ function ipCount(t, ip) { const n = t.items ? t.items.length : t.cards ? t.cards
 function startTask(id) {
   const x = findTask(id); if (!x) return;
   const p = S.progress[id] || {};
-  TS = { t0: Date.now(), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [], acc: 0 };
+  TS = { t0: Date.now(), startedUndone: !isDone(id), id, i: 0, picked: null, checked: false, ok: false, results: [], flipped: false, showText: false, finished: false, draft: p.answer || '', input: null, order: [], acc: 0 };
   const ip = (S.inProgress || {})[id], n = x.task.items ? x.task.items.length : x.task.cards ? x.task.cards.length : 0;
   if (ip && (!n || (ip.i || 0) < n)) {
-    Object.assign(TS, { i: ip.i || 0, results: ip.results || [], wrong: ip.wrong || [], picked: ip.picked == null ? null : ip.picked, checked: !!ip.checked, ok: !!ip.ok, input: ip.input == null ? null : ip.input, order: ip.order || [], best: ip.best || null, almost: ip.almost || null, acc: ip.acc || 0 });
+    Object.assign(TS, { i: ip.i || 0, results: ip.results || [], wrong: ip.wrong || [], picked: ip.picked == null ? null : ip.picked, checked: !!ip.checked, ok: !!ip.ok, input: ip.input == null ? null : ip.input, order: ip.order || [], best: ip.best || null, almost: ip.almost || null, acc: ip.acc || 0, open: ip.open || [] });
     if (ip.draft) TS.draft = ip.draft;
   }
   UI.stack.push({ v: 'task', id });
@@ -717,11 +752,42 @@ function vTask(id) {
   if (!TS || TS.id !== id) { startTask(id); UI.stack.pop(); }
   const meta = `<div class="tmeta"><span class="pill" style="background:${s.color};color:#fff">${s.short()}</span>${x.day ? `<span class="pill">${L('День', 'Day')} ${x.day.day}</span>` : x.item ? `<span class="pill">${esc(x.item.title)}</span>` : ''}<span class="pill">${typeLabel(t)} · ${mins(t.minutes)}</span>${isDone(id) ? `<span class="pill good">${L('Выполнено', 'Done')}</span>` : ''}</div>`;
   let body = '';
+  const pr = S.progress[id];
+  if (pr && pr.done && t.type !== 'lesson' && !(TS && TS.id === id && (TS.redo || TS.startedUndone))) return { title: t.title, back: true, body: meta + doneView(t, pr) };
   if (t.type === 'lesson') body = tLesson(t);
   else if (t.type === 'cards') body = tCards(t);
   else if (t.type === 'write') body = tWrite(t);
   else body = tItems(t);
   return { title: t.title, back: true, body: meta + body };
+}
+const fmtScore = n => String(Math.round(n * 10) / 10).replace('.', ',');
+function verdictPill(r) {
+  if (!r) return `<span class="pill">${L('ждёт проверки', 'pending')}</span>`;
+  if (r.verdict === 'ok') return `<span class="pill good">${L('верно', 'correct')}</span>`;
+  if (r.verdict === 'almost') return `<span class="pill warn">${L('почти', 'almost')}</span>`;
+  return `<span class="pill bad">${L('ошибка', 'mistake')}</span>`;
+}
+function reviewRow(o, r) {
+  return `<div class="row static" style="align-items:flex-start"><span class="row-main"><span class="row-sub">${esc(o.prompt)}</span><span class="row-title">${esc(o.answer)}</span>
+    ${r && r.correct && r.verdict !== 'ok' ? `<span class="row-sub">${L('Правильно', 'Correct')}: <b style="color:var(--label)">${esc(r.correct)}</b></span>` : ''}
+    ${r && r.comment ? `<span class="row-sub">${esc(r.comment)}</span>` : ''}</span>${verdictPill(r)}</div>`;
+}
+function reviewBox(r) {
+  return `<div class="panel" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>${L('Проверка Claude', 'Claude’s review')}</b>${r.level ? `<span class="pill lvl big">${esc(r.level)}</span>` : ''}</div>
+    ${r.comment ? `<p style="margin:10px 0 0">${esc(r.comment)}</p>` : ''}
+    ${(r.fixes || []).length ? `<div class="diff" style="margin-top:10px">${r.fixes.map(f => `<div><s class="dw-bad">${esc(f.from)}</s> → <b class="dw-good">${esc(f.to)}</b>${f.why ? `<div class="row-sub">${esc(f.why)}</div>` : ''}</div>`).join('')}</div>` : ''}</div>`;
+}
+function doneView(t, pr) {
+  const locked = pr.at < today(), rv = S.verdicts[t.id] || {};
+  let h = `<div class="notice">${IC.check}<span>${locked ? L('Пройдено ', 'Done ') + fmtShort(pr.at) + L('. Прошедшие задания заново не проходятся — правила и слова вернутся в повторении.', '. Past tasks can’t be retaken — rules and words come back in review.') : L('Пройдено сегодня.', 'Done today.')}</span></div>`;
+  if (pr.total) h += `<div class="summary" style="padding:8px 0 4px"><div class="big">${fmtScore(pr.score)}/${pr.total}</div><p>${L('автопроверка', 'auto-checked')}</p></div>`;
+  if ((pr.open || []).length) h += groupHead(L('Ваши переводы', 'Your translations')) + '<div class="group">' + pr.open.slice().sort((a, b) => a.i - b.i).map(o => reviewRow(o, rv[o.i])).join('') + '</div>';
+  if (pr.answer) h += groupHead(L('Ваш текст', 'Your text')) + `<div class="panel" style="white-space:pre-wrap">${esc(pr.answer)}</div>` + (rv.text ? reviewBox(rv.text) : `<div class="gfoot">${L('Ждёт проверки Claude — сделайте экспорт.', 'Waiting for Claude — make an export.')}</div>`);
+  const wr = (pr.wrong || []).filter(w => w.kind !== 'translate');
+  if (wr.length) h += groupHead(L('Ошибки', 'Mistakes')) + '<div class="group">' + wr.map(w => `<div class="row static"><span class="row-main"><span class="row-sub">${esc(w.prompt)}</span>${w.kind === 'choice' ? `<span class="row-title">${L('Ваш ответ', 'Yours')}: ${esc(w.answer)} · ${L('верно', 'correct')}: <b>${esc(w.ref)}</b></span>` : diffHtml(wordDiff(w.answer, w.ref))}</span></div>`).join('') + '</div>';
+  if (t.type === 'cards') h += groupHead(L('Слова', 'Words')) + '<div class="group">' + t.cards.map(c => vocabMap()[c]).filter(Boolean).map(v => `<div class="row static"><span class="row-main"><span class="row-title">${esc(v.en)}</span><span class="row-sub">${esc(v.ru)}</span></span></div>`).join('') + '</div>';
+  if (!locked && t.type !== 'cards') h += `<div class="actions"><button class="btn sec" data-act="redo">${L('Пройти ещё раз', 'Do it again')}</button></div>`;
+  return h;
 }
 function tLesson(t) {
   let h = '<div class="panel lesson">' + t.body.map(p => `<p>${md(p)}</p>`).join('') + '</div>';
@@ -783,10 +849,12 @@ const KIND_HINT = {
 function tItems(t) {
   const items = t.items;
   if (TS.finished) {
-    const sc = TS.results.reduce((a, x) => a + (Number(x) || 0), 0);
-    const msg = sc === items.length ? L('Без ошибок.', 'No mistakes.') : sc >= items.length * 0.8 ? L('Хороший результат. Ошибки вернутся в повторении.', 'Good result. Mistakes will come back in review.') : L('Это правило ещё не стало автоматическим — оно вернётся в следующих днях.', 'This rule is not automatic yet — it will come back in the next days.');
-    return `<div class="summary"><div class="big">${String(sc).replace('.', ',')}/${items.length}</div><p>${msg}</p>${(TS.wrong || []).length ? `<p class="row-sub" style="margin-top:8px">${L('Ошибки сохранены — Claude разберёт их в отчёте после экспорта.', 'Mistakes are saved — Claude will go through them in the report after your export.')}</p>` : ''}</div>
-      <div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button><button class="btn plain" data-act="retry">${L('Пройти ещё раз', 'Try again')}</button></div>`;
+    const scored = TS.results.filter(x => x !== null && x !== undefined), nOpen = (TS.open || []).length;
+    const sc = scored.reduce((a, x) => a + (Number(x) || 0), 0);
+    if (!scored.length) return `<div class="summary"><div class="big">${nOpen}</div><p>${L(ruPlural(nOpen, 'перевод сохранён', 'перевода сохранено', 'переводов сохранено') + '. Claude проверит их после экспорта, результат появится здесь и на экране «Сегодня».', 'translations saved. Claude will check them after your export; the result appears here and on the Today screen.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
+    const msg = sc === scored.length ? L('Без ошибок.', 'No mistakes.') : sc >= items.length * 0.8 ? L('Хороший результат. Ошибки вернутся в повторении.', 'Good result. Mistakes will come back in review.') : L('Это правило ещё не стало автоматическим — оно вернётся в следующих днях.', 'This rule is not automatic yet — it will come back in the next days.');
+    return `<div class="summary"><div class="big">${String(sc).replace('.', ',')}/${scored.length}</div><p>${msg}</p>${nOpen ? `<p class="row-sub" style="margin-top:8px">${L('Переводы (' + nOpen + ') ушли на проверку Claude.', 'Translations (' + nOpen + ') went to Claude for checking.')}</p>` : ''}${(TS.wrong || []).length ? `<p class="row-sub" style="margin-top:8px">${L('Ошибки сохранены — Claude разберёт их в отчёте после экспорта.', 'Mistakes are saved — Claude will go through them in the report after your export.')}</p>` : ''}</div>
+      <div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`;
   }
   const it = items[TS.i], kind = itemKind(t, it);
   let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
@@ -813,9 +881,13 @@ function tItems(t) {
       <div class="tiles">${pool.map((x, pi) => `<button class="tile-w" data-act="tile-add" data-pi="${pi}" ${used.includes(pi) || TS.checked ? 'disabled' : ''}>${esc(x.v)}</button>`).join('')}</div>`;
     if (!TS.checked) h += `<div class="btns"><button class="btn sec" data-act="order-reset" ${used.length ? '' : 'disabled'}>${L('Сбросить', 'Reset')}</button><button class="btn" data-act="order-check" ${used.length === toks.length ? '' : 'disabled'}>${L('Проверить', 'Check')}</button></div>`;
     else h += feedback(TS.ok, null, TS.ok ? null : wordDiff(used.map(pi => pool[pi].v).join(' '), it.en), it) + nextBtn(t);
-  } else if (kind === 'gap' || kind === 'dictation' || kind === 'translate' || kind === 'fix') {
-    if (kind === 'translate') h += `<p class="q">${esc(it.ru)}</p>`;
-    else if (it.q && kind !== 'fix') h += `<p class="q">${md(it.q)}</p>`;
+  } else if (kind === 'translate') {
+    h += `<p class="q">${esc(it.ru)}</p>`;
+    h += `<textarea class="field" style="min-height:96px" id="tr-input" data-tr="1" lang="en" spellcheck="false" autocapitalize="sentences" placeholder="${L('Напишите или надиктуйте по-английски', 'Type or dictate in English')}" ${TS.checked ? 'disabled' : ''}>${esc(TS.input || '')}</textarea>`;
+    if (!TS.checked) h += micButton('tr') + `<div class="actions"><button class="btn" data-act="tr-save">${L('Сохранить ответ', 'Save answer')}</button></div>`;
+    else h += `<div class="fb neutral"><b>${L('Сохранено — проверит Claude', 'Saved — Claude will check it')}</b><div class="row-sub" style="margin-top:6px">${L('Один из возможных вариантов', 'One possible version')}: ${esc(it.a[0])}</div></div>` + nextBtn(t);
+  } else if (kind === 'gap' || kind === 'dictation' || kind === 'fix') {
+    if (it.q && kind !== 'fix') h += `<p class="q">${md(it.q)}</p>`;
     const val = TS.input != null ? TS.input : kind === 'fix' ? it.q : '';
     const ph = kind === 'translate' ? L('Напишите по-английски', 'Write in English') : kind === 'fix' ? '' : kind === 'dictation' ? L('Напишите предложение', 'Type the sentence') : L('Ваш ответ', 'Your answer');
     h += `<input class="field" id="gap-input" data-gap="1" autocomplete="off" autocapitalize="${kind === 'gap' ? 'off' : 'sentences'}" spellcheck="false" lang="en" placeholder="${ph}" value="${esc(val)}" ${TS.checked ? 'disabled' : ''}>`;
@@ -911,7 +983,8 @@ function buildExport() {
     summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
     mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, reviewedUpTo() && w.date && w.date <= reviewedUpTo() ? { reviewed: true } : {})))),
-    reviews: S.reviews || [], inProgress: S.inProgress || {},
+    reviews: S.reviews || [], inProgress: S.inProgress || {}, verdicts: S.verdicts || {},
+    openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).map(o => Object.assign({ task: id, unfinished: true }, o)))),
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
     packs: S.packs, tests: S.tests, media: S.media
   };
@@ -954,6 +1027,9 @@ function addContent(d) {
     purgeReviewed();
     msg = L('Claude разобрал ваши ответы до ', 'Claude reviewed your answers up to ') + fmtDate(d.upTo);
   }
+  let gotRev = 0;
+  (d.verdicts || []).forEach(r => { if (!r || !r.task) return; const k = r.i == null ? 'text' : r.i; const cur = (S.verdicts[r.task] = S.verdicts[r.task] || {}); if (!cur[k] || cur[k].id !== r.id) { cur[k] = r; gotRev++; } });
+  if (gotRev) msg = msg || L('Пришла проверка от Claude: ', 'Claude’s review arrived: ') + gotRev;
   (d.results || []).forEach(c => { if (c && c.id && c.results && !S.checks.some(x => x.id === c.id)) { S.checks.push(c); S.checks.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); msg = msg || L('Получена оценка от Claude', 'A grade from Claude has arrived'); } });
   return msg;
 }
@@ -969,7 +1045,7 @@ function importData(raw) {
 }
 function mergeExport(d, replace) {
   if (replace) {
-    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, inProgress: d.inProgress || {}, settings: S.settings, reviews: d.reviews || S.reviews || [] });
+    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, inProgress: d.inProgress || {}, settings: S.settings, reviews: d.reviews || S.reviews || [], verdicts: d.verdicts || S.verdicts || {} });
   } else {
     (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
     (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
@@ -981,6 +1057,7 @@ function mergeExport(d, replace) {
       if (wrong.length) S.progress[id].wrong = wrong;
     });
     (d.reviews || []).forEach(r => { if (!(S.reviews || []).some(x => x.id === r.id)) S.reviews = [...(S.reviews || []), r]; });
+    Object.entries(d.verdicts || {}).forEach(([tid, rv]) => { S.verdicts[tid] = Object.assign({}, rv, S.verdicts[tid] || {}); });
     Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
     (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
     (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
@@ -1003,6 +1080,7 @@ function currentView() {
     if (top.v === 'check') return vCheck(top.skill);
     if (top.v === 'media-item') return vMediaItem(top.id);
     if (top.v === 'daysec') return vDaySec(top.sec, top.di);
+    if (top.v === 'reviews') return vReviews();
   }
   return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
 }
@@ -1076,6 +1154,9 @@ function applyDictation(target, text) {
     const task = findTask(TS.id).task, n = words(TS.draft);
     const wc = document.getElementById('wc'); if (wc) wc.textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
     const sb = document.getElementById('save-write'); if (sb) sb.disabled = n < task.minWords;
+  } else if (target === 'tr' && TS) {
+    TS.input = joinText(TS.input, text); TS.trVoice = true;
+    const f = document.getElementById('tr-input'); if (f) f.value = TS.input;
   } else if (target.startsWith('sp-') && CS) {
     const i = Number(target.slice(3)); CS.spoken = CS.spoken || []; CS.spoken[i] = joinText(CS.spoken[i], text);
     const el = document.getElementById('spt-' + i); if (el) { el.value = CS.spoken[i]; }
@@ -1089,11 +1170,16 @@ function nextItem() {
   try { speechSynthesis.cancel(); } catch (er) {}
   const t = findTask(TS.id).task;
   if (TS.i >= t.items.length - 1) {
-    TS.finished = true; const sc = TS.results.reduce((a, x) => a + (Number(x) || 0), 0);
+    TS.finished = true;
+    const scored = TS.results.filter(x => x !== null && x !== undefined);
+    const sc = scored.reduce((a, x) => a + (Number(x) || 0), 0), total = scored.length;
     const wrong = (TS.wrong || []).map(w => Object.assign({ date: today() }, w));
-    markDone(t.id, { score: sc, total: t.items.length }); S.progress[t.id].score = sc;
-    if (wrong.length) S.progress[t.id].wrong = [...(S.progress[t.id].wrong || []), ...wrong].slice(-500);
+    markDone(t.id, total ? { score: sc, total } : {});
+    const pr = S.progress[t.id];
+    if (total) { pr.score = sc; pr.total = total; } else { delete pr.score; delete pr.total; }
+    if (wrong.length) pr.wrong = [...(pr.wrong || []), ...wrong].slice(-500);
     if (S.inProgress) delete S.inProgress[t.id];
+    if (TS.open && TS.open.length) { pr.open = [...(pr.open || []).filter(o => !TS.open.some(n => n.i === o.i)), ...TS.open.map(o => Object.assign({ date: today() }, o))]; if (S.verdicts[t.id]) TS.open.forEach(o => { delete S.verdicts[t.id][o.i]; }); }
     save();
   }
   else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; persistTS(); }
@@ -1133,6 +1219,16 @@ document.addEventListener('click', e => {
     }
     case 'timer': runTimer(el.dataset.i); break;
     case 'mic': toggleMic(el.dataset.target); break;
+    case 'tr-save': {
+      const t = findTask(TS.id).task, it = t.items[TS.i];
+      const v = ((document.getElementById('tr-input') || {}).value || TS.input || '').trim();
+      if (!v) { toast(L('Сначала напишите перевод', 'Write a translation first')); return; }
+      stopMic(); TS.input = v; TS.checked = true; TS.results[TS.i] = null;
+      TS.open = (TS.open || []).filter(o => o.i !== TS.i); TS.open.push({ i: TS.i, prompt: it.ru, answer: v, ref: it.a[0], alt: it.a.slice(1), voice: !!TS.trVoice });
+      TS.trVoice = false; persistTS(); render(); break;
+    }
+    case 'redo': { const id = UI.stack[UI.stack.length - 1].id; TS = null; UI.stack.pop(); clearTS(id); startTask(id); TS.redo = true; go(() => {}); break; }
+    case 'open-reviews': go(() => UI.stack.push({ v: 'reviews' })); break;
     case 'speak-next': stopMic(); clearInterval(timerT); try { speechSynthesis.cancel(); } catch (er) {} CS.phase = 1; go(() => {}); break;
     case 'speak-back': CS.phase = 0; go(() => {}); break;
     case 'check-submit-speaking': {
@@ -1260,6 +1356,7 @@ document.addEventListener('input', e => {
     document.getElementById('cwc-' + i).textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${sk.parts[i].minWords}`;
     document.getElementById('cw-submit').disabled = !sk.parts.every((p, k) => words(CS.drafts[k]) >= p.minWords);
   }
+  if (t.dataset.tr && TS) TS.input = t.value;
   if (t.dataset.spt != null && CS) { CS.spoken = CS.spoken || []; CS.spoken[Number(t.dataset.spt)] = t.value; }
   if (t.dataset.aw) { liveTranslate(t.value); document.getElementById('aw-save').disabled = !t.value.trim(); }
   if (t.id === 'set-rate') document.getElementById('rate-val').textContent = Math.round(t.value * 100) + '%';
@@ -1313,6 +1410,7 @@ function applyHash() {
   else if (h === 'show') { UI.tab = 'media'; UI.stack.push({ v: 'show', id: 'silicon-valley' }); }
   else if (h === 'review') { UI.tab = 'english'; UI.stack.push({ v: 'review' }); }
   else if (h === 'section') { UI.tab = 'english'; UI.stack.push({ v: 'section', sec: 'general' }); }
+  else if (h === 'reviews') { UI.tab = 'today'; UI.stack.push({ v: 'reviews' }); }
   else if (h === 'articles') { UI.tab = 'media'; UI.mseg = 'article'; }
   else if (h === 'article' && S.media[0]) { UI.tab = 'media'; UI.stack.push({ v: 'media-item', id: S.media[0].id }); }
   else if (h === 'checks') { UI.tab = 'progress'; UI.stack.push({ v: 'checks' }); }
