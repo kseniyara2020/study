@@ -45,9 +45,9 @@ R1 = ("make / do", "make/do", [
 ])
 
 R2 = ("used to / be used to / get used to", "used to", [
- ("I used to work in an office.", "Раньше я работала в офисе.", "used to work", ["am used to working", "use to work"], "I use to work in an office.", "work", []),
+ ("I used to work in an office.", "Раньше я работала в офисе.", "used to work", ["am used to working", "use to work"], "I use to work in an office.", "work", ["I used to work in the office."]),
  ("I'm used to working from home.", "Я привыкла работать из дома.", "working", ["work", "worked"], "I'm used to work from home.", "work", ["I am used to working from home."]),
- ("She is getting used to the new software.", "Она привыкает к новой программе.", "getting used to", ["used to", "getting use to"], "She is getting use to the new software.", "get", ["She's getting used to the new software."]),
+ ("She is getting used to the new software.", "Она привыкает к новой программе.", "getting used to", ["used to", "getting use to"], "She is getting use to the new software.", "get", ["She's getting used to the new software.", "She is getting used to the new program.", "She is getting used to a new program.", "She's getting used to the new program."]),
  ("We didn't use to have design reviews.", "Раньше у нас не было дизайн-ревью.", "didn't use to have", ["didn't used to have", "weren't used to have"], "We didn't used to have design reviews.", "not have", ["We never used to have design reviews."]),
  ("Did you use to live in London?", "Ты раньше жила в Лондоне?", "use to live", ["used to live", "use to living"], "Did you used to live in London?", "live", []),
  ("I'm not used to speaking English at work.", "Я не привыкла говорить по-английски на работе.", "speaking", ["speak", "spoke"], "I'm not used to speak English at work.", "speak", ["I am not used to speaking English at work."]),
@@ -64,7 +64,7 @@ R2 = ("used to / be used to / get used to", "used to", [
  ("Have you got used to the time difference?", "Ты привыкла к разнице во времени?", "got used to", ["used to", "get use to"], "Have you got use to the time difference?", "get", ["Have you gotten used to the time difference?"]),
  ("Designers are used to hearing criticism.", "Дизайнеры привыкли слышать критику.", "hearing", ["hear", "heard"], "Designers are used to hear criticism.", "hear", []),
  ("He used to be very shy.", "Раньше он был очень застенчивым.", "used to be", ["is used to be", "used to being"], "He was used to be very shy.", "be", []),
- ("I'm getting used to living in a new city.", "Я привыкаю жить в новом городе.", "living", ["live", "lived"], "I'm getting used to live in a new city.", "live", ["I am getting used to living in a new city."]),
+ ("I'm getting used to living in a new city.", "Я привыкаю жить в новом городе.", "living", ["live", "lived"], "I'm getting used to live in a new city.", "live", ["I am getting used to living in a new city.", "I'm getting used to living in the new city.", "I am getting used to living in the new city."]),
  ("Did they use to work together?", "Они раньше работали вместе?", "use to work", ["used to work", "use to working"], "Did they used to work together?", "work", []),
  ("It's hard to get used to a new team.", "Трудно привыкнуть к новой команде.", "get used to", ["be use to", "use to"], "It's hard to get use to a new team.", "get", ["It is hard to get used to a new team."]),
  ("I'm not used to this much attention.", "Я не привыкла к такому вниманию.", "used to", ["use to", "using to"], "I'm not use to this much attention.", "be used to", []),
@@ -327,3 +327,13 @@ UX = [
   ("What are the next steps?", "Какие дальше шаги?"),
  ]),
 ]
+
+# Correct alternatives found in the user's answers (export 01.11.2026) — add to `a` when these phrases are reused.
+UX_ALT = {
+ "This part feels a bit crowded.": ["This part seems a bit crowded.", "This part looks a bit crowded."],
+ "I like how clear the navigation is.": ["I like that the navigation is clear.", "I like how clear the navigation is."],
+ "The text is hard to read on mobile.": ["The text is difficult to read on mobile.", "The text is hard to read on a phone."],
+ "Let's start with the problem we are solving.": ["Let's start with the problem that we are solving.", "Let's start with the problem we're solving."],
+ "Feel free to stop me at any point.": ["Feel free to interrupt me at any point.", "Feel free to stop me at any time."],
+ "I'd suggest using fewer colours.": ["I'd suggest using fewer colors.", "I would suggest using fewer colours."],
+}

@@ -1,0 +1,219 @@
+{
+ "type": "review",
+ "id": "review-2026-11-01",
+ "date": "2026-11-01",
+ "upTo": "2026-11-01",
+ "summary": "Дни 1–2 разобраны. Понимание — почти 100%, а сказать самой пока трудно: make/do 63%, used to 70% — оба вернутся в следующем пакете. Главная повторяющаяся ошибка — be и do в отрицаниях (I'm not sure, It doesn't make…).",
+ "verdicts": [
+  {
+   "id": "v-p2-d2-g9-10",
+   "task": "p2-d2-g9",
+   "i": 10,
+   "verdict": "wrong",
+   "correct": "Could you make a copy of this file?",
+   "comment": "копия — make a copy (появляется результат), не do"
+  },
+  {
+   "id": "v-p2-d2-u3-0",
+   "task": "p2-d2-u3",
+   "i": 0,
+   "verdict": "almost",
+   "correct": "I like how clear the navigation is.",
+   "comment": "Ваш вариант по смыслу верный, но нужен артикль: I like that the navigation is clear."
+  },
+  {
+   "id": "v-p2-d2-u3-1",
+   "task": "p2-d2-u3",
+   "i": 1,
+   "verdict": "wrong",
+   "correct": "Have you considered a bottom sheet here?",
+   "comment": "shelf — полка, нужно sheet (шторка). «Вы не рассматривали…» = Have you considered…?"
+  },
+  {
+   "id": "v-p2-d2-u3-2",
+   "task": "p2-d2-u3",
+   "i": 2,
+   "verdict": "wrong",
+   "correct": "I'm not sure about the colour of the main button.",
+   "comment": "sure — прилагательное, нужен be: I'm not sure (не I don't sure). «цвет кнопки» = the colour of the button"
+  },
+  {
+   "id": "v-p2-d2-u3-3",
+   "task": "p2-d2-u3",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "What if we moved the search to the top?",
+   "comment": "up — не глагол; «перенести наверх» = move … to the top. После What if — прошедшее: moved"
+  },
+  {
+   "id": "v-p2-d2-u3-4",
+   "task": "p2-d2-u3",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "seems тоже верно; feels звучит чуть живее"
+  },
+  {
+   "id": "v-p2-d2-u3-5",
+   "task": "p2-d2-u3",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "The text is hard to read on mobile.",
+   "comment": "После hard/difficult — to + глагол: difficult to read, не for reading"
+  },
+  {
+   "id": "v-p2-d2-u3-6",
+   "task": "p2-d2-u3",
+   "i": 6,
+   "verdict": "wrong",
+   "correct": "Could we make the call to action more visible?",
+   "comment": "make + объект + прилагательное: make it visible / make it clearer. Не do"
+  },
+  {
+   "id": "v-p2-d2-u3-7",
+   "task": "p2-d2-u3",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "I'd suggest using fewer colours.",
+   "comment": "offer to use = «предлагаю сама использовать»; совет — suggest + -ing: I'd suggest using…"
+  },
+  {
+   "id": "v-p2-d2-u9-0",
+   "task": "p2-d2-u9",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "Let me walk you through the new flow.",
+   "comment": "Let me — «давайте я»; Let's = «давайте мы». through (через), не trough/throw. step by step уже внутри walk through"
+  },
+  {
+   "id": "v-p2-d2-u9-1",
+   "task": "p2-d2-u9",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "Let's start with the problem we are solving.",
+   "comment": "Нужен артикль: the problem. that можно оставить"
+  },
+  {
+   "id": "v-p2-d2-u9-2",
+   "task": "p2-d2-u9",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "I have a few open questions.",
+   "comment": "few = «мало», a few = «несколько». Без a смысл меняется"
+  },
+  {
+   "id": "v-p2-d2-u9-3",
+   "task": "p2-d2-u9",
+   "i": 3,
+   "verdict": "ok"
+  },
+  {
+   "id": "v-p2-d2-u9-4",
+   "task": "p2-d2-u9",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "I went with cards because they are easier to scan.",
+   "comment": "went with = «выбрала». easier to scan/read — to + глагол, не for reading"
+  },
+  {
+   "id": "v-p2-d2-u9-5",
+   "task": "p2-d2-u9",
+   "i": 5,
+   "verdict": "wrong",
+   "correct": "If you tap here, a bottom sheet opens.",
+   "comment": "Нужно подлежащее: If you tap. После if-части — opens (или will open), не will opened"
+  },
+  {
+   "id": "v-p2-d2-u9-6",
+   "task": "p2-d2-u9",
+   "i": 6,
+   "verdict": "ok"
+  },
+  {
+   "id": "v-p2-d2-u9-7",
+   "task": "p2-d2-u9",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "Feel free to stop me at any point.",
+   "comment": "Смысл верный; просто Interrupt me звучит резко. Предлог — at any point"
+  },
+  {
+   "id": "v-p2-d1-g10-text",
+   "task": "p2-d1-g10",
+   "level": "A2+/B1",
+   "comment": "Задание выполнено, 3 сочетания верно (make mistakes, make an effort, do your best). Ошибки — make/do и be.",
+   "fixes": [
+    {
+     "from": "Sport makes me good.",
+     "to": "Exercise does me good.",
+     "why": "«идёт на пользу» = do somebody good"
+    },
+    {
+     "from": "Don't afraid",
+     "to": "Don't be afraid",
+     "why": "afraid — прилагательное, нужен be"
+    },
+    {
+     "from": "at first time",
+     "to": "the first time",
+     "why": "«в первый раз» = the first time"
+    },
+    {
+     "from": "He made me favour",
+     "to": "He did me a favour",
+     "why": "do a favour + артикль"
+    },
+    {
+     "from": "by the time",
+     "to": "on time",
+     "why": "on time — вовремя"
+    }
+   ]
+  },
+  {
+   "id": "v-p2-d2-g10-text",
+   "task": "p2-d2-g10",
+   "level": "B1",
+   "comment": "Отлично: все три формы (used to / be used to / get used to) употреблены верно. Ошибки только в последнем предложении и предлог с children.",
+   "fixes": [
+    {
+     "from": "reading books for my children",
+     "to": "reading books to my children",
+     "why": "читать вслух кому-то — read to; read for = вместо кого-то"
+    },
+    {
+     "from": "I was getting used to busy schedule very hard",
+     "to": "It was very hard to get used to a busy schedule.",
+     "why": "«было трудно привыкнуть» = It was hard to get used to…; артикль a busy schedule"
+    },
+    {
+     "from": "walking with my dog",
+     "to": "walking my dog",
+     "why": "так естественнее (оба варианта понятны)"
+    }
+   ]
+  },
+  {
+   "id": "v-p2-d2-u7-text",
+   "task": "p2-d2-u7",
+   "level": "A2+/B1",
+   "comment": "Всё нужное сказано: макеты готовы, ссылка, фидбэк до четверга, пустые состояния в работе. Мешают опечатки и две конструкции.",
+   "fixes": [
+    {
+     "from": "I walk you throw new low of the onboarding, the link is added.",
+     "to": "Let me walk you through the new onboarding flow — here's the link.",
+     "why": "Let me walk you through; through (не throw); flow"
+    },
+    {
+     "from": "I would to notice that empty states are still working on",
+     "to": "Just a heads-up: I'm still working on the empty states.",
+     "why": "would to notice — так не говорят; «состояния в работе» = I'm still working on them / they're still in progress"
+    },
+    {
+     "from": "Hi. The onboarding is done.",
+     "to": "Hi! The onboarding designs are ready.",
+     "why": "designs are ready — про макеты; done звучит как готовый продукт"
+    }
+   ]
+  }
+ ]
+}
