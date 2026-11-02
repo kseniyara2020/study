@@ -138,22 +138,30 @@ if (!S.notes) S.notes = [];
 if (!S.media) S.media = [];
 S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
 document.documentElement.lang = lang();
-if (!S.packs.some(p => p.id === SEED.id)) { addContentEarly(SEED); }
+if (!S.packs.some(p => p.id === SEED.id || (p.replaces || []).includes(SEED.id))) { addContentEarly(SEED); }
 /* ---------- answer retention: a wrong answer is deleted only after Claude has reviewed it (review file, upTo) AND it is 7+ days old ---------- */
 const KEEP_DAYS = 7;
 function reviewedUpTo() { return (S.reviews || []).reduce((m, r) => r.upTo > m ? r.upTo : m, ''); }
+// latest review moment in ms: upToTs (time of the export Claude reviewed) or, for old files, the end of the upTo day
+function reviewedTs() { return (S.reviews || []).reduce((m, r) => Math.max(m, r.upToTs ? Date.parse(r.upToTs) || 0 : r.upTo ? parse(r.upTo).getTime() + 86399999 : 0), 0); }
+// answers carry ts (ms) since 02.11.2026; older ones only a date
+function isReviewed(w) {
+  const t = reviewedTs(); if (!t) return false;
+  if (w.ts) return w.ts <= t;
+  return !!(w.date && parse(w.date).getTime() + 86399999 <= t);
+}
 function mistakeStats() {
-  const up = reviewedUpTo(); let open = 0, done = 0;
-  [...Object.values(S.progress), ...Object.values(S.inProgress || {})].forEach(p => (p.wrong || []).forEach(w => { if (up && w.date && w.date <= up) done++; else open++; }));
+  let open = 0, done = 0;
+  [...Object.values(S.progress), ...Object.values(S.inProgress || {})].forEach(p => (p.wrong || []).forEach(w => { if (isReviewed(w)) done++; else open++; }));
   return { open, done };
 }
 function purgeReviewed() {
-  const up = reviewedUpTo(); if (!up) return 0;
+  if (!reviewedTs()) return 0;
   const cut = new Date(); cut.setDate(cut.getDate() - KEEP_DAYS); const cutoff = ymd(cut);
   let n = 0;
   Object.values(S.progress).forEach(p => {
     if (!p.wrong || !p.wrong.length) return;
-    const keep = p.wrong.filter(w => !(w.date && w.date <= up && w.date <= cutoff));
+    const keep = p.wrong.filter(w => !(isReviewed(w) && w.date && w.date <= cutoff));
     n += p.wrong.length - keep.length;
     if (keep.length) p.wrong = keep; else delete p.wrong;
   });
@@ -821,14 +829,16 @@ function tCards(t) {
       <div class="qcount" style="text-align:center">${TS.i + 1} ${L('из', 'of')} ${ids.length}</div>`;
   return h;
 }
+// word counter of a write task: the minimum is only a recommendation (level tests keep a hard minimum)
+function wcText(n, min) { return `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')}` + (min ? ` · ${L('рекомендуем от', 'aim for')} ${min}` : ''); }
 function tWrite(t) {
-  const n = words(TS.draft), ok = n >= t.minWords;
+  const n = words(TS.draft), ok = n >= 1;
   const p = S.progress[t.id];
   return `<div class="panel"><p class="prompt">${md(t.prompt)}</p><p class="hint" style="margin:0">${md(t.hint || '')}</p></div>
     <div class="lbl" style="margin:18px 16px 8px">${L('Ваш текст на английском', 'Your text in English')}</div>
     <textarea class="field" id="write-${esc(t.id)}" data-write="1" placeholder="${L('Пишите или надиктуйте по-английски…', 'Type or dictate in English…')}" spellcheck="true" lang="en">${esc(TS.draft)}</textarea>
     ${micButton('write')}
-    <div class="wc" id="wc">${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${t.minWords}</div>
+    <div class="wc" id="wc">${wcText(n, t.minWords)}</div>
     <div class="actions"><button class="btn" data-act="save-write" id="save-write" ${ok ? '' : 'disabled'}>${p && p.done ? L('Сохранить изменения', 'Save changes') : L('Сохранить', 'Save')}</button></div>
     <div class="gfoot">${L('Текст попадёт в экспорт. Claude проверит его по критериям CEFR: содержание, связность, лексика, грамматика.', 'The text goes into your export. Claude grades it by CEFR criteria: content, coherence, vocabulary, grammar.')}</div>`;
 }
@@ -990,7 +1000,7 @@ function buildExport() {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
     summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
     progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
-    mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, reviewedUpTo() && w.date && w.date <= reviewedUpTo() ? { reviewed: true } : {})))),
+    mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, isReviewed(w) ? { reviewed: true } : {})))),
     reviews: S.reviews || [], inProgress: S.inProgress || {}, verdicts: S.verdicts || {},
     appNotes: (S.notes || []).filter(n => !['done', 'declined'].includes(n.status)),
     openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).map(o => Object.assign({ task: id, unfinished: true }, o)))),
@@ -1021,9 +1031,11 @@ function sheetImport() {
 // adds a pack or a level test (and any graded results inside it); returns a short message or null
 function addContent(d) {
   let msg = null;
-  if (d.type === 'study-pack' && Array.isArray(d.days) && d.id && !S.packs.some(p => p.id === d.id)) {
+  if (d.type === 'study-pack' && Array.isArray(d.days) && d.id && !S.packs.some(p => p.id === d.id || (p.replaces || []).includes(d.id))) {
     if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
     S.packs.push(d);
+    // unfinished tasks that no longer exist in any pack start over
+    Object.keys(S.inProgress || {}).forEach(id => { if (!findTask(id)) delete S.inProgress[id]; });
     (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
     (d.shows || []).forEach(sh => { if (!S.shows.some(x => x.id === sh.id)) S.shows.push(Object.assign({ watched: [] }, sh)); });
     msg = L('Пакет «', 'Pack “') + d.title + L('» добавлен', '” added');
@@ -1032,7 +1044,7 @@ function addContent(d) {
     S.tests.push(d); msg = L('Новая версия теста уровня загружена', 'A new level test version is loaded');
   }
   if (d.type === 'review' && d.id && d.upTo && !(S.reviews || []).some(r => r.id === d.id)) {
-    S.reviews = [...(S.reviews || []), { id: d.id, date: d.date || today(), upTo: d.upTo, summary: d.summary || '' }];
+    S.reviews = [...(S.reviews || []), Object.assign({ id: d.id, date: d.date || today(), upTo: d.upTo, summary: d.summary || '' }, d.upToTs ? { upToTs: d.upToTs } : {})];
     purgeReviewed();
     msg = L('Claude разобрал ваши ответы до ', 'Claude reviewed your answers up to ') + fmtDate(d.upTo);
   }
@@ -1216,8 +1228,8 @@ function applyDictation(target, text) {
     TS.draft = joinText(TS.draft, text); TS.voice = true; persistTS();
     const ta = document.querySelector('[data-write]'); if (ta) ta.value = TS.draft;
     const task = findTask(TS.id).task, n = words(TS.draft);
-    const wc = document.getElementById('wc'); if (wc) wc.textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
-    const sb = document.getElementById('save-write'); if (sb) sb.disabled = n < task.minWords;
+    const wc = document.getElementById('wc'); if (wc) wc.textContent = wcText(n, task.minWords);
+    const sb = document.getElementById('save-write'); if (sb) sb.disabled = n < 1;
   } else if (target === 'note' && UI.sheet && UI.sheet.draft) {
     const f = document.getElementById('note-text'); const d = UI.sheet.draft; d.text = joinText(f ? f.value : d.text, text); if (f) f.value = d.text;
   } else if (target === 'tr' && TS) {
@@ -1230,7 +1242,7 @@ function applyDictation(target, text) {
 }
 function logWrong(t, it, kind, answer, ref, almost) {
   TS.wrong = TS.wrong || [];
-  TS.wrong.push({ i: TS.i, kind, prompt: it.ru || it.q || it.say || '', answer, ref, almost: almost || undefined, date: today() });
+  TS.wrong.push({ i: TS.i, kind, prompt: it.ru || it.q || it.say || '', answer, ref, almost: almost || undefined, date: today(), ts: Date.now() });
 }
 function nextItem() {
   try { speechSynthesis.cancel(); } catch (er) {}
@@ -1428,8 +1440,8 @@ document.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.write) {
     TS.draft = t.value; clearTimeout(draftT); draftT = setTimeout(persistTS, 700); const task = findTask(TS.id).task, n = words(t.value);
-    document.getElementById('wc').textContent = `${n} ${P(n, 'слово', 'слова', 'слов', 'word', 'words')} · ${L('минимум', 'minimum')} ${task.minWords}`;
-    document.getElementById('save-write').disabled = n < task.minWords;
+    document.getElementById('wc').textContent = wcText(n, task.minWords);
+    document.getElementById('save-write').disabled = n < 1;
   }
   if (t.dataset.cw != null && CS) {
     const i = Number(t.dataset.cw), sk = currentTest().skills.writing, n = words(t.value);
@@ -1468,7 +1480,7 @@ async function checkPacks(silent) {
     const r = await fetch('packs/index.json', { cache: 'no-store' });
     if (!r.ok) throw new Error('index');
     const idx = await r.json();
-    const list = [...(idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id)), ...(idx.levelTests || []).filter(p => !S.tests.some(x => x.id === p.id)), ...(idx.results || []).filter(p => !(S.seenResults || []).includes(p.id))];
+    const list = [...(idx.packs || []).filter(p => !S.packs.some(x => x.id === p.id || (x.replaces || []).includes(p.id))), ...(idx.levelTests || []).filter(p => !S.tests.some(x => x.id === p.id)), ...(idx.results || []).filter(p => !(S.seenResults || []).includes(p.id))];
     const msgs = [];
     for (const p of list) {
       const pr = await fetch('packs/' + p.file, { cache: 'no-store' });

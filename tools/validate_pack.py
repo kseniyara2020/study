@@ -14,6 +14,7 @@ other_ids, other_vocab = set(), {}
 for f in glob.glob(os.path.join(here, 'pack-*.json')):
     if os.path.abspath(f) == os.path.abspath(path): continue
     o = json.load(open(f))
+    if o.get('id') in (p.get('replaces') or []): continue  # a pack this one replaces keeps the same ids on purpose
     for d in o.get('days', []):
         for s in ('general', 'ux'):
             for t in d.get(s, []): other_ids.add(t['id'])

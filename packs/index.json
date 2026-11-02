@@ -1,10 +1,10 @@
 {
  "packs": [
   {
-   "id": "pack-002",
-   "file": "pack-002.json",
-   "title": "Неделя 1 · плотная: make/do, used to, фразовые, wish, двойники",
-   "created": "2026-10-30"
+   "id": "pack-002b",
+   "file": "pack-002b.json",
+   "title": "Неделя 1 · плотная (д3 — новый формат)",
+   "created": "2026-11-02"
   }
  ],
  "levelTests": [
@@ -26,6 +26,10 @@
   {
    "id": "review-2026-11-02b",
    "file": "review-2026-11-02b.json"
+  },
+  {
+   "id": "notes-2026-11-02",
+   "file": "notes-2026-11-02.json"
   }
  ]
 }
