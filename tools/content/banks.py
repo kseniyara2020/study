@@ -92,7 +92,7 @@ R3 = ("phrasal verbs", "phrasal", [
  ("Let's put off the launch until March.", "Давай отложим запуск до марта.", "put off", ["put on", "set off"], "Let's put out the launch until March.", "отложим", ["Let's postpone the launch until March."]),
  ("She came up with a great idea.", "Она придумала отличную идею.", "came up with", ["came across", "came over"], "She came up a great idea.", "придумала", []),
  ("I can't figure out what's wrong with the layout.", "Я не могу понять, что не так с макетом.", "figure out", ["point out", "carry out"], "I can't figure up what's wrong with the layout.", "понять", ["I can't work out what's wrong with the layout."]),
- ("He pointed out a mistake in the flow.", "Он указал на ошибку в сценарии.", "pointed out", ["figured out", "called out"], "He pointed up a mistake in the flow.", "указал на", []),
+ ("During the review, he pointed out a mistake in the flow to the team.", "На ревью он указал команде на ошибку в сценарии.", "pointed out", ["looked into", "called out"], "During the review, he pointed up a mistake in the flow to the team.", "указал на", []),  # 01.11: figured out was ambiguous — distractor replaced, context added
  ("Sorry, please carry on.", "Извините, продолжайте, пожалуйста.", "carry on", ["carry out", "go off"], "Sorry, please carry.", "продолжайте", ["Sorry, please go on."]),
  ("Can you set up a call with the client?", "Можешь организовать созвон с клиентом?", "set up", ["put up", "look up"], "Can you set on a call with the client?", "организовать", []),
  ("She turned down the job offer.", "Она отклонила предложение о работе.", "turned down", ["turned off", "called off"], "She turned off the job offer.", "отклонила", []),

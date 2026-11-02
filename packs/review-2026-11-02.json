@@ -1,0 +1,54 @@
+{
+ "type": "review",
+ "id": "review-2026-11-02",
+ "date": "2026-11-02",
+ "upTo": "2026-11-01",
+ "summary": "День 3 начат: узнавание фразовых глаголов 7/10 (с учётом спорного вопроса — 7,5). Сообщение в Slack стало заметно лучше — B1. Осталась одна ошибка с be: I'm still working.",
+ "verdicts": [
+  {
+   "id": "v-p2-d2-u7-text-2",
+   "task": "p2-d2-u7",
+   "level": "B1",
+   "comment": "Намного лучше первой версии: вежливое обращение, срок, ссылка, всё по делу. Осталось три исправления.",
+   "fixes": [
+    {
+     "from": "I would love to listen your feedback",
+     "to": "I'd love your feedback / I'd love to hear your feedback",
+     "why": "listen to — слушать (процесс); hear — услышать, получить. И после listen нужен to"
+    },
+    {
+     "from": "I still working on the empty states",
+     "to": "I'm still working on the empty states",
+     "why": "Present Continuous = am/is/are + -ing; без am не бывает (та же ошибка be, что в I don't sure)"
+    },
+    {
+     "from": "Just a notice:",
+     "to": "Just a heads-up:",
+     "why": "heads-up — «предупреждаю / к сведению»; notice — объявление, уведомление"
+    },
+    {
+     "from": "Link is here:",
+     "to": "Here's the link:",
+     "why": "так естественнее; плюс артикль the"
+    }
+   ]
+  }
+ ],
+ "noteStatus": [
+  {
+   "id": "n-mvxkbs61jfy3",
+   "status": "planned",
+   "reply": "Согласна: минимум слов станет рекомендацией, отправлять можно любой текст. Сделаю после вашего «да» в чате."
+  },
+  {
+   "id": "n-mvxkpcxcqhei",
+   "status": "done",
+   "reply": "Вы правы, вопрос неоднозначный: figured out (сам разобрался, нашёл) тоже возможен. Засчитываю как верный; в новых пакетах у таких вопросов будет контекст."
+  },
+  {
+   "id": "n-mvyc3fz7w0ls",
+   "status": "planned",
+   "reply": "Принято: день фразовых глаголов — каждую неделю; урок = список всех глаголов пакета с переводом и примером; сразу за ним — карточки-квиз. С pack-003. Подробности и вопрос про текущий день 3 — в чате."
+  }
+ ]
+}
