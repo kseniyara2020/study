@@ -464,6 +464,8 @@ function purgeReviewed() {
   return n;
 }
 if (purgeReviewed()) { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+// one-time clean-up (03.11.2026): finished tasks that were only opened again are not "unfinished"
+Object.keys(S.inProgress || {}).forEach(id => { const x = S.inProgress[id]; if (idleOnDone(id, x)) delete S.inProgress[id]; });
 function addContentEarly(d) {
   if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
   S.packs.push(d); (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
@@ -1038,8 +1040,14 @@ function feedback(ok, al, diff, it, extra) {
 }
 
 /* ---------- task session (saved after every answer, so leaving mid-task loses nothing) ---------- */
+// nothing new happened in a finished task (opened only to look) — no "unfinished" entry
+function idleOnDone(id, x) {
+  const p = S.progress[id]; if (!p || !p.done) return false;
+  return !(x.i > 0 || x.checked || (x.picked != null) || (x.results || []).length || (x.wrong || []).length || (x.open || []).length || ((x.draft || '') && (x.draft || '') !== (p.answer || '')));
+}
 function persistTS() {
   if (!TS || TS.finished || !findTask(TS.id)) return;
+  if (idleOnDone(TS.id, TS)) { if (S.inProgress && S.inProgress[TS.id]) { delete S.inProgress[TS.id]; save(); } return; }
   const now = Date.now(); TS.acc = (TS.acc || 0) + Math.min(1800, Math.round((now - TS.t0) / 1000)); TS.t0 = now;
   S.inProgress = S.inProgress || {};
   S.inProgress[TS.id] = { i: TS.i, results: TS.results, wrong: TS.wrong || [], picked: TS.picked, checked: TS.checked, ok: TS.ok, input: TS.input, order: TS.order || [], best: TS.best || null, almost: TS.almost || null, draft: TS.draft || '', acc: TS.acc, open: TS.open || [], at: today() };
@@ -1619,7 +1627,7 @@ document.addEventListener('click', e => {
     case 'speak': speak(el.dataset.text, { slow: !!el.dataset.slow }); break;
     case 'play-dialog': { const x = findTask(TS.id); speakDialog(x.task.lines, !!el.dataset.slow); break; }
     case 'toggle-text': TS.showText = !TS.showText; render(); break;
-    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a ? 1 : 0; if (TS.picked !== it.a) { TS.wrong = TS.wrong || []; TS.wrong.push({ i: TS.i, kind: 'choice', prompt: it.q + (it.say ? ' [' + it.say + ']' : ''), answer: it.options[TS.picked], ref: it.options[it.a], date: today() }); } persistTS(); render(); break; }
+    case 'pick': { const it = findTask(TS.id).task.items[TS.i]; TS.picked = Number(el.dataset.i); TS.results[TS.i] = TS.picked === it.a ? 1 : 0; if (TS.picked !== it.a) { TS.wrong = TS.wrong || []; TS.wrong.push({ i: TS.i, kind: 'choice', prompt: it.q + (it.say ? ' [' + it.say + ']' : ''), answer: it.options[TS.picked], ref: it.options[it.a], date: today(), ts: Date.now() }); } persistTS(); render(); break; }
     case 'check': {
       const t = findTask(TS.id).task, it = t.items[TS.i], kind = itemKind(t, it); const v = (document.getElementById('gap-input') || {}).value || '';
       if (!v.trim()) { toast(L('Сначала впишите ответ', 'Type an answer first')); return; }
