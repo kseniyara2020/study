@@ -1,0 +1,241 @@
+{
+ "type": "review",
+ "id": "review-2026-11-03",
+ "date": "2026-11-03",
+ "upTo": "2026-11-03",
+ "upToTs": "2026-11-03T13:10:23.790Z",
+ "summary": "День 3: фразовые глаголы узнаёте отлично (квиз 18/20, на слух 10/10), а самой выдать глагол пока трудно — вписать 3,5/10, исправить 0/6. Это нормально для первого дня. Своя речь — B1, все 5 глаголов верно.",
+ "verdicts": [
+  {
+   "id": "v3-p2-d3-n9-0",
+   "task": "p2-d3-n9",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v3-p2-d3-n9-1",
+   "task": "p2-d3-n9",
+   "i": 1,
+   "verdict": "wrong",
+   "correct": "Let's put off the launch until March.",
+   "comment": "Ответа нет. put off = откладывать; Let's postpone… тоже верно"
+  },
+  {
+   "id": "v3-p2-d3-n9-2",
+   "task": "p2-d3-n9",
+   "i": 2,
+   "verdict": "wrong",
+   "correct": "She came up with a great idea.",
+   "comment": "Прошедшее время: came (не come). «отличную идею» впервые — a great idea"
+  },
+  {
+   "id": "v3-p2-d3-n9-3",
+   "task": "p2-d3-n9",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "I can't figure out what's wrong with the layout.",
+   "comment": "«не могу» = can't (не don't). what's wrong — нужен is"
+  },
+  {
+   "id": "v3-p2-d3-n9-4",
+   "task": "p2-d3-n9",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "Can you sort out the problem with the icons?",
+   "comment": "Ответ не закончен. sort out = решить; figure out the problem тоже можно"
+  },
+  {
+   "id": "v3-p2-d3-n9-5",
+   "task": "p2-d3-n9",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: Fill in this form, please — вежливое please можно ставить в конце."
+  },
+  {
+   "id": "v3-p2-d3-n9-6",
+   "task": "p2-d3-n9",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: I look forward to working together — чуть официальнее, отлично для писем."
+  },
+  {
+   "id": "v3-p2-d3-n9-7",
+   "task": "p2-d3-n9",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "Let's catch up after the holidays.",
+   "comment": "catch up уже значит «обменяться новостями»; если с news — catch up on the news. И артикль: after the holidays"
+  },
+  {
+   "id": "v3-p2-d3-n9-8",
+   "task": "p2-d3-n9",
+   "i": 8,
+   "verdict": "wrong",
+   "correct": "We're looking forward to seeing you.",
+   "comment": "После look forward to — -ing: seeing / meeting you (не to meet)"
+  },
+  {
+   "id": "v3-p2-d3-n9-9",
+   "task": "p2-d3-n9",
+   "i": 9,
+   "verdict": "wrong",
+   "correct": "I need to catch up on my emails.",
+   "comment": "catch up on = наверстать, разобрать накопившееся"
+  },
+  {
+   "id": "v3-p2-d3-n11-6",
+   "task": "p2-d3-n11",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "The kids are used to going to bed at nine.",
+   "comment": "Форма be used to + -ing — верно! Только «ложиться спать» = go to bed; sleeping = спать (процесс)"
+  },
+  {
+   "id": "v3-p2-d3-u3-0",
+   "task": "p2-d3-u3",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "That's a fair point.",
+   "comment": "«замечание, мысль» в споре = point; note — заметка"
+  },
+  {
+   "id": "v3-p2-d3-u3-1",
+   "task": "p2-d3-u3",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "Could you tell me more about that?",
+   "comment": "После tell нужно кому: tell me more. Can you… тоже правильно"
+  },
+  {
+   "id": "v3-p2-d3-u3-2",
+   "task": "p2-d3-u3",
+   "i": 2,
+   "verdict": "wrong",
+   "correct": "Let me think about it and get back to you.",
+   "comment": "После let me — без to: Let me think. «вернусь к вам» = get back to you"
+  },
+  {
+   "id": "v3-p2-d3-u3-3",
+   "task": "p2-d3-u3",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "I see your point, but I see it differently.",
+   "comment": "thought → point (мысль в споре); in other way → differently / in a different way"
+  },
+  {
+   "id": "v3-p2-d3-u3-4",
+   "task": "p2-d3-u3",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "I did it this way because of accessibility.",
+   "comment": "доступность (a11y) = accessibility; possible = «возможно». Прошедшее: did"
+  },
+  {
+   "id": "v3-p2-d3-u3-5",
+   "task": "p2-d3-u3",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "Good catch, I'll fix it.",
+   "comment": "«Хорошо подмечено» = Good catch (устойчивое). change it — тоже можно"
+  },
+  {
+   "id": "v3-p2-d3-u3-6",
+   "task": "p2-d3-u3",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Так тоже правильно. That's really helpful — чуть теплее, но смысл тот же."
+  },
+  {
+   "id": "v3-p2-d3-u3-7",
+   "task": "p2-d3-u3",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "Could we find a compromise?",
+   "comment": "find (не found — это прошедшее). Could we find a compromise? — правильно; agree on a compromise — вариант эталона"
+  },
+  {
+   "id": "v3-p2-d3-u9-0",
+   "task": "p2-d3-u9",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "Let me walk you through the new flow.",
+   "comment": "walk you through = провести по шагам; нужны you и through"
+  },
+  {
+   "id": "v3-p2-d3-u9-1",
+   "task": "p2-d3-u9",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "We tested two versions with five users.",
+   "comment": "tested (тестировали), tasted — пробовали на вкус"
+  },
+  {
+   "id": "v3-p2-d3-u9-2",
+   "task": "p2-d3-u9",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v3-p2-d3-u9-3",
+   "task": "p2-d3-u9",
+   "i": 3,
+   "verdict": "ok"
+  },
+  {
+   "id": "v3-p2-d3-u9-4",
+   "task": "p2-d3-u9",
+   "i": 4,
+   "verdict": "almost",
+   "correct": "This part feels a bit crowded.",
+   "comment": "crowded (перегруженный), crowed — опечатка. a bit / a little ставим перед crowded"
+  },
+  {
+   "id": "v3-p2-d3-u9-5",
+   "task": "p2-d3-u9",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: You can stop me anytime — проще и вполне естественно."
+  },
+  {
+   "id": "v3-p2-d3-u9-6",
+   "task": "p2-d3-u9",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "I like that the navigation is clear.",
+   "comment": "Нужно that: I like that… Ещё вариант — I like how clear the navigation is"
+  },
+  {
+   "id": "v3-p2-d3-u9-7",
+   "task": "p2-d3-u9",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "What if we moved the search to the top?",
+   "comment": "В вашем нет глагола. What if we moved… / What if the search were at the top?"
+  },
+  {
+   "id": "v3-p2-d3-n12-text",
+   "task": "p2-d3-n12",
+   "level": "B1",
+   "comment": "Задание выполнено: 5 фразовых глаголов, и все употреблены верно (go over, get back to, sort it out, figure out, come up with). Связный текст, хорошая логика. Одна ошибка и пара улучшений.",
+   "fixes": [
+    {
+     "from": "After I can go over my current projects",
+     "to": "After that, I go over my current projects",
+     "why": "After одно не стоит в начале как «после этого» — нужно After that / Then. can здесь лишнее"
+    },
+    {
+     "from": "Usually I start my work thinking about my daily tasks.",
+     "to": "I usually start my day by thinking about my tasks. (по желанию)",
+     "why": "Не ошибка. usually естественнее перед глаголом; start by + -ing — «начинаю с того, что…»"
+    },
+    {
+     "from": "get back to closed tasks",
+     "to": "get back to unfinished tasks (по желанию)",
+     "why": "Не ошибка грамматики, но closed = уже закрытые; если имели в виду недоделанные — unfinished / pending"
+    }
+   ]
+  }
+ ]
+}

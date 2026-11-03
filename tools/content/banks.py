@@ -104,9 +104,9 @@ R3 = ("phrasal verbs", "phrasal", [
  ("How did you find out about the job?", "Как ты узнала об этой работе?", "find out", ["find up", "look out"], "How did you find about the job?", "узнала", ["How did you hear about the job?"]),
  ("Don't give up, you're almost there.", "Не сдавайся, ты почти у цели.", "give up", ["give out", "take up"], "Don't give off, you're almost there.", "сдавайся", []),
  ("Who will take over the project when she leaves?", "Кто возьмёт на себя проект, когда она уйдёт?", "take over", ["take off", "take up"], "Who will take out the project when she leaves?", "возьмёт на себя", []),
- ("Can you sort out the problem with the icons?", "Можешь решить проблему с иконками?", "sort out", ["sort in", "set out"], "Can you sort up the problem with the icons?", "решить", []),
- ("Please fill in this form.", "Пожалуйста, заполните эту форму.", "fill in", ["fill up", "put in"], "Please fill on this form.", "заполните", ["Please fill out this form."]),
- ("I'm looking forward to working with you.", "Я с нетерпением жду совместной работы.", "looking forward to", ["looking for", "looking after"], "I'm looking forward to work with you.", "жду с нетерпением", ["I am looking forward to working with you."]),
+ ("Can you sort out the problem with the icons?", "Можешь решить проблему с иконками?", "sort out", ["sort in", "set out"], "Can you sort up the problem with the icons?", "решить", ["Can you figure out the problem with the icons?"]),
+ ("Please fill in this form.", "Пожалуйста, заполните эту форму.", "fill in", ["fill up", "put in"], "Please fill on this form.", "заполните", ["Please fill out this form.", "Fill in this form, please.", "Fill in this form please."]),
+ ("I'm looking forward to working with you.", "Я с нетерпением жду совместной работы.", "looking forward to", ["looking for", "looking after"], "I'm looking forward to work with you.", "жду с нетерпением", ["I am looking forward to working with you.", "I look forward to working with you.", "I look forward to working together.", "I'm looking forward to working together."]),
  ("Let's catch up after the holidays.", "Давай созвонимся и обменяемся новостями после праздников.", "catch up", ["catch on", "keep up"], "Let's catch after the holidays.", "обменяемся новостями", []),
  ("We had to call off the workshop because of the storm.", "Нам пришлось отменить воркшоп из-за бури.", "call off", ["call up", "turn down"], "We had to call out the workshop because of the storm.", "отменить", ["We had to cancel the workshop because of the storm."]),
  ("Stop putting off the difficult tasks.", "Хватит откладывать сложные задачи.", "putting off", ["putting on", "putting out"], "Stop putting out the difficult tasks.", "откладывать", []),
@@ -337,3 +337,13 @@ UX_ALT = {
  "Feel free to stop me at any point.": ["Feel free to interrupt me at any point.", "Feel free to stop me at any time."],
  "I'd suggest using fewer colours.": ["I'd suggest using fewer colors.", "I would suggest using fewer colours."],
 }
+UX_ALT.update({
+ "Thanks, that's really helpful.": ["Thanks, it's very useful.", "Thanks, that's very helpful.", "Thanks, it's really helpful."],
+ "Here you can see the main screen.": ["Here you see the main screen.", "Here's the main screen."],
+ "Feel free to stop me at any point.": ["Feel free to interrupt me at any point.", "Feel free to stop me at any time.", "You can stop me anytime.", "You can stop me at any time."],
+ "Could you say more about that?": ["Could you tell me more about that?", "Can you tell me more about it?", "Could you tell me more about it?"],
+ "Can we agree on a compromise?": ["Could we find a compromise?", "Can we find a compromise?"],
+ "Good catch, I'll fix it.": ["Good catch, I'll change it.", "Good catch, I will fix it."],
+ "The reason I did it this way is accessibility.": ["I did it this way because of accessibility.", "I did it like this because of accessibility."],
+ "The kids are used to going to bed at nine.": ["Children are used to going to bed at nine.", "The children are used to going to bed at nine."],
+})  # export 03.11.2026
