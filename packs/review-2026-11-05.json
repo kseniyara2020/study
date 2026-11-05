@@ -1,0 +1,268 @@
+{
+ "type": "review",
+ "id": "review-2026-11-05",
+ "date": "2026-11-05",
+ "upTo": "2026-11-05",
+ "upToTs": "2026-11-05T09:24:09.125Z",
+ "summary": "День 4 (wish) — 82%, лучший результат по правилу! Переводы — 17 верно из 28, ошибка только одна. Письма клиенту — B1. Главное сейчас: пропуск am/is/are (I looking forward) и фразовые глаголы в карточках.",
+ "verdicts": [
+  {
+   "id": "v4-p2-d4-g7-0",
+   "task": "p2-d4-g7",
+   "i": 0,
+   "verdict": "ok"
+  },
+  {
+   "id": "v4-p2-d4-g7-3",
+   "task": "p2-d4-g7",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: said it / said that."
+  },
+  {
+   "id": "v4-p2-d4-g7-1",
+   "task": "p2-d4-g7",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "I wish I had studied harder at school.",
+   "comment": "Past Perfect — верно! Только порядок: harder сразу после studied"
+  },
+  {
+   "id": "v4-p2-d4-g7-2",
+   "task": "p2-d4-g7",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "I wish I could speak English fluently.",
+   "comment": "speak English — без in (speak in English — «говорить на английском» в ситуации, а не владеть языком)"
+  },
+  {
+   "id": "v4-p2-d4-g7-4",
+   "task": "p2-d4-g7",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: skipped — «пропустила (сама решила не идти)», missed — «пропустила, не успела»."
+  },
+  {
+   "id": "v4-p2-d4-g7-5",
+   "task": "p2-d4-g7",
+   "i": 5,
+   "verdict": "ok"
+  },
+  {
+   "id": "v4-p2-d4-g7-6",
+   "task": "p2-d4-g7",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: studied English = learned English."
+  },
+  {
+   "id": "v4-p2-d4-g7-7",
+   "task": "p2-d4-g7",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "If only it would stop raining!",
+   "comment": "Когда хотим, чтобы что-то изменилось (чтобы дождь прекратился), — would: If only the rain would stop!"
+  },
+  {
+   "id": "v4-p2-d4-g7-8",
+   "task": "p2-d4-g7",
+   "i": 8,
+   "verdict": "ok"
+  },
+  {
+   "id": "v4-p2-d4-g7-9",
+   "task": "p2-d4-g7",
+   "i": 9,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: more money for research."
+  },
+  {
+   "id": "v4-p2-d4-g9-0",
+   "task": "p2-d4-g9",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: Did you live in London before? В упражнении на used to лучше Did you use to live in London?"
+  },
+  {
+   "id": "v4-p2-d4-g9-2",
+   "task": "p2-d4-g9",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v4-p2-d4-u3-0",
+   "task": "p2-d4-u3",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: the last email."
+  },
+  {
+   "id": "v4-p2-d4-u3-1",
+   "task": "p2-d4-u3",
+   "i": 1,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: layouts = макеты."
+  },
+  {
+   "id": "v4-p2-d4-u3-2",
+   "task": "p2-d4-u3",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "Could you send me your feedback by Thursday?",
+   "comment": "После could — начальная форма: send (не sent)"
+  },
+  {
+   "id": "v4-p2-d4-u3-3",
+   "task": "p2-d4-u3",
+   "i": 3,
+   "verdict": "almost",
+   "correct": "Sorry for the late reply.",
+   "comment": "Нужен артикль: the late reply"
+  },
+  {
+   "id": "v4-p2-d4-u3-4",
+   "task": "p2-d4-u3",
+   "i": 4,
+   "verdict": "ok"
+  },
+  {
+   "id": "v4-p2-d4-u3-5",
+   "task": "p2-d4-u3",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно; align on the scope — чуть привычнее."
+  },
+  {
+   "id": "v4-p2-d4-u3-6",
+   "task": "p2-d4-u3",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "Thanks for the quick reply.",
+   "comment": "Артикль the; quick reply звучит естественнее, чем fast reply"
+  },
+  {
+   "id": "v4-p2-d4-u3-7",
+   "task": "p2-d4-u3",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "I'm still waiting for the texts for the website.",
+   "comment": "wait for — ждать что-то (без for нельзя). am still waiting — верно!"
+  },
+  {
+   "id": "v4-p2-d4-u10-0",
+   "task": "p2-d4-u10",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: color — американское написание."
+  },
+  {
+   "id": "v4-p2-d4-u10-1",
+   "task": "p2-d4-u10",
+   "i": 1,
+   "verdict": "ok"
+  },
+  {
+   "id": "v4-p2-d4-u10-2",
+   "task": "p2-d4-u10",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: Which problem… И порядок слов в вопросе теперь верный!"
+  },
+  {
+   "id": "v4-p2-d4-u10-3",
+   "task": "p2-d4-u10",
+   "i": 3,
+   "verdict": "almost",
+   "correct": "Maybe we should test it with users.",
+   "comment": "have to = «обязаны»; «возможно, стоит» = Maybe we should… / It might be worth testing…"
+  },
+  {
+   "id": "v4-p2-d4-u10-4",
+   "task": "p2-d4-u10",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "Let me walk you through the new flow.",
+   "comment": "Третий раз: walk YOU THROUGH (провести по шагам). throw = бросать"
+  },
+  {
+   "id": "v4-p2-d4-u10-5",
+   "task": "p2-d4-u10",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "Let's start with the problem that we are solving.",
+   "comment": "Нужен артикль: the problem"
+  },
+  {
+   "id": "v4-p2-d4-u10-6",
+   "task": "p2-d4-u10",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "The trade-off is that we show less data at once.",
+   "comment": "«в том, что…» = is that + предложение; in the beginning → at once / up front"
+  },
+  {
+   "id": "v4-p2-d4-u10-7",
+   "task": "p2-d4-u10",
+   "i": 7,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: have tested."
+  },
+  {
+   "id": "v4-p2-d4-g10-text",
+   "task": "p2-d4-g10",
+   "level": "B1",
+   "comment": "Задание выполнено: wish + Past Perfect и If only есть. Отлично — I wish I had relocated… Ошибки в формах.",
+   "fixes": [
+    {
+     "from": "I wish I could speak in English fluently",
+     "to": "I wish I could speak English fluently",
+     "why": "speak English — без in (уже второй раз)"
+    },
+    {
+     "from": "I wish I hadn't were too patient for a long time",
+     "to": "I wish I hadn't been so patient for so long",
+     "why": "Past Perfect от be — had been; too → so (too = «слишком» перед прилагательным без сравнения с нормой)"
+    },
+    {
+     "from": "If only I learned as uxui designer in my 22",
+     "to": "If only I had trained as a UX/UI designer at 22",
+     "why": "Прошлое → If only + had + 3-я форма; «в 22» = at 22 / when I was 22; артикль a designer"
+    }
+   ]
+  },
+  {
+   "id": "v4-p2-d4-u8-text",
+   "task": "p2-d4-u8",
+   "level": "B1",
+   "comment": "Хорошее деловое письмо: following up on, align on, set up a call, looking forward to hearing from you — всё к месту. Ошибки в мелочах.",
+   "fixes": [
+    {
+     "from": "I looking forward to hearing from you",
+     "to": "I'm looking forward to hearing from you",
+     "why": "Снова пропущен am: I'm looking (шестой раз — главная ошибка)"
+    },
+    {
+     "from": "could you sent me data",
+     "to": "could you send them to me",
+     "why": "После could — send; тексты = them (не it / data)"
+    },
+    {
+     "from": "I can't continue my work without it",
+     "to": "I can't continue without them",
+     "why": "texts — множественное число → them"
+    },
+    {
+     "from": "could I set up our phone call for tomorrow there we could align",
+     "to": "could we set up a call tomorrow where we could align",
+     "why": "where (где), не there (там); our → a"
+    },
+    {
+     "from": "With regards,",
+     "to": "Best regards, / Kind regards, (по желанию)",
+     "why": "Не ошибка, но With regards звучит старомодно"
+    }
+   ]
+  }
+ ]
+}

@@ -1,10 +1,10 @@
 {
  "packs": [
   {
-   "id": "pack-002c",
-   "file": "pack-002c.json",
+   "id": "pack-002d",
+   "file": "pack-002d.json",
    "title": "Неделя 1 · плотная (д3 — новый формат)",
-   "created": "2026-11-03"
+   "created": "2026-11-05"
   }
  ],
  "levelTests": [
@@ -34,6 +34,10 @@
   {
    "id": "review-2026-11-03",
    "file": "review-2026-11-03.json"
+  },
+  {
+   "id": "review-2026-11-05",
+   "file": "review-2026-11-05.json"
   }
  ]
 }

@@ -94,7 +94,7 @@ R3 = ("phrasal verbs", "phrasal", [
  ("I can't figure out what's wrong with the layout.", "Я не могу понять, что не так с макетом.", "figure out", ["point out", "carry out"], "I can't figure up what's wrong with the layout.", "понять", ["I can't work out what's wrong with the layout."]),
  ("During the review, he pointed out a mistake in the flow to the team.", "На ревью он указал команде на ошибку в сценарии.", "pointed out", ["looked into", "called out"], "During the review, he pointed up a mistake in the flow to the team.", "указал на", []),  # 01.11: figured out was ambiguous — distractor replaced, context added
  ("Sorry, please carry on.", "Извините, продолжайте, пожалуйста.", "carry on", ["carry out", "go off"], "Sorry, please carry.", "продолжайте", ["Sorry, please go on."]),
- ("Can you set up a call with the client?", "Можешь организовать созвон с клиентом?", "set up", ["put up", "look up"], "Can you set on a call with the client?", "организовать", []),
+ ("Can you set up a call with the client?", "Можешь организовать созвон с клиентом?", "set up", ["put up", "look up"], "Can you set on a call with the client?", "организовать", ["Could you set up a phone call with the client?", "Could you set up a call with the client?", "Can you set up a phone call with the client?"]),
  ("She turned down the job offer.", "Она отклонила предложение о работе.", "turned down", ["turned off", "called off"], "She turned off the job offer.", "отклонила", []),
  ("I'll look into the problem tomorrow.", "Я разберусь с проблемой завтра.", "look into", ["look after", "look for"], "I'll look in the problem tomorrow.", "разберусь", ["I will look into the problem tomorrow."]),
  ("Don't bring up salary in the first interview.", "Не поднимай тему зарплаты на первом собеседовании.", "bring up", ["bring in", "take up"], "Don't bring on salary in the first interview.", "поднимай тему", []),
@@ -134,7 +134,7 @@ R4 = ("wish / if only", "wish", [
  ("I wish I had more time.", "Жаль, что у меня мало времени.", "had", ["have", "would have"], "I wish I have more time.", "have", []),
  ("I wish I had studied harder at school.", "Жаль, что я не училась усерднее в школе.", "had studied", ["studied", "would study"], "I wish I studied harder at school.", "study", []),
  ("I wish I could speak English fluently.", "Хотела бы я свободно говорить по-английски.", "could", ["can", "will"], "I wish I can speak English fluently.", "can", []),
- ("She wishes she hadn't said that.", "Она жалеет, что сказала это.", "hadn't said", ["didn't say", "wouldn't say"], "She wishes she didn't say that.", "not say", ["She wishes she had not said that."]),
+ ("She wishes she hadn't said that.", "Она жалеет, что сказала это.", "hadn't said", ["didn't say", "wouldn't say"], "She wishes she didn't say that.", "not say", ["She wishes she had not said that.", "She wishes she hadn't said it.", "She wishes she had not said it."]),
  ("If only we had tested it with users.", "Если бы мы только протестировали это на пользователях.", "had tested", ["tested", "have tested"], "If only we tested it with users.", "test", []),
  ("I wish it wasn't so cold today.", "Жаль, что сегодня так холодно.", "wasn't", ["isn't", "won't be"], "I wish it isn't so cold today.", "not be", ["I wish it weren't so cold today."]),
  ("I wish I knew the answer.", "Жаль, что я не знаю ответа.", "knew", ["know", "would know"], "I wish I know the answer.", "know", []),
@@ -147,9 +147,9 @@ R4 = ("wish / if only", "wish", [
  ("If only I had saved the file!", "Если бы я только сохранила файл!", "had saved", ["saved", "have saved"], "If only I saved the file!", "save", []),
  ("I wish I didn't have to work today.", "Жаль, что мне сегодня нужно работать.", "didn't have", ["don't have", "won't have"], "I wish I don't have to work today.", "not have", ["I wish I did not have to work today."]),
  ("She wishes she had more experience.", "Ей жаль, что у неё мало опыта.", "had", ["has", "would have"], "She wishes she has more experience.", "have", []),
- ("I wish I hadn't missed the meeting.", "Жаль, что я пропустила встречу.", "hadn't missed", ["didn't miss", "haven't missed"], "I wish I didn't miss the meeting.", "not miss", ["I wish I had not missed the meeting."]),
+ ("I wish I hadn't missed the meeting.", "Жаль, что я пропустила встречу.", "hadn't missed", ["didn't miss", "haven't missed"], "I wish I didn't miss the meeting.", "not miss", ["I wish I had not missed the meeting.", "I wish I hadn't skipped the meeting.", "I wish I had not skipped the meeting."]),
  ("We wish we could help you.", "Нам жаль, что мы не можем вам помочь.", "could", ["can", "will"], "We wish we can help you.", "can", []),
- ("I wish I had learned English as a child.", "Жаль, что я не учила английский в детстве.", "had learned", ["learned", "have learned"], "I wish I learned English as a child.", "learn", ["I wish I had learnt English as a child."]),
+ ("I wish I had learned English as a child.", "Жаль, что я не учила английский в детстве.", "had learned", ["learned", "have learned"], "I wish I learned English as a child.", "learn", ["I wish I had learnt English as a child.", "I wish I had studied English as a child."]),
  ("If only it would stop raining!", "Хоть бы дождь прекратился!", "would stop", ["stops", "will stop"], "If only it stops raining!", "stop", []),
  ("I wish I knew how to code.", "Жаль, что я не умею программировать.", "knew", ["know", "have known"], "I wish I know how to code.", "know", []),
  ("They wish they hadn't sold the house.", "Они жалеют, что продали дом.", "hadn't sold", ["didn't sell", "haven't sold"], "They wish they didn't sell the house.", "not sell", ["They wish they had not sold the house."]),
@@ -170,7 +170,7 @@ R4 = ("wish / if only", "wish", [
  ("I wish people would read the instructions.", "Хоть бы люди читали инструкции.", "would read", ["will read", "are reading"], "I wish people will read the instructions.", "read", []),
  ("I wish I hadn't forgotten my keys.", "Зря я забыла ключи.", "hadn't forgotten", ["didn't forget", "haven't forgotten"], "I wish I didn't forget my keys.", "not forget", ["I wish I had not forgotten my keys."]),
  ("I wish I had a car.", "Жаль, что у меня нет машины.", "had", ["have", "would have"], "I wish I have a car.", "have", []),
- ("If only we had more budget for research.", "Если бы у нас было больше бюджета на исследования.", "had", ["have", "would have"], "If only we have more budget for research.", "have", []),
+ ("If only we had more budget for research.", "Если бы у нас было больше бюджета на исследования.", "had", ["have", "would have"], "If only we have more budget for research.", "have", ["If only we had more money for research.", "If only we had a bigger budget for research."]),
 ])
 
 R5 = ("confusing words B2", "pairs", [
@@ -347,3 +347,12 @@ UX_ALT.update({
  "The reason I did it this way is accessibility.": ["I did it this way because of accessibility.", "I did it like this because of accessibility."],
  "The kids are used to going to bed at nine.": ["Children are used to going to bed at nine.", "The children are used to going to bed at nine."],
 })  # export 03.11.2026
+UX_ALT.update({
+ "Just following up on my last email.": ["Just following up on the last email.", "Just following up on my previous email."],
+ "I've attached the updated mockups.": ["I have attached the updated layouts.", "I've attached the updated layouts.", "I have attached the updated mockups."],
+ "Could we align on the scope this week?": ["Could we align the scope for this week?", "Could we agree on the scope this week?"],
+ "What problem are we trying to solve here?": ["Which problem are we trying to solve here?"],
+ "We tested two versions with five users.": ["We have tested two versions with five users.", "We've tested two versions with five users."],
+ "I'm not sure about the colour of the main button.": ["I'm not sure about the color of the main button.", "I am not sure about the color of the main button."],
+ "Did you use to live in London?": ["Did you live in London before?"],
+})  # export 05.11.2026
