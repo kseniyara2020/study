@@ -863,6 +863,14 @@ function seedShuffle(arr, seedStr) {
   return a;
 }
 function orderTokens(it) { return it.en.split(/\s+/).filter(Boolean); }
+// topic tag above a question in mixed review tasks (decision 10.11.2026): the topic name only, the rule itself opens after the answer
+function topicTag(t, it) {
+  if (!it || !it.rule) return '';
+  const rules = new Set((t.items || []).map(x => x.rule).filter(Boolean));
+  if (rules.size < 2) return '';
+  const x = findTask(it.rule); if (!x || !x.pack) return '';
+  const d = x.pack.days[x.di]; return (d && d.title) || x.task.title || '';
+}
 const KIND_HINT = {
   translate: () => L('Переведите на английский', 'Translate into English'),
   fix: () => L('Найдите и исправьте ошибку', 'Find and fix the mistake'),
@@ -885,6 +893,7 @@ function tItems(t) {
   const it = items[TS.i], kind = itemKind(t, it);
   let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
   if (t.type === 'mix' || t.type === 'translate' || t.type === 'fix' || t.type === 'order' || t.type === 'shadow' || t.type === 'gap') { const hint = KIND_HINT[kind] ? KIND_HINT[kind]() : ''; if (hint) h += `<div class="lbl" style="margin:0 0 10px">${hint}</div>`; }
+  { const tg = topicTag(t, it); if (tg) h += `<div class="topic-tag">${esc(tg)}</div>`; }
   if (t.type === 'dialog') {
     h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="${L('Прослушать диалог', 'Play dialogue')}">${IC.play}</button>
        <div class="audio-t"><b>${L('Прослушайте диалог', 'Listen to the dialogue')}</b><span>${t.lines.length} ${L('реплик · можно слушать сколько угодно', 'lines · listen as often as you like')}</span></div>

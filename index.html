@@ -276,6 +276,7 @@ textarea.field{min-height:180px;resize:vertical}
 .link-btn{background:none;border:0;padding:0;margin-top:10px;color:var(--accent);font:inherit;font-size:var(--fs-sub);cursor:pointer}
 .qfoot{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .qfoot .link-btn{margin-top:8px;font-size:13px}
+.topic-tag{display:inline-block;margin:0 0 8px;padding:3px 10px;border-radius:12px;background:var(--fill);color:var(--label2);font-size:13px;line-height:18px}
 .seg-chips{display:flex;gap:8px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px}
 .fb.almost b:first-child{color:var(--orange)}
 .pill.warn{background:rgba(255,149,0,.16);color:var(--orange)}
@@ -1018,7 +1019,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 03.11 16:23</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 10.11 14:23</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
@@ -1175,6 +1176,14 @@ function seedShuffle(arr, seedStr) {
   return a;
 }
 function orderTokens(it) { return it.en.split(/\s+/).filter(Boolean); }
+// topic tag above a question in mixed review tasks (decision 10.11.2026): the topic name only, the rule itself opens after the answer
+function topicTag(t, it) {
+  if (!it || !it.rule) return '';
+  const rules = new Set((t.items || []).map(x => x.rule).filter(Boolean));
+  if (rules.size < 2) return '';
+  const x = findTask(it.rule); if (!x || !x.pack) return '';
+  const d = x.pack.days[x.di]; return (d && d.title) || x.task.title || '';
+}
 const KIND_HINT = {
   translate: () => L('Переведите на английский', 'Translate into English'),
   fix: () => L('Найдите и исправьте ошибку', 'Find and fix the mistake'),
@@ -1197,6 +1206,7 @@ function tItems(t) {
   const it = items[TS.i], kind = itemKind(t, it);
   let h = `<div class="progress"><i style="width:${(TS.i / items.length) * 100}%"></i></div>`;
   if (t.type === 'mix' || t.type === 'translate' || t.type === 'fix' || t.type === 'order' || t.type === 'shadow' || t.type === 'gap') { const hint = KIND_HINT[kind] ? KIND_HINT[kind]() : ''; if (hint) h += `<div class="lbl" style="margin:0 0 10px">${hint}</div>`; }
+  { const tg = topicTag(t, it); if (tg) h += `<div class="topic-tag">${esc(tg)}</div>`; }
   if (t.type === 'dialog') {
     h += `<div class="audio"><button class="play" data-act="play-dialog" aria-label="${L('Прослушать диалог', 'Play dialogue')}">${IC.play}</button>
        <div class="audio-t"><b>${L('Прослушайте диалог', 'Listen to the dialogue')}</b><span>${t.lines.length} ${L('реплик · можно слушать сколько угодно', 'lines · listen as often as you like')}</span></div>

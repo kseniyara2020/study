@@ -754,7 +754,8 @@
        "a": [
         "done"
        ],
-       "explain": "Ты уже сделала упражнение?"
+       "explain": "Ты уже сделала упражнение?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -762,7 +763,8 @@
        "a": [
         "make"
        ],
-       "explain": "Давай запишемся на понедельник."
+       "explain": "Давай запишемся на понедельник.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -770,7 +772,8 @@
        "a": [
         "does"
        ],
-       "explain": "Спорт идёт тебе на пользу."
+       "explain": "Спорт идёт тебе на пользу.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -778,7 +781,8 @@
        "a": [
         "made"
        ],
-       "explain": "Я быстро подружилась с новыми коллегами."
+       "explain": "Я быстро подружилась с новыми коллегами.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -786,7 +790,8 @@
        "a": [
         "make"
        ],
-       "explain": "Можешь сделать копию этого файла?"
+       "explain": "Можешь сделать копию этого файла?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -794,7 +799,8 @@
        "a": [
         "do"
        ],
-       "explain": "Мы работаем с клиентами из Германии."
+       "explain": "Мы работаем с клиентами из Германии.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -802,7 +808,8 @@
        "a": [
         "made"
        ],
-       "explain": "Она позвонила клиенту."
+       "explain": "Она позвонила клиенту.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -810,7 +817,8 @@
        "a": [
         "make"
        ],
-       "explain": "Пожалуйста, убедись, что кнопка работает на мобильном."
+       "explain": "Пожалуйста, убедись, что кнопка работает на мобильном.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -818,7 +826,8 @@
        "a": [
         "make"
        ],
-       "explain": "Я не хочу снова совершить ту же ошибку."
+       "explain": "Я не хочу снова совершить ту же ошибку.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -826,7 +835,8 @@
        "a": [
         "did"
        ],
-       "explain": "Они провели опрос 200 пользователей."
+       "explain": "Они провели опрос 200 пользователей.",
+       "rule": "p2-d1-g1"
       }
      ]
     },
@@ -840,37 +850,43 @@
        "kind": "order",
        "en": "It doesn't make any difference.",
        "ru": "Это не имеет никакого значения.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "order",
        "en": "I need to do some work this evening.",
        "ru": "Мне нужно поработать сегодня вечером.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "order",
        "en": "He made a suggestion during the meeting.",
        "ru": "Он внёс предложение на встрече.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "order",
        "en": "We made an effort to finish on time.",
        "ru": "Мы постарались закончить вовремя.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "order",
        "en": "Can you do something about the slow loading?",
        "ru": "Можешь что-нибудь сделать с медленной загрузкой?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "order",
        "en": "Let's make a list of all the screens.",
        "ru": "Давай составим список всех экранов.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       }
      ]
     },
@@ -887,7 +903,8 @@
         "I'm doing a course in UX writing.",
         "I'm taking a course in UX writing."
        ],
-       "explain": "Я прохожу курс по UX-райтингу."
+       "explain": "Я прохожу курс по UX-райтингу.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -895,7 +912,8 @@
        "a": [
         "She makes a good impression at interviews."
        ],
-       "explain": "Она производит хорошее впечатление на собеседованиях."
+       "explain": "Она производит хорошее впечатление на собеседованиях.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -903,7 +921,8 @@
        "a": [
         "It's time to make a choice."
        ],
-       "explain": "Пора сделать выбор."
+       "explain": "Пора сделать выбор.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -911,7 +930,8 @@
        "a": [
         "I did the cleaning before the guests arrived."
        ],
-       "explain": "Я убралась до прихода гостей."
+       "explain": "Я убралась до прихода гостей.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -919,7 +939,8 @@
        "a": [
         "Don't make fun of my accent!"
        ],
-       "explain": "Не смейся над моим акцентом!"
+       "explain": "Не смейся над моим акцентом!",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -927,7 +948,8 @@
        "a": [
         "The storm did a lot of damage."
        ],
-       "explain": "Буря нанесла большой ущерб."
+       "explain": "Буря нанесла большой ущерб.",
+       "rule": "p2-d1-g1"
       }
      ]
     },
@@ -942,7 +964,8 @@
        "ru": "Нам нужно принять решение сегодня.",
        "a": [
         "We need to make a decision today."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
@@ -950,7 +973,8 @@
        "a": [
         "Could you do me a favour?",
         "Can you do me a favour?"
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
@@ -958,7 +982,8 @@
        "a": [
         "I made a mistake in the report.",
         "I made an error in the report."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
@@ -966,49 +991,56 @@
        "a": [
         "We did some research before the redesign.",
         "We did research before the redesign."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Ты уже сделала упражнение?",
        "a": [
         "Have you done the exercise yet?"
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Давай запишемся на понедельник.",
        "a": [
         "Let's make an appointment for Monday."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Спорт идёт тебе на пользу.",
        "a": [
         "Exercise does you good."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Я быстро подружилась с новыми коллегами.",
        "a": [
         "I made friends with my new colleagues quickly."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Можно я прокомментирую макет?",
        "a": [
         "Can I make a comment on the layout?"
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Она занимается йогой каждое утро.",
        "a": [
         "She does yoga every morning."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       }
      ]
     },
@@ -1021,42 +1053,50 @@
       {
        "kind": "shadow",
        "en": "It doesn't make any difference.",
-       "ru": "Это не имеет никакого значения."
+       "ru": "Это не имеет никакого значения.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "I need to do some work this evening.",
-       "ru": "Мне нужно поработать сегодня вечером."
+       "ru": "Мне нужно поработать сегодня вечером.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "He made a suggestion during the meeting.",
-       "ru": "Он внёс предложение на встрече."
+       "ru": "Он внёс предложение на встрече.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "We made an effort to finish on time.",
-       "ru": "Мы постарались закончить вовремя."
+       "ru": "Мы постарались закончить вовремя.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "Can you do something about the slow loading?",
-       "ru": "Можешь что-нибудь сделать с медленной загрузкой?"
+       "ru": "Можешь что-нибудь сделать с медленной загрузкой?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "Let's make a list of all the screens.",
-       "ru": "Давай составим список всех экранов."
+       "ru": "Давай составим список всех экранов.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "I'm doing a course in UX writing.",
-       "ru": "Я прохожу курс по UX-райтингу."
+       "ru": "Я прохожу курс по UX-райтингу.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "She makes a good impression at interviews.",
-       "ru": "Она производит хорошее впечатление на собеседованиях."
+       "ru": "Она производит хорошее впечатление на собеседованиях.",
+       "rule": "p2-d1-g1"
       }
      ]
     },
@@ -1767,7 +1807,8 @@
        "a": [
         "got used to"
        ],
-       "explain": "Ты привыкла к разнице во времени?"
+       "explain": "Ты привыкла к разнице во времени?",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1775,7 +1816,8 @@
        "a": [
         "hearing"
        ],
-       "explain": "Дизайнеры привыкли слышать критику."
+       "explain": "Дизайнеры привыкли слышать критику.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1783,7 +1825,8 @@
        "a": [
         "used to be"
        ],
-       "explain": "Раньше он был очень застенчивым."
+       "explain": "Раньше он был очень застенчивым.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1791,7 +1834,8 @@
        "a": [
         "living"
        ],
-       "explain": "Я привыкаю жить в новом городе."
+       "explain": "Я привыкаю жить в новом городе.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1799,7 +1843,8 @@
        "a": [
         "use to work"
        ],
-       "explain": "Они раньше работали вместе?"
+       "explain": "Они раньше работали вместе?",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1807,7 +1852,8 @@
        "a": [
         "get used to"
        ],
-       "explain": "Трудно привыкнуть к новой команде."
+       "explain": "Трудно привыкнуть к новой команде.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1815,7 +1861,8 @@
        "a": [
         "used to"
        ],
-       "explain": "Я не привыкла к такому вниманию."
+       "explain": "Я не привыкла к такому вниманию.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1823,7 +1870,8 @@
        "a": [
         "used to use"
        ],
-       "explain": "Раньше мы пользовались Sketch, а теперь Figma."
+       "explain": "Раньше мы пользовались Sketch, а теперь Figma.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1831,7 +1879,8 @@
        "a": [
         "presenting"
        ],
-       "explain": "Она привыкнет выступать на английском."
+       "explain": "Она привыкнет выступать на английском.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -1839,7 +1888,8 @@
        "a": [
         "didn't use to wear"
        ],
-       "explain": "Раньше он не носил очки."
+       "explain": "Раньше он не носил очки.",
+       "rule": "p2-d2-g1"
       }
      ]
     },
@@ -1853,13 +1903,15 @@
        "kind": "order",
        "en": "Are you getting used to the new schedule?",
        "ru": "Ты привыкаешь к новому графику?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
        "en": "I used to hate public speaking.",
        "ru": "Раньше я терпеть не могла выступать на публике.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
@@ -1867,7 +1919,8 @@
        "ru": "Она привыкла работать под давлением.",
        "alt": [
         "She's used to working under pressure."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
@@ -1876,13 +1929,15 @@
        "alt": [
         "We are not used to such short deadlines.",
         "We aren't used to such short deadlines."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
        "en": "I used to live near the sea.",
        "ru": "Раньше я жила у моря.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
@@ -1890,7 +1945,8 @@
        "ru": "Ты привыкнешь.",
        "alt": [
         "You will get used to it."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       }
      ]
     },
@@ -1908,7 +1964,8 @@
         "He's used to traveling for work.",
         "He is used to travelling for work."
        ],
-       "explain": "Он привык ездить в командировки."
+       "explain": "Он привык ездить в командировки.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "fix",
@@ -1916,7 +1973,8 @@
        "a": [
         "Did you use to play the piano?"
        ],
-       "explain": "Ты раньше играла на пианино?"
+       "explain": "Ты раньше играла на пианино?",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "fix",
@@ -1924,7 +1982,8 @@
        "a": [
         "It took us weeks to get used to the new process."
        ],
-       "explain": "Нам понадобились недели, чтобы привыкнуть к новому процессу."
+       "explain": "Нам понадобились недели, чтобы привыкнуть к новому процессу.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "fix",
@@ -1933,7 +1992,8 @@
         "I'm used to having lunch at one.",
         "I am used to having lunch at one."
        ],
-       "explain": "Я привыкла обедать в час."
+       "explain": "Я привыкла обедать в час.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "fix",
@@ -1941,7 +2001,8 @@
        "a": [
         "This building used to be a factory."
        ],
-       "explain": "Раньше это здание было фабрикой."
+       "explain": "Раньше это здание было фабрикой.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "fix",
@@ -1950,7 +2011,8 @@
         "She's getting used to the British accent.",
         "She is getting used to the British accent."
        ],
-       "explain": "Она привыкает к британскому акценту."
+       "explain": "Она привыкает к британскому акценту.",
+       "rule": "p2-d2-g1"
       }
      ]
     },
@@ -1966,7 +2028,8 @@
        "a": [
         "I used to work in an office.",
         "I used to work in the office."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -1974,7 +2037,8 @@
        "a": [
         "I'm used to working from home.",
         "I am used to working from home."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -1985,7 +2049,8 @@
         "She is getting used to the new program.",
         "She is getting used to a new program.",
         "She's getting used to the new program."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -1993,7 +2058,8 @@
        "a": [
         "We didn't use to have design reviews.",
         "We never used to have design reviews."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -2001,21 +2067,24 @@
        "a": [
         "Have you got used to the time difference?",
         "Have you gotten used to the time difference?"
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
        "ru": "Дизайнеры привыкли слышать критику.",
        "a": [
         "Designers are used to hearing criticism."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
        "ru": "Раньше он был очень застенчивым.",
        "a": [
         "He used to be very shy."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -2025,7 +2094,8 @@
         "I am getting used to living in a new city.",
         "I'm getting used to living in the new city.",
         "I am getting used to living in the new city."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
@@ -2034,14 +2104,16 @@
         "We didn't use to work on weekends.",
         "We never used to work on weekends.",
         "We didn't use to work at weekends."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
        "ru": "Ты привыкла рано вставать?",
        "a": [
         "Are you used to waking up early?"
-       ]
+       ],
+       "rule": "p2-d2-g1"
       }
      ]
     },
@@ -2054,42 +2126,50 @@
       {
        "kind": "shadow",
        "en": "Are you getting used to the new schedule?",
-       "ru": "Ты привыкаешь к новому графику?"
+       "ru": "Ты привыкаешь к новому графику?",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "I used to hate public speaking.",
-       "ru": "Раньше я терпеть не могла выступать на публике."
+       "ru": "Раньше я терпеть не могла выступать на публике.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "She is used to working under pressure.",
-       "ru": "Она привыкла работать под давлением."
+       "ru": "Она привыкла работать под давлением.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "We're not used to such short deadlines.",
-       "ru": "Мы не привыкли к таким коротким дедлайнам."
+       "ru": "Мы не привыкли к таким коротким дедлайнам.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "I used to live near the sea.",
-       "ru": "Раньше я жила у моря."
+       "ru": "Раньше я жила у моря.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "You'll get used to it.",
-       "ru": "Ты привыкнешь."
+       "ru": "Ты привыкнешь.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "He's used to travelling for work.",
-       "ru": "Он привык ездить в командировки."
+       "ru": "Он привык ездить в командировки.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "Did you use to play the piano?",
-       "ru": "Ты раньше играла на пианино?"
+       "ru": "Ты раньше играла на пианино?",
+       "rule": "p2-d2-g1"
       }
      ]
     },
@@ -4486,7 +4566,8 @@
        "a": [
         "hadn't missed"
        ],
-       "explain": "Жаль, что я пропустила встречу."
+       "explain": "Жаль, что я пропустила встречу.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4494,7 +4575,8 @@
        "a": [
         "could"
        ],
-       "explain": "Нам жаль, что мы не можем вам помочь."
+       "explain": "Нам жаль, что мы не можем вам помочь.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4502,7 +4584,8 @@
        "a": [
         "had learned"
        ],
-       "explain": "Жаль, что я не учила английский в детстве."
+       "explain": "Жаль, что я не учила английский в детстве.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4510,7 +4593,8 @@
        "a": [
         "would stop"
        ],
-       "explain": "Хоть бы дождь прекратился!"
+       "explain": "Хоть бы дождь прекратился!",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4518,7 +4602,8 @@
        "a": [
         "knew"
        ],
-       "explain": "Жаль, что я не умею программировать."
+       "explain": "Жаль, что я не умею программировать.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4526,7 +4611,8 @@
        "a": [
         "hadn't sold"
        ],
-       "explain": "Они жалеют, что продали дом."
+       "explain": "Они жалеют, что продали дом.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4534,7 +4620,8 @@
        "a": [
         "were"
        ],
-       "explain": "Жаль, что мой ноутбук не быстрее."
+       "explain": "Жаль, что мой ноутбук не быстрее.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4542,7 +4629,8 @@
        "a": [
         "had asked"
        ],
-       "explain": "Жаль, что я не задала больше вопросов."
+       "explain": "Жаль, что я не задала больше вопросов.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4550,7 +4638,8 @@
        "a": [
         "had"
        ],
-       "explain": "Если бы у меня было больше уверенности."
+       "explain": "Если бы у меня было больше уверенности.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -4558,7 +4647,8 @@
        "a": [
         "could"
        ],
-       "explain": "Ему хотелось бы работать из дома."
+       "explain": "Ему хотелось бы работать из дома.",
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -4574,19 +4664,22 @@
        "ru": "Зря я отправила то письмо.",
        "alt": [
         "I wish I had not sent that email."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
        "en": "I wish we had a bigger team.",
        "ru": "Жаль, что у нас не команда побольше.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
        "en": "If only you had told me earlier!",
        "ru": "Если бы ты только сказал мне раньше!",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
@@ -4594,13 +4687,15 @@
        "ru": "Жаль, что я не говорю по-французски.",
        "alt": [
         "I wish I could speak French."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
        "en": "She wishes she had gone to the party.",
        "ru": "Она жалеет, что не пошла на вечеринку.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
@@ -4608,7 +4703,8 @@
        "ru": "Жаль, что встреча такая длинная.",
        "alt": [
         "I wish the meeting wasn't so long."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -4624,7 +4720,8 @@
        "a": [
         "I wish I had bought that jacket."
        ],
-       "explain": "Жаль, что я не купила ту куртку."
+       "explain": "Жаль, что я не купила ту куртку.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -4632,7 +4729,8 @@
        "a": [
         "If only I could remember his name."
        ],
-       "explain": "Если бы я только могла вспомнить его имя."
+       "explain": "Если бы я только могла вспомнить его имя.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -4640,7 +4738,8 @@
        "a": [
         "I wish I lived by the sea."
        ],
-       "explain": "Хотела бы я жить у моря."
+       "explain": "Хотела бы я жить у моря.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -4648,7 +4747,8 @@
        "a": [
         "We wish we had started earlier."
        ],
-       "explain": "Жаль, что мы не начали раньше."
+       "explain": "Жаль, что мы не начали раньше.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -4656,7 +4756,8 @@
        "a": [
         "I wish people would read the instructions."
        ],
-       "explain": "Хоть бы люди читали инструкции."
+       "explain": "Хоть бы люди читали инструкции.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -4665,7 +4766,8 @@
         "I wish I hadn't forgotten my keys.",
         "I wish I had not forgotten my keys."
        ],
-       "explain": "Зря я забыла ключи."
+       "explain": "Зря я забыла ключи.",
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -4680,21 +4782,24 @@
        "ru": "Жаль, что у меня мало времени.",
        "a": [
         "I wish I had more time."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
        "ru": "Жаль, что я не училась усерднее в школе.",
        "a": [
         "I wish I had studied harder at school."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
        "ru": "Хотела бы я свободно говорить по-английски.",
        "a": [
         "I wish I could speak English fluently."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
@@ -4704,7 +4809,8 @@
         "She wishes she had not said that.",
         "She wishes she hadn't said it.",
         "She wishes she had not said it."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
@@ -4714,14 +4820,16 @@
         "I wish I had not missed the meeting.",
         "I wish I hadn't skipped the meeting.",
         "I wish I had not skipped the meeting."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
        "ru": "Нам жаль, что мы не можем вам помочь.",
        "a": [
         "We wish we could help you."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
@@ -4730,21 +4838,24 @@
         "I wish I had learned English as a child.",
         "I wish I had learnt English as a child.",
         "I wish I had studied English as a child."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
        "ru": "Хоть бы дождь прекратился!",
        "a": [
         "If only it would stop raining!"
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
        "ru": "Жаль, что у меня нет машины.",
        "a": [
         "I wish I had a car."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "translate",
@@ -4753,7 +4864,8 @@
         "If only we had more budget for research.",
         "If only we had more money for research.",
         "If only we had a bigger budget for research."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -4766,42 +4878,50 @@
       {
        "kind": "shadow",
        "en": "I wish I hadn't sent that email.",
-       "ru": "Зря я отправила то письмо."
+       "ru": "Зря я отправила то письмо.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "I wish we had a bigger team.",
-       "ru": "Жаль, что у нас не команда побольше."
+       "ru": "Жаль, что у нас не команда побольше.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "If only you had told me earlier!",
-       "ru": "Если бы ты только сказал мне раньше!"
+       "ru": "Если бы ты только сказал мне раньше!",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "I wish I spoke French.",
-       "ru": "Жаль, что я не говорю по-французски."
+       "ru": "Жаль, что я не говорю по-французски.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "She wishes she had gone to the party.",
-       "ru": "Она жалеет, что не пошла на вечеринку."
+       "ru": "Она жалеет, что не пошла на вечеринку.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "I wish the meeting weren't so long.",
-       "ru": "Жаль, что встреча такая длинная."
+       "ru": "Жаль, что встреча такая длинная.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "I wish I had bought that jacket.",
-       "ru": "Жаль, что я не купила ту куртку."
+       "ru": "Жаль, что я не купила ту куртку.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "If only I could remember his name.",
-       "ru": "Если бы я только могла вспомнить его имя."
+       "ru": "Если бы я только могла вспомнить его имя.",
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -5649,7 +5769,8 @@
        "a": [
         "affect"
        ],
-       "explain": "Погода может влиять на настроение."
+       "explain": "Погода может влиять на настроение.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5657,7 +5778,8 @@
        "a": [
         "affect"
        ],
-       "explain": "Мелкие изменения могут повлиять на весь макет."
+       "explain": "Мелкие изменения могут повлиять на весь макет.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5665,7 +5787,8 @@
        "a": [
         "effect"
        ],
-       "explain": "Новый дизайн положительно повлиял на продажи."
+       "explain": "Новый дизайн положительно повлиял на продажи.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5673,7 +5796,8 @@
        "a": [
         "effect"
        ],
-       "explain": "Лекарство не подействовало."
+       "explain": "Лекарство не подействовало.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5681,7 +5805,8 @@
        "a": [
         "lose"
        ],
-       "explain": "Не потеряй ключи."
+       "explain": "Не потеряй ключи.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5689,7 +5814,8 @@
        "a": [
         "lose"
        ],
-       "explain": "Не потеряй прогресс — сохрани файл."
+       "explain": "Не потеряй прогресс — сохрани файл.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5697,7 +5823,8 @@
        "a": [
         "loose"
        ],
-       "explain": "Эти брюки слишком свободные."
+       "explain": "Эти брюки слишком свободные.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5705,7 +5832,8 @@
        "a": [
         "loose"
        ],
-       "explain": "Один из винтов разболтался."
+       "explain": "Один из винтов разболтался.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5713,7 +5841,8 @@
        "a": [
         "borrow"
        ],
-       "explain": "Можно я возьму твою зарядку на время?"
+       "explain": "Можно я возьму твою зарядку на время?",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "gap",
@@ -5721,7 +5850,8 @@
        "a": [
         "borrowed"
        ],
-       "explain": "Я взяла книгу в библиотеке."
+       "explain": "Я взяла книгу в библиотеке.",
+       "rule": "p2-d5-g1"
       }
      ]
     },
@@ -5735,19 +5865,22 @@
        "kind": "order",
        "en": "Could you lend me your pen?",
        "ru": "Можешь одолжить мне ручку?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "order",
        "en": "Can you lend me ten euros?",
        "ru": "Можешь одолжить мне десять евро?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "order",
        "en": "Can you give me some advice?",
        "ru": "Можешь дать мне совет?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "order",
@@ -5755,7 +5888,8 @@
        "ru": "Спасибо за совет!",
        "alt": [
         "Thank you for the advice!"
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "order",
@@ -5763,13 +5897,15 @@
        "ru": "Советую сначала протестировать.",
        "alt": [
         "I'd advise you to test it first."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "order",
        "en": "What would you advise me to do?",
        "ru": "Что бы ты мне посоветовала?",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d5-g1"
       }
      ]
     },
@@ -5785,7 +5921,8 @@
        "a": [
         "This car is very economical."
        ],
-       "explain": "Эта машина очень экономичная."
+       "explain": "Эта машина очень экономичная.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -5794,7 +5931,8 @@
         "It's more economical to buy a yearly plan.",
         "It is cheaper to buy a yearly plan."
        ],
-       "explain": "Выгоднее купить годовой тариф."
+       "explain": "Выгоднее купить годовой тариф.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -5802,7 +5940,8 @@
        "a": [
         "The country has serious economic problems."
        ],
-       "explain": "У страны серьёзные экономические проблемы."
+       "explain": "У страны серьёзные экономические проблемы.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -5810,7 +5949,8 @@
        "a": [
         "Economic growth slowed down last year."
        ],
-       "explain": "В прошлом году экономический рост замедлился."
+       "explain": "В прошлом году экономический рост замедлился.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -5818,7 +5958,8 @@
        "a": [
         "The workshop was really fun."
        ],
-       "explain": "Воркшоп был очень весёлым и интересным."
+       "explain": "Воркшоп был очень весёлым и интересным.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -5826,7 +5967,8 @@
        "a": [
         "We had a lot of fun at the party."
        ],
-       "explain": "Мы отлично повеселились на вечеринке."
+       "explain": "Мы отлично повеселились на вечеринке.",
+       "rule": "p2-d5-g1"
       }
      ]
     },
@@ -5842,14 +5984,16 @@
        "a": [
         "Her argument was very compelling.",
         "Her argument was really compelling."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Видео рассказывает захватывающую историю.",
        "a": [
         "The video tells a compelling story."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
@@ -5860,28 +6004,32 @@
         "Helmets are necessary here.",
         "Helmets are required here.",
         "Helmets are compulsory here."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Английский — обязательный предмет в школе.",
        "a": [
         "English is a compulsory subject at school."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Погода может влиять на настроение.",
        "a": [
         "The weather can affect your mood."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Мелкие изменения могут повлиять на весь макет.",
        "a": [
         "Small changes can affect the whole layout."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
@@ -5889,14 +6037,16 @@
        "a": [
         "The new design had a positive effect on sales.",
         "The new design had a positive impact on sales."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Лекарство не подействовало.",
        "a": [
         "The medicine had no effect."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
@@ -5906,14 +6056,16 @@
         "That joke is not funny.",
         "This joke is not funny.",
         "This joke isn't funny."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "translate",
        "ru": "Он рассказал смешную историю о своём первом клиенте.",
        "a": [
         "He told a funny story about his first client."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       }
      ]
     },
@@ -5926,42 +6078,50 @@
       {
        "kind": "shadow",
        "en": "Could you lend me your pen?",
-       "ru": "Можешь одолжить мне ручку?"
+       "ru": "Можешь одолжить мне ручку?",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "Can you lend me ten euros?",
-       "ru": "Можешь одолжить мне десять евро?"
+       "ru": "Можешь одолжить мне десять евро?",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "Can you give me some advice?",
-       "ru": "Можешь дать мне совет?"
+       "ru": "Можешь дать мне совет?",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "Thanks for the advice!",
-       "ru": "Спасибо за совет!"
+       "ru": "Спасибо за совет!",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "I advise you to test it first.",
-       "ru": "Советую сначала протестировать."
+       "ru": "Советую сначала протестировать.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "What would you advise me to do?",
-       "ru": "Что бы ты мне посоветовала?"
+       "ru": "Что бы ты мне посоветовала?",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "This car is very economical.",
-       "ru": "Эта машина очень экономичная."
+       "ru": "Эта машина очень экономичная.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "It's more economical to buy a yearly plan.",
-       "ru": "Выгоднее купить годовой тариф."
+       "ru": "Выгоднее купить годовой тариф.",
+       "rule": "p2-d5-g1"
       }
      ]
     },
@@ -6884,7 +7044,8 @@
        "say": "Let's make a plan for next week.",
        "a": [
         "Let's make a plan for next week."
-       ]
+       ],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "dictation",
@@ -6895,7 +7056,8 @@
         "She is getting used to the new program.",
         "She is getting used to a new program.",
         "She's getting used to the new program."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "dictation",
@@ -6903,28 +7065,32 @@
        "a": [
         "I'll get back to you by Friday.",
         "I will get back to you by Friday."
-       ]
+       ],
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "dictation",
        "say": "I wish I had more time.",
        "a": [
         "I wish I had more time."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "dictation",
        "say": "This topic is still relevant today.",
        "a": [
         "This topic is still relevant today."
-       ]
+       ],
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "dictation",
        "say": "I used to live near the sea.",
        "a": [
         "I used to live near the sea."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "dictation",
@@ -6935,7 +7101,8 @@
         "I look forward to working with you.",
         "I look forward to working together.",
         "I'm looking forward to working together."
-       ]
+       ],
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "dictation",
@@ -6945,7 +7112,8 @@
         "She wishes she had not said that.",
         "She wishes she hadn't said it.",
         "She wishes she had not said it."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -6961,7 +7129,8 @@
        "a": [
         "gave up"
        ],
-       "explain": "В прошлом году он бросил курить."
+       "explain": "В прошлом году он бросил курить.",
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "gap",
@@ -6969,14 +7138,16 @@
        "a": [
         "used to"
        ],
-       "explain": "Мы не привыкли к таким коротким дедлайнам."
+       "explain": "Мы не привыкли к таким коротким дедлайнам.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "translate",
        "ru": "Жаль, что я не знаю ответа.",
        "a": [
         "I wish I knew the answer."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -6984,7 +7155,8 @@
        "a": [
         "I have to do my homework first."
        ],
-       "explain": "Сначала мне нужно сделать домашнее задание."
+       "explain": "Сначала мне нужно сделать домашнее задание.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "choice",
@@ -6995,7 +7167,8 @@
         "do"
        ],
        "a": 2,
-       "explain": "Мы работаем с клиентами из Германии."
+       "explain": "Мы работаем с клиентами из Германии.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -7003,7 +7176,8 @@
        "a": [
         "didn't use to have"
        ],
-       "explain": "Раньше у нас не было дизайн-ревью."
+       "explain": "Раньше у нас не было дизайн-ревью.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -7011,7 +7185,8 @@
        "a": [
         "did"
        ],
-       "explain": "Буря нанесла большой ущерб."
+       "explain": "Буря нанесла большой ущерб.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "choice",
@@ -7022,7 +7197,8 @@
         "loose"
        ],
        "a": 0,
-       "explain": "Не потеряй прогресс — сохрани файл."
+       "explain": "Не потеряй прогресс — сохрани файл.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "fix",
@@ -7030,7 +7206,8 @@
        "a": [
         "Can you do the dishes tonight?"
        ],
-       "explain": "Можешь помыть посуду сегодня вечером?"
+       "explain": "Можешь помыть посуду сегодня вечером?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -7038,7 +7215,8 @@
        "a": [
         "I wish I could speak English fluently."
        ],
-       "explain": "Хотела бы я свободно говорить по-английски."
+       "explain": "Хотела бы я свободно говорить по-английски.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -7046,7 +7224,8 @@
        "a": [
         "We wish we could help you."
        ],
-       "explain": "Нам жаль, что мы не можем вам помочь."
+       "explain": "Нам жаль, что мы не можем вам помочь.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "fix",
@@ -7055,7 +7234,8 @@
         "Have you figured out how it works?",
         "Have you worked out how it works?"
        ],
-       "explain": "Ты разобралась, как это работает?"
+       "explain": "Ты разобралась, как это работает?",
+       "rule": "p2-d3-n1"
       }
      ]
     },
@@ -7068,42 +7248,50 @@
       {
        "kind": "shadow",
        "en": "We need to make a decision today.",
-       "ru": "Нам нужно принять решение сегодня."
+       "ru": "Нам нужно принять решение сегодня.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "shadow",
        "en": "I'm used to working from home.",
-       "ru": "Я привыкла работать из дома."
+       "ru": "Я привыкла работать из дома.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "I'm looking forward to working with you.",
-       "ru": "Я с нетерпением жду совместной работы."
+       "ru": "Я с нетерпением жду совместной работы.",
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "shadow",
        "en": "I wish I could speak English fluently.",
-       "ru": "Хотела бы я свободно говорить по-английски."
+       "ru": "Хотела бы я свободно говорить по-английски.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "shadow",
        "en": "This topic is still relevant today.",
-       "ru": "Эта тема до сих пор актуальна."
+       "ru": "Эта тема до сих пор актуальна.",
+       "rule": "p2-d5-g1"
       },
       {
        "kind": "shadow",
        "en": "You'll soon get used to the noise.",
-       "ru": "Ты скоро привыкнешь к шуму."
+       "ru": "Ты скоро привыкнешь к шуму.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "shadow",
        "en": "I'll get back to you by Friday.",
-       "ru": "Я вернусь к вам с ответом до пятницы."
+       "ru": "Я вернусь к вам с ответом до пятницы.",
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "shadow",
        "en": "I wish you wouldn't interrupt me.",
-       "ru": "Хоть бы ты меня не перебивал."
+       "ru": "Хоть бы ты меня не перебивал.",
+       "rule": "p2-d4-g1"
       }
      ]
     },
@@ -7932,7 +8120,8 @@
        "a": [
         "Please don't make so much noise."
        ],
-       "explain": "Пожалуйста, не шумите так."
+       "explain": "Пожалуйста, не шумите так.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -7941,7 +8130,8 @@
         "Could you do me a favour?",
         "Can you do me a favour?"
        ],
-       "explain": "Можешь оказать мне услугу?"
+       "explain": "Можешь оказать мне услугу?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -7949,20 +8139,23 @@
        "a": [
         "make"
        ],
-       "explain": "Нам нужно принять решение сегодня."
+       "explain": "Нам нужно принять решение сегодня.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Он жалеет, что не согласился на эту работу.",
        "a": [
         "He wishes he had taken the job."
-       ]
+       ],
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "order",
        "en": "He made a lot of money last year.",
        "ru": "В прошлом году он заработал много денег.",
-       "alt": []
+       "alt": [],
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "choice",
@@ -7974,7 +8167,8 @@
         "Мы с нетерпением ждём встречи с вами."
        ],
        "a": 2,
-       "explain": "We're looking forward to seeing you."
+       "explain": "We're looking forward to seeing you.",
+       "rule": "p2-d3-n1"
       },
       {
        "kind": "choice",
@@ -7985,14 +8179,16 @@
         "make"
        ],
        "a": 2,
-       "explain": "Нам нужно внести изменения в макет."
+       "explain": "Нам нужно внести изменения в макет.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "translate",
        "ru": "Она не привыкла получать столько фидбэка.",
        "a": [
         "She wasn't used to getting so much feedback."
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "gap",
@@ -8000,7 +8196,8 @@
        "a": [
         "used to work"
        ],
-       "explain": "Раньше я работала в офисе."
+       "explain": "Раньше я работала в офисе.",
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "order",
@@ -8008,7 +8205,8 @@
        "ru": "Ты раньше жила в Лондоне?",
        "alt": [
         "Did you live in London before?"
-       ]
+       ],
+       "rule": "p2-d2-g1"
       },
       {
        "kind": "choice",
@@ -8019,7 +8217,8 @@
         "do"
        ],
        "a": 1,
-       "explain": "Можно я прокомментирую макет?"
+       "explain": "Можно я прокомментирую макет?",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "gap",
@@ -8027,7 +8226,8 @@
        "a": [
         "lived"
        ],
-       "explain": "Хотела бы я жить у моря."
+       "explain": "Хотела бы я жить у моря.",
+       "rule": "p2-d4-g1"
       },
       {
        "kind": "gap",
@@ -8035,7 +8235,8 @@
        "a": [
         "made"
        ],
-       "explain": "Мы постарались закончить вовремя."
+       "explain": "Мы постарались закончить вовремя.",
+       "rule": "p2-d1-g1"
       },
       {
        "kind": "fix",
@@ -8044,7 +8245,8 @@
         "I wish I didn't have to work today.",
         "I wish I did not have to work today."
        ],
-       "explain": "Жаль, что мне сегодня нужно работать."
+       "explain": "Жаль, что мне сегодня нужно работать.",
+       "rule": "p2-d4-g1"
       }
      ]
     },
