@@ -1,0 +1,259 @@
+{
+ "type": "review",
+ "id": "review-2026-11-10",
+ "date": "2026-11-10",
+ "upTo": "2026-11-10",
+ "upToTs": "2026-11-10T10:32:38.533Z",
+ "summary": "День 5 (слова-двойники) — 78%: compelling/sensible/compulsory и affect/effect путаются. Созвоны и письма — B1. 8 карточек уже освоены! Фразовые глаголы в карточках не держатся — в pack-003 будет другой способ.",
+ "verdicts": [
+  {
+   "id": "v5-p2-d5-g7-0",
+   "task": "p2-d5-g7",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "Her argument was very compelling.",
+   "comment": "sensible = здравый, разумный; «убедительный» = compelling"
+  },
+  {
+   "id": "v5-p2-d5-g7-1",
+   "task": "p2-d5-g7",
+   "i": 1,
+   "verdict": "ok"
+  },
+  {
+   "id": "v5-p2-d5-g7-2",
+   "task": "p2-d5-g7",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно. По правилу дня: Wearing a helmet is compulsory here / Helmets are required here."
+  },
+  {
+   "id": "v5-p2-d5-g7-3",
+   "task": "p2-d5-g7",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "English is a compulsory subject at school.",
+   "comment": "Слово выбрано верно! Но: English без the, compulsory (написание), at school"
+  },
+  {
+   "id": "v5-p2-d5-g7-4",
+   "task": "p2-d5-g7",
+   "i": 4,
+   "verdict": "almost",
+   "correct": "The weather can affect your mood.",
+   "comment": "affect — без on: affect something. (have an effect ON)"
+  },
+  {
+   "id": "v5-p2-d5-g7-5",
+   "task": "p2-d5-g7",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "Small changes can affect the whole layout.",
+   "comment": "affect без on; small changes звучит естественнее, чем little"
+  },
+  {
+   "id": "v5-p2-d5-g7-6",
+   "task": "p2-d5-g7",
+   "i": 6,
+   "verdict": "wrong",
+   "correct": "The new design had a positive effect on sales.",
+   "comment": "effect — существительное: have an effect on. Глагол — affect: The new design positively affected sales"
+  },
+  {
+   "id": "v5-p2-d5-g7-7",
+   "task": "p2-d5-g7",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "The medicine didn't have any effect.",
+   "comment": "Нужно any (или had no effect). pills — тоже можно"
+  },
+  {
+   "id": "v5-p2-d5-g7-8",
+   "task": "p2-d5-g7",
+   "i": 8,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v5-p2-d5-g7-9",
+   "task": "p2-d5-g7",
+   "i": 9,
+   "verdict": "wrong",
+   "correct": "He told a funny story about his first client.",
+   "comment": "Артикль a funny story; «первом» = first (new = новом)"
+  },
+  {
+   "id": "v5-p2-d5-u3-0",
+   "task": "p2-d5-u3",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "Can you hear me okay?",
+   "comment": "Слышать = hear (listen — слушать). Третий раз listen ↔ hear"
+  },
+  {
+   "id": "v5-p2-d5-u3-1",
+   "task": "p2-d5-u3",
+   "i": 1,
+   "verdict": "wrong",
+   "correct": "Can everyone see my screen?",
+   "comment": "everyone — единственное число; вопрос с модальным: Can everyone see…?"
+  },
+  {
+   "id": "v5-p2-d5-u3-2",
+   "task": "p2-d5-u3",
+   "i": 2,
+   "verdict": "ok"
+  },
+  {
+   "id": "v5-p2-d5-u3-3",
+   "task": "p2-d5-u3",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Так тоже правильно; repeat that — чуть естественнее."
+  },
+  {
+   "id": "v5-p2-d5-u3-4",
+   "task": "p2-d5-u3",
+   "i": 4,
+   "verdict": "ok"
+  },
+  {
+   "id": "v5-p2-d5-u3-6",
+   "task": "p2-d5-u3",
+   "i": 6,
+   "verdict": "ok"
+  },
+  {
+   "id": "v5-p2-d5-u3-5",
+   "task": "p2-d5-u3",
+   "i": 5,
+   "verdict": "wrong",
+   "correct": "I think we lost you for a second.",
+   "comment": "Прошедшее: lost (уже случилось); for a second = на секунду"
+  },
+  {
+   "id": "v5-p2-d5-u3-7",
+   "task": "p2-d5-u3",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "Shall we move on to the next point?",
+   "comment": "В вопросе нужно подлежащее: Shall WE…; move on TO"
+  },
+  {
+   "id": "v5-p2-d5-u8-0",
+   "task": "p2-d5-u8",
+   "i": 0,
+   "verdict": "almost",
+   "correct": "Have you considered a bottom sheet here?",
+   "comment": "Шторка = bottom sheet. Did you think about… — так тоже можно, Have you considered — вежливее"
+  },
+  {
+   "id": "v5-p2-d5-u8-1",
+   "task": "p2-d5-u8",
+   "i": 1,
+   "verdict": "ok",
+   "comment": "Так тоже правильно, но на созвоне может звучать как проверка. По желанию: Does this make sense so far?"
+  },
+  {
+   "id": "v5-p2-d5-u8-2",
+   "task": "p2-d5-u8",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "I have a few open questions.",
+   "comment": "a few = несколько; few = мало (второй раз)"
+  },
+  {
+   "id": "v5-p2-d5-u8-3",
+   "task": "p2-d5-u8",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v5-p2-d5-u8-4",
+   "task": "p2-d5-u8",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже правильно (u — только в чатах, в письмах you)."
+  },
+  {
+   "id": "v5-p2-d5-u8-5",
+   "task": "p2-d5-u8",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно; feedback on — чуть привычнее, чем about."
+  },
+  {
+   "id": "v5-p2-d5-u8-6",
+   "task": "p2-d5-u8",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "This part feels a bit crowded.",
+   "comment": "a little / a bit ставим перед прилагательным: a bit crowded"
+  },
+  {
+   "id": "v5-p2-d5-u8-7",
+   "task": "p2-d5-u8",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "Just following up on my last email.",
+   "comment": "«напоминаю о письме» = following up on; letter — бумажное письмо, в работе — email"
+  },
+  {
+   "id": "v5-p2-d5-g11-text",
+   "task": "p2-d5-g11",
+   "level": "B1",
+   "comment": "Слова из пар употреблены верно: relevant, sensitive, borrowed. Ошибка — как раз в паре advice/advise.",
+   "fixes": [
+    {
+     "from": "I can advice to juniors don't be afraid to make mistakes",
+     "to": "I can advise juniors not to be afraid of making mistakes",
+     "why": "advise — глагол (с s), advice — существительное; advise someone not to do"
+    },
+    {
+     "from": "My daughter is very sensitive person",
+     "to": "My daughter is a very sensitive person",
+     "why": "Артикль: a person"
+    },
+    {
+     "from": "I have relevant experience for ux ui designer work",
+     "to": "I have relevant experience as a UX/UI designer (по желанию)",
+     "why": "Не ошибка, но as a designer естественнее. Задание просило 5 разных пар — relevant повторился, а пятой пары нет"
+    }
+   ]
+  },
+  {
+   "id": "v5-p2-d5-u7-text",
+   "task": "p2-d5-u7",
+   "level": "B1",
+   "comment": "Задание выполнено: что решили, срок, следующая встреча. Ошибки в глаголах и предлогах.",
+   "fixes": [
+    {
+     "from": "to sum up meeting we have checked finished layouts",
+     "to": "To sum up the meeting: we checked the finished layouts",
+     "why": "Встреча закончилась → Past Simple (checked); артикли the meeting, the layouts"
+    },
+    {
+     "from": "Our new plan to do dark theme for landing",
+     "to": "Next, we plan to make a dark theme for the landing page",
+     "why": "Нужен глагол (plan / is); make a theme (создать) — make/do; the landing page"
+    },
+    {
+     "from": "deadline for this task is three days",
+     "to": "the deadline is in three days",
+     "why": "«через три дня» = in three days"
+    },
+    {
+     "from": "I'll share detailed reports to our work chat",
+     "to": "I'll share detailed notes in our work chat",
+     "why": "в чате — in"
+    },
+    {
+     "from": "Let's schedule a new meeting to Friday",
+     "to": "Let's schedule the next meeting for Friday",
+     "why": "запланировать на — for"
+    }
+   ]
+  }
+ ]
+}

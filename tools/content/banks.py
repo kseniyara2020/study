@@ -176,7 +176,7 @@ R4 = ("wish / if only", "wish", [
 R5 = ("confusing words B2", "pairs", [
  ("Her argument was very compelling.", "Её аргумент был очень убедительным.", "compelling", ["compulsory", "complimentary"], "Her argument was very compulsory.", "compelling/compulsory", ["Her argument was really compelling."]),
  ("The video tells a compelling story.", "Видео рассказывает захватывающую историю.", "compelling", ["compulsory", "complete"], "The video tells a compulsory story.", "compelling/compulsory", []),
- ("Wearing a helmet is compulsory here.", "Здесь обязательно носить шлем.", "compulsory", ["compelling", "comfortable"], "Wearing a helmet is compelling here.", "compelling/compulsory", ["Wearing a helmet is mandatory here."]),
+ ("Wearing a helmet is compulsory here.", "Здесь обязательно носить шлем.", "compulsory", ["compelling", "comfortable"], "Wearing a helmet is compelling here.", "compelling/compulsory", ["Wearing a helmet is mandatory here.", "Helmets are necessary here.", "Helmets are required here.", "Helmets are compulsory here."]),
  ("English is a compulsory subject at school.", "Английский — обязательный предмет в школе.", "compulsory", ["compelling", "complicated"], "English is a compelling subject at school.", "compelling/compulsory", []),
  ("That's a sensible idea.", "Это разумная идея.", "sensible", ["sensitive", "sensational"], "That's a sensitive idea.", "sensible/sensitive", ["That is a sensible idea."]),
  ("Wear sensible shoes for the hike.", "Надень удобную практичную обувь для похода.", "sensible", ["sensitive", "sensual"], "Wear sensitive shoes for the hike.", "sensible/sensitive", []),
@@ -356,3 +356,13 @@ UX_ALT.update({
  "I'm not sure about the colour of the main button.": ["I'm not sure about the color of the main button.", "I am not sure about the color of the main button."],
  "Did you use to live in London?": ["Did you live in London before?"],
 })  # export 05.11.2026
+UX_ALT.update({
+ "Sorry, could you repeat that?": ["Sorry, could you repeat?", "Sorry, could you repeat it?", "Sorry, can you repeat that?"],
+ "Does this make sense so far?": ["Do you understand everything?", "Is everything clear so far?"],
+ "I'd love your feedback on the empty states.": ["I would love to hear your feedback about the empty states.", "I'd love to hear your feedback on the empty states.", "I would love to hear your feedback about empty states."],
+ "That's a fair point.": ["It's a fair point.", "That is a fair point."],
+ "Let's get started.": ["Let's start."],
+ "You're on mute.": ["You are on mute."],
+ "That joke isn't funny.": ["This joke is not funny.", "This joke isn't funny."],
+ "The video tells a compelling story.": [],
+})  # export 10.11.2026
