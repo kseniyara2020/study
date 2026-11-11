@@ -1,0 +1,79 @@
+{
+ "type": "review",
+ "id": "review-2026-11-11",
+ "date": "2026-11-11",
+ "upTo": "2026-11-11",
+ "upToTs": "2026-11-11T12:47:49.608Z",
+ "summary": "Большое повторение начато: смешанная практика 18/22. Снова путаются make/do (make coffee, do business, do damage) и on time / by the time.",
+ "verdicts": [
+  {
+   "id": "v6-p2-d6-g1-0",
+   "task": "p2-d6-g1",
+   "i": 0,
+   "verdict": "wrong",
+   "correct": "I cleaned everything before the guests arrived.",
+   "comment": "Всё в прошлом → Past Simple: cleaned, arrived (не 've cleaned / come); the guests. По правилу дня: I did the cleaning"
+  },
+  {
+   "id": "v6-p2-d6-g1-3",
+   "task": "p2-d6-g1",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v6-p2-d6-g1-8",
+   "task": "p2-d6-g1",
+   "i": 8,
+   "verdict": "almost",
+   "correct": "They carried on working after the break.",
+   "comment": "carry on + -ing: carried on working (не to work)"
+  },
+  {
+   "id": "v6-p2-d6-g1-9",
+   "task": "p2-d6-g1",
+   "i": 9,
+   "verdict": "wrong",
+   "correct": "I wish we had a bigger team.",
+   "comment": "команда = team (company — компания); «побольше» = a bigger"
+  },
+  {
+   "id": "v6-p2-d6-g1-17",
+   "task": "p2-d6-g1",
+   "i": 17,
+   "verdict": "almost",
+   "correct": "I'll look into the problem tomorrow.",
+   "comment": "figure out the problem — без with, так тоже можно; «разобраться с проблемой» точнее — look into"
+  },
+  {
+   "id": "v6-p2-d6-g1-21",
+   "task": "p2-d6-g1",
+   "i": 21,
+   "verdict": "ok",
+   "comment": "Так тоже правильно. Для раздражающей привычки чаще: I wish you wouldn't interrupt me."
+  },
+  {
+   "id": "v6-p2-d6-g1-23",
+   "task": "p2-d6-g1",
+   "i": 23,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: near the sea = by the sea."
+  },
+  {
+   "id": "v6-p2-d6-g1-24",
+   "task": "p2-d6-g1",
+   "i": 24,
+   "verdict": "almost",
+   "correct": "We tried to finish on time.",
+   "comment": "tried — так тоже правильно; «вовремя» = on time (by the time — «к тому времени, как…»), уже второй раз"
+  },
+  {
+   "id": "v6-p2-d6-g3-2",
+   "task": "p2-d6-g3",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "I wish I knew the answer.",
+   "comment": "Ответ конкретный → the answer. If only — так тоже правильно"
+  }
+ ]
+}
