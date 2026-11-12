@@ -366,3 +366,11 @@ UX_ALT.update({
  "That joke isn't funny.": ["This joke is not funny.", "This joke isn't funny."],
  "The video tells a compelling story.": [],
 })  # export 10.11.2026
+UX_ALT.update({
+ "I'm a UX/UI designer who works mostly on web products.": ["I'm a UX/UI designer who mostly works with web products.", "I'm a UX/UI designer who mostly works on web products.", "I am a UX/UI designer who mostly works on web products."],
+ "I work closely with developers.": ["I closely work with developers."],
+ "The biggest challenge was the tight deadline.": ["The most difficult point was the tight deadline.", "The most difficult part was the tight deadline.", "The hardest part was the tight deadline."],
+ "I hadn't thought about that.": ["I didn't think about this.", "I didn't think about that.", "I hadn't thought about this."],
+ "Could you say more about that?": ["Could you tell me more about this?"],
+ "My process usually starts with research.": [],
+})  # export 13.11.2026

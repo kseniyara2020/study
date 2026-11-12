@@ -1,0 +1,228 @@
+{
+ "type": "review",
+ "id": "review-2026-11-13",
+ "date": "2026-11-13",
+ "upTo": "2026-11-13",
+ "upToTs": "2026-11-12T23:38:21.844Z",
+ "summary": "День 6 пройден, день 7 начат. Tell me about yourself — B1, хорошая структура. Повторяются: walk you through, following up on, have to вместо should, wish + Past Perfect.",
+ "verdicts": [
+  {
+   "id": "v7-p2-d6-u3-0",
+   "task": "p2-d6-u3",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: mostly works with web products."
+  },
+  {
+   "id": "v7-p2-d6-u3-1",
+   "task": "p2-d6-u3",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "Recently, I designed a dashboard for a messaging tool.",
+   "comment": "Артикли: a dashboard, a messaging tool; designed (спроектировала) точнее, чем made"
+  },
+  {
+   "id": "v7-p2-d6-u3-2",
+   "task": "p2-d6-u3",
+   "i": 2,
+   "verdict": "ok"
+  },
+  {
+   "id": "v7-p2-d6-u3-3",
+   "task": "p2-d6-u3",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "I talk to users to understand their pain points.",
+   "comment": "told = сказала; «разговариваю» = talk to (обычно → Present Simple)"
+  },
+  {
+   "id": "v7-p2-d6-u3-4",
+   "task": "p2-d6-u3",
+   "i": 4,
+   "verdict": "almost",
+   "correct": "Then I create wireframes and test them early.",
+   "comment": "wireframes — много → them (не its)"
+  },
+  {
+   "id": "v7-p2-d6-u3-5",
+   "task": "p2-d6-u3",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно; work closely — чуть привычнее."
+  },
+  {
+   "id": "v7-p2-d6-u3-6",
+   "task": "p2-d6-u3",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "One project I'm proud of is a redesign of an online store.",
+   "comment": "One of the projects (мн. число) / One project; a redesign of an online store — артикли"
+  },
+  {
+   "id": "v7-p2-d6-u3-7",
+   "task": "p2-d6-u3",
+   "i": 7,
+   "verdict": "ok",
+   "comment": "Так тоже правильно. The biggest challenge — звучит естественнее на собеседовании."
+  },
+  {
+   "id": "v7-p2-d6-u10-0",
+   "task": "p2-d6-u10",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: в разговоре Past Simple нормально."
+  },
+  {
+   "id": "v7-p2-d6-u10-1",
+   "task": "p2-d6-u10",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "Could we make the call to action more visible?",
+   "comment": "make — верно! Артикль the: речь о конкретной кнопке"
+  },
+  {
+   "id": "v7-p2-d6-u10-2",
+   "task": "p2-d6-u10",
+   "i": 2,
+   "verdict": "almost",
+   "correct": "Users told us the old filters were confusing.",
+   "comment": "told us (said to us — тяжеловесно); the old filters were — согласование времён"
+  },
+  {
+   "id": "v7-p2-d6-u10-3",
+   "task": "p2-d6-u10",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "Just following up on my last email.",
+   "comment": "Третий раз: «напоминаю о письме» = following up on. recognise = узнать (в лицо)"
+  },
+  {
+   "id": "v7-p2-d6-u10-4",
+   "task": "p2-d6-u10",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v7-p2-d6-u10-5",
+   "task": "p2-d6-u10",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "Have you considered a bottom sheet here?",
+   "comment": "sheet (шторка), shelf = полка — второй раз. What do you think about… — так тоже можно"
+  },
+  {
+   "id": "v7-p2-d6-u10-6",
+   "task": "p2-d6-u10",
+   "i": 6,
+   "verdict": "wrong",
+   "correct": "It might be worth testing this with users.",
+   "comment": "have to = обязаны (второй раз); taste = пробовать на вкус; «стоит» = it might be worth -ing / maybe we should"
+  },
+  {
+   "id": "v7-p2-d6-u10-7",
+   "task": "p2-d6-u10",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "What if we moved the search to the top?",
+   "comment": "наверх = to the top; moved — вежливее, move — тоже понятно"
+  },
+  {
+   "id": "v7-p2-d7-g1-2",
+   "task": "p2-d7-g1",
+   "i": 2,
+   "verdict": "wrong",
+   "correct": "They wish they hadn't sold the house.",
+   "comment": "Подлежащее они → They wish they…; о прошлом → hadn't sold (Past Perfect)"
+  },
+  {
+   "id": "v7-p2-d7-g1-4",
+   "task": "p2-d7-g1",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "She wishes she had more experience.",
+   "comment": "She wishes (с -es); «мало опыта» → wish she had more experience"
+  },
+  {
+   "id": "v7-p2-d7-g1-7",
+   "task": "p2-d7-g1",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "These trousers are too loose.",
+   "comment": "«свободные» (одежда) = loose; free = бесплатный, свободный (о времени); «слишком» = too"
+  },
+  {
+   "id": "v7-p2-d6-g5-text",
+   "task": "p2-d6-g5",
+   "level": "B1",
+   "comment": "Хорошее деловое сообщение: что сделано, предложение созвониться. figured out edge cases и I look forward to our meeting — отлично. В задании просили ещё: что отложено, к чему привыкаете (used to), о чём жалеете (wish) — этого нет.",
+   "fixes": [
+    {
+     "from": "I would be glad went you through all pages",
+     "to": "I'd be glad to walk you through all the pages",
+     "why": "walk you through — провести по шагам (четвёртый раз); после glad — to + глагол"
+    },
+    {
+     "from": "If you aren't against I set up a call phone by Friday",
+     "to": "If you don't mind, I'll set up a call before Friday",
+     "why": "«если вы не против» = if you don't mind; a call (без phone); I'll — обещание"
+    },
+    {
+     "from": "A little report about our project, landing of online store",
+     "to": "A quick update on our project, the online store landing page",
+     "why": "update on — привычно для рабочих сообщений; landing page"
+    },
+    {
+     "from": "solved some bugs",
+     "to": "fixed some bugs (по желанию)",
+     "why": "Не ошибка, но про баги обычно fix"
+    },
+    {
+     "from": "With regards",
+     "to": "Best regards (по желанию)",
+     "why": "Не ошибка, звучит старомодно (второй раз)"
+    }
+   ]
+  },
+  {
+   "id": "v7-p2-d6-u8-text",
+   "task": "p2-d6-u8",
+   "level": "B1",
+   "comment": "Хороший ответ: схема настоящее → прошлое → будущее соблюдена, I mostly work with web products и I'm looking for new job opportunities — отлично. Ошибки в артиклях и Present Perfect.",
+   "fixes": [
+    {
+     "from": "I'm ux ui designer and I'm in this field more then three years",
+     "to": "I'm a UX/UI designer, and I've been in this field for more than three years",
+     "why": "a designer; «уже N лет» = have been … for; than (не then)"
+    },
+    {
+     "from": "Now I'm working like a product designer in dev-Company",
+     "to": "Currently, I work as a product designer at a development company",
+     "why": "as (в роли), like = как, похоже на; at a company"
+    },
+    {
+     "from": "my role included work with company's site and different company's product, as a dashboards",
+     "to": "my role includes working on the company website and our products, such as dashboards",
+     "why": "роль сейчас → includes; such as (например); dashboards без a"
+    },
+    {
+     "from": "on my previous job",
+     "to": "at my previous job",
+     "why": "на работе — at work / at my job"
+    },
+    {
+     "from": "lear English",
+     "to": "learn English",
+     "why": "опечатка"
+    }
+   ]
+  }
+ ],
+ "noteStatus": [
+  {
+   "id": "n-mwcmas2s81tm",
+   "status": "planned",
+   "reply": "Принято: в pack-003 в «Понимании на слух» варианты будут похожи — отличаться одной деталью (время, кто, отрицание, число), без перебора."
+  }
+ ]
+}
