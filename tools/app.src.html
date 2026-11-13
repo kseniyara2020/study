@@ -415,7 +415,7 @@ function initState() {
     shows: [{ id: 'silicon-valley', title: 'Silicon Valley', current: 'S1E3', watched: [],
       episodes: [{ ep: 'S1E3', title: 'Articles of Incorporation' }] }],
     checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
-    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.9, trUrl: '', lang: 'ru' },
+    settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.95, trUrl: '', lang: 'ru' },
     media: (SEED.media || []).slice(),
     activity: {}
   };
@@ -522,12 +522,17 @@ const VOICE_SLOTS = [
   { id: 'us-f', lang: 'en-us', ru: 'Американский · женский', en: 'American · female', suggest: 'Ava, Samantha',
     prefs: ['ava (premium)', 'zoe (premium)', 'ava (enhanced)', 'zoe (enhanced)', 'allison (enhanced)', 'samantha (enhanced)', 'susan (enhanced)', 'ava', 'samantha', 'zoe', 'allison', 'susan', 'nicky', 'google us english'] },
   { id: 'us-m', lang: 'en-us', ru: 'Американский · мужской', en: 'American · male', suggest: 'Evan, Tom',
-    prefs: ['evan (premium)', 'evan (enhanced)', 'nathan (enhanced)', 'tom (enhanced)', 'alex', 'evan', 'nathan', 'tom', 'aaron'] }
+    prefs: ['evan (premium)', 'evan (enhanced)', 'nathan (enhanced)', 'tom (enhanced)', 'alex', 'evan', 'nathan', 'tom', 'aaron'] },
+  { id: 'au-f', lang: 'en-au', ru: 'Австралийский · женский', en: 'Australian · female', suggest: 'Karen',
+    prefs: ['karen (premium)', 'karen (enhanced)', 'catherine (enhanced)', 'karen', 'catherine'] },
+  { id: 'ie-f', lang: 'en-ie', ru: 'Ирландский · женский', en: 'Irish · female', suggest: 'Moira',
+    prefs: ['moira (premium)', 'moira (enhanced)', 'moira'] }
 ];
+const IS_IOS = (() => { try { return /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1); } catch (e) { return false; } })();
 let VOICES = [];
 function loadVoices() { try { VOICES = (speechSynthesis.getVoices() || []).filter(v => /^en[-_]/i.test(v.lang)); } catch (e) { VOICES = []; } }
 try { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (UI.tab === 'settings' && !UI.stack.length) render(); }; } catch (e) {}
-const RU_VOICE = { 'дэниэл': 'daniel', 'дэниел': 'daniel', 'даниэль': 'daniel', 'дэниель': 'daniel', 'кейт': 'kate', 'оливер': 'oliver', 'джейми': 'jamie', 'серена': 'serena', 'сирена': 'serena', 'стефани': 'stephanie', 'марта': 'martha', 'артур': 'arthur', 'саманта': 'samantha', 'ава': 'ava', 'эва': 'ava', 'эйва': 'ava', 'зои': 'zoe', 'зоуи': 'zoe', 'эллисон': 'allison', 'элисон': 'allison', 'сьюзан': 'susan', 'сюзан': 'susan', 'ники': 'nicky', 'никки': 'nicky', 'эван': 'evan', 'нейтан': 'nathan', 'натан': 'nathan', 'том': 'tom', 'алекс': 'alex', 'аарон': 'aaron', 'эрон': 'aaron' };
+const RU_VOICE = { 'карен': 'karen', 'мойра': 'moira', 'моира': 'moira', 'дэниэл': 'daniel', 'дэниел': 'daniel', 'даниэль': 'daniel', 'дэниель': 'daniel', 'кейт': 'kate', 'оливер': 'oliver', 'джейми': 'jamie', 'серена': 'serena', 'сирена': 'serena', 'стефани': 'stephanie', 'марта': 'martha', 'артур': 'arthur', 'саманта': 'samantha', 'ава': 'ava', 'эва': 'ava', 'эйва': 'ava', 'зои': 'zoe', 'зоуи': 'zoe', 'эллисон': 'allison', 'элисон': 'allison', 'сьюзан': 'susan', 'сюзан': 'susan', 'ники': 'nicky', 'никки': 'nicky', 'эван': 'evan', 'нейтан': 'nathan', 'натан': 'nathan', 'том': 'tom', 'алекс': 'alex', 'аарон': 'aaron', 'эрон': 'aaron' };
 const vBase = v => {
   const uri = String(v.voiceURI || '');
   if (/^com\.apple\./i.test(uri) && !/eloquence|novelty|ttsbundle/i.test(uri)) { const last = uri.split('.').pop().toLowerCase(); if (/^[a-z]+$/.test(last)) return last; }
@@ -549,9 +554,11 @@ function mainVoice() {
   return voiceFor(S.settings.voiceSlot) || VOICE_SLOTS.map(s => voiceFor(s.id)).find(Boolean) || null;
 }
 function altVoice() {
-  const s = S.settings.voiceSlot || 'us-f';
+  // second speaker in dialogues: same accent, other gender; else Daniel (British male); else any other voice
+  const s = S.settings.voiceSlot || 'us-f', main = mainVoice();
   const other = s.slice(0, 3) + (s.endsWith('f') ? 'm' : 'f');
-  return voiceFor(other) || mainVoice();
+  const order = [other, 'gb-m', 'us-f', 'gb-f', 'us-m', 'au-f', 'ie-f'];
+  return order.map(voiceFor).find(v => v && v !== main) || main;
 }
 function speak(text, opts) {
   opts = opts || {};
@@ -975,13 +982,14 @@ function vSettings() {
     <label class="row"><span class="tile" style="background:var(--pink)">${IC.tv}</span><span class="row-main"><span class="row-title">${L('Медиа на экране «Сегодня»', 'Media on the Today screen')}</span><span class="row-sub">${L('Мягкое напоминание, без плана', 'A gentle reminder, no plan')}</span></span><input type="checkbox" id="set-media" data-set="mediaNudge" ${st.mediaNudge ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
     <div class="gfoot">${L('Ежедневное напоминание присылает приложение «Команды» на iPhone и Mac: автоматизация «Время суток» открывает учебное приложение. Без сервера и бесплатно.', 'The daily reminder comes from the Shortcuts app on iPhone and Mac: a “Time of Day” automation opens this app. Free, no server needed.')}</div>`;
   h += groupHead(L('Озвучка', 'Voice')) + '<div class="group">' + VOICE_SLOTS.map(sl => {
-    const v = voiceFor(sl.id), on = st.voiceSlot === sl.id;
-    return `<button class="row" data-act="set-voice" data-slot="${sl.id}"><span class="row-main"><span class="row-title">${L(sl.ru, sl.en)}</span><span class="row-sub">${v ? esc(v.name) : L('не установлен — скачайте ', 'not installed — download ') + esc(sl.suggest)}</span></span>
+    const v = voiceFor(sl.id), on = st.voiceSlot === sl.id && v;
+    if (!v) return `<div class="row" aria-disabled="true" style="opacity:.45"><span class="row-main"><span class="row-title">${L(sl.ru, sl.en)}</span><span class="row-sub">${IS_IOS ? L('iOS не даёт этот голос веб-приложениям — доступен на Mac (', 'iOS does not give this voice to web apps — available on Mac (') + esc(sl.suggest) + ')' : L('не установлен — скачайте ', 'not installed — download ') + esc(sl.suggest)}</span></span><span style="width:22px"></span></div>`;
+    return `<button class="row" data-act="set-voice" data-slot="${sl.id}"><span class="row-main"><span class="row-title">${L(sl.ru, sl.en)}</span><span class="row-sub">${esc(v.name)}</span></span>
       <span class="play small" data-act="voice-test" data-slot="${sl.id}" role="button" aria-label="${L('Прослушать', 'Listen')}" style="display:grid;place-items:center">${IC.play}</span>
       <span style="width:22px;color:var(--accent)">${on ? IC.check : ''}</span></button>`;
   }).join('') + `<label class="row"><span class="row-main"><span class="row-title">${L('Скорость', 'Speed')}</span><span class="row-sub" id="rate-val">${Math.round(st.rate * 100)}%</span></span><input type="range" id="set-rate" data-set="rate" min="0.6" max="1.2" step="0.05" value="${st.rate}"></label></div>
     <div class="gfoot">${L('На устройстве найдены английские голоса', 'English voices on this device')}: ${VOICES.length ? (() => { const NOV = /^(albert|bad news|bahh|bells|boing|bubbles|cellos|wobble|fred|good news|jester|junior|kathy|organ|superstar|trinoids|whisper|zarvox|ralph|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley|бабушка|дедушка)\b/i; const nat = VOICES.filter(v => !NOV.test(v.name) && !/eloquence|novelty/i.test(v.voiceURI || '')); return VOICES.length + L(' всего, естественные: ', ' total, natural: ') + (nat.length ? esc(nat.map(v => v.name + ' · ' + v.lang.replace('_', '-')).join(', ')) : '—'); })() : L('пока не загрузились — откройте экран ещё раз', 'not loaded yet — reopen this screen')}</div>
-    <div class="gfoot">${L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: iPhone → Настройки → Универсальный доступ → Устный контент → Голоса → Английский. На Mac: Системные настройки → Универсальный доступ → Устный контент.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: iPhone → Settings → Accessibility → Spoken Content → Voices → English. On Mac: System Settings → Accessibility → Spoken Content.')}</div>`;
+    <div class="gfoot">${IS_IOS ? L('На iPhone и iPad веб-приложениям доступны только встроенные голоса iOS: скачанные «улучшенные» голоса (Evan, Tom, Ava и др.) Safari не отдаёт. Они работают на Mac. В диалогах второго собеседника читает другой голос (обычно Daniel).', 'On iPhone and iPad, web apps only get the built-in iOS voices: downloaded Enhanced voices (Evan, Tom, Ava…) are not available in Safari. They work on Mac. In dialogues the second speaker uses another voice (usually Daniel).') : L('Только естественные голоса Apple. Самые живые — с пометкой «улучшенный» или Premium: Системные настройки → Универсальный доступ → Устный контент → Системный голос → Управлять голосами. В диалогах второго собеседника читает другой голос.', 'Only natural Apple voices. The most natural ones are marked Enhanced or Premium: System Settings → Accessibility → Spoken Content → System voice → Manage Voices. In dialogues the second speaker uses another voice.')}</div>`;
   h += groupHead(L('Перевод DeepL', 'DeepL translation')) + `<div class="group icons"><label class="row"><span class="tile" style="background:var(--accent)">${IC.key}</span><span class="row-main"><span class="row-title">${L('Адрес переводчика', 'Translator address')}</span></span><input class="inline" id="set-trurl" data-set="trUrl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://….workers.dev" value="${esc(st.trUrl || '')}"></label>
     <button class="row" data-act="tr-test"><span class="tile" style="background:var(--green)">${IC.check}</span><span class="row-main"><span class="row-title" style="color:var(--accent)">${L('Проверить перевод', 'Test translation')}</span><span class="row-sub">${st.trUrl ? L('Переведёт пробную фразу через DeepL', 'Translates a sample phrase via DeepL') : L('Сначала вставьте адрес', 'Paste the address first')}</span></span></button></div>
     <div class="gfoot">${L('Ключ DeepL хранится в вашем Cloudflare Worker, а не в приложении — так его никто не увидит. Без адреса работает встроенный словарь и кнопка Google Translate.', 'Your DeepL key lives in your Cloudflare Worker, not in the app, so nobody can see it. Without an address, the built-in dictionary and the Google Translate button work.')}</div>`;
