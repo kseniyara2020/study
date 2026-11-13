@@ -1,0 +1,295 @@
+{
+ "type": "review",
+ "id": "review-2026-11-14",
+ "date": "2026-11-14",
+ "upTo": "2026-11-14",
+ "upToTs": "2026-11-13T22:22:10.352Z",
+ "summary": "Неделя 1 пройдена! Тест: чтение и аудирование — C1. Понимаете вы отлично; дальше — строить фразы самой: вопросы, am/is/are, времена. Это и есть pack-003.",
+ "verdicts": [
+  {
+   "id": "v8-p2-d7-g2-1",
+   "task": "p2-d7-g2",
+   "i": 1,
+   "verdict": "wrong",
+   "correct": "She is making great progress with her English.",
+   "comment": "«делать успехи» = make progress (не do success); сейчас → is making"
+  },
+  {
+   "id": "v8-p2-d7-g2-3",
+   "task": "p2-d7-g2",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: laugh at = смеяться над. make fun of = дразнить, высмеивать."
+  },
+  {
+   "id": "v8-p2-d7-g2-4",
+   "task": "p2-d7-g2",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "The printer has run out of paper.",
+   "comment": "run out OF + что закончилось; подлежащее — принтер; paper (бумага)"
+  },
+  {
+   "id": "v8-p2-d7-g2-7",
+   "task": "p2-d7-g2",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "She made a phone call to the client.",
+   "comment": "make a call — верно! Артикль a: a (phone) call"
+  },
+  {
+   "id": "v8-p2-d7-g3-3",
+   "task": "p2-d7-g3",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "He wishes he had taken the job.",
+   "comment": "О прошлом → had + 3-я форма; «согласиться на работу» = take / accept the job"
+  },
+  {
+   "id": "v8-p2-d7-g3-7",
+   "task": "p2-d7-g3",
+   "i": 7,
+   "verdict": "wrong",
+   "correct": "She wasn't used to getting so much feedback.",
+   "comment": "«не привыкла» = wasn't used to + -ing; didn't use to = «раньше не…»"
+  },
+  {
+   "id": "v8-p2-d7-u1-0",
+   "task": "p2-d7-u1",
+   "i": 0,
+   "verdict": "almost",
+   "correct": "Thanks, that's really helpful.",
+   "comment": "useful — прилагательное (usefully — наречие)"
+  },
+  {
+   "id": "v8-p2-d7-u1-1",
+   "task": "p2-d7-u1",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "It could take a lot of time to build.",
+   "comment": "could + глагол без be: could take. That would take too long — вариант эталона"
+  },
+  {
+   "id": "v8-p2-d7-u1-2",
+   "task": "p2-d7-u1",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v8-p2-d7-u1-3",
+   "task": "p2-d7-u1",
+   "i": 3,
+   "verdict": "almost",
+   "correct": "One project I'm proud of is a redesign of an online store.",
+   "comment": "Пропущен am: I'm proud of. Артикли — верно!"
+  },
+  {
+   "id": "v8-p2-d7-u1-4",
+   "task": "p2-d7-u1",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: Do you have time for a short call tomorrow?"
+  },
+  {
+   "id": "v8-p2-d7-u1-5",
+   "task": "p2-d7-u1",
+   "i": 5,
+   "verdict": "almost",
+   "correct": "Feel free to stop me at any point.",
+   "comment": "at any moment / at any point (не in)"
+  },
+  {
+   "id": "v8-p2-d7-u1-6",
+   "task": "p2-d7-u1",
+   "i": 6,
+   "verdict": "almost",
+   "correct": "This part feels a bit crowded.",
+   "comment": "a bit / a little — перед прилагательным (второй раз)"
+  },
+  {
+   "id": "v8-p2-d7-u1-7",
+   "task": "p2-d7-u1",
+   "i": 7,
+   "verdict": "almost",
+   "correct": "I have a few open questions.",
+   "comment": "a few = несколько; few = мало (третий раз)"
+  },
+  {
+   "id": "v8-p2-d7-u1-8",
+   "task": "p2-d7-u1",
+   "i": 8,
+   "verdict": "wrong",
+   "correct": "What does a typical day look like?",
+   "comment": "Вопрос: What + does + подлежащее + глагол. «как выглядит» = what … look like"
+  },
+  {
+   "id": "v8-p2-d7-u1-9",
+   "task": "p2-d7-u1",
+   "i": 9,
+   "verdict": "ok",
+   "comment": "Так тоже правильно."
+  },
+  {
+   "id": "v8-p2-d7-u1-10",
+   "task": "p2-d7-u1",
+   "i": 10,
+   "verdict": "wrong",
+   "correct": "I like how clear the navigation is.",
+   "comment": "«нравится, насколько понятная» = I like how clear… / I like that the navigation is clear"
+  },
+  {
+   "id": "v8-p2-d7-u1-11",
+   "task": "p2-d7-u1",
+   "i": 11,
+   "verdict": "almost",
+   "correct": "Maybe we could simplify this step.",
+   "comment": "Probably = вероятно; «может быть» в предложении = maybe. This step could be simpler — тоже можно"
+  },
+  {
+   "id": "v8-p2-d7-u1-12",
+   "task": "p2-d7-u1",
+   "i": 12,
+   "verdict": "wrong",
+   "correct": "If you tap here, a bottom sheet opens.",
+   "comment": "Нужно подлежащее: If you tap; tap (нажать), tape — лента; bottom sheet"
+  },
+  {
+   "id": "v8-p2-d7-u1-13",
+   "task": "p2-d7-u1",
+   "i": 13,
+   "verdict": "wrong",
+   "correct": "The main goal here is to reduce drop-offs.",
+   "comment": "отток = drop-offs / churn"
+  },
+  {
+   "id": "v8-m2-3-0",
+   "task": "m2-3",
+   "i": 0,
+   "verdict": "almost",
+   "correct": "This habit is deeply ingrained.",
+   "comment": "Пропущен is: is ingrained (как прилагательное)"
+  },
+  {
+   "id": "v8-m2-3-1",
+   "task": "m2-3",
+   "i": 1,
+   "verdict": "almost",
+   "correct": "After a while, it happens effortlessly.",
+   "comment": "effortlessly — наречие при глаголе: it happens effortlessly (или it becomes effortless)"
+  },
+  {
+   "id": "v8-m2-3-2",
+   "task": "m2-3",
+   "i": 2,
+   "verdict": "wrong",
+   "correct": "You need to practise consistently.",
+   "comment": "consequently = следовательно; consistently = последовательно, регулярно"
+  },
+  {
+   "id": "v8-m2-3-3",
+   "task": "m2-3",
+   "i": 3,
+   "verdict": "wrong",
+   "correct": "Link the new habit to a daily cue.",
+   "comment": "привязать к = link to / tie to; сигнал = cue"
+  },
+  {
+   "id": "v8-m2-3-4",
+   "task": "m2-3",
+   "i": 4,
+   "verdict": "wrong",
+   "correct": "There is no one-size-fits-all approach.",
+   "comment": "«не существует» = there is no…; универсальный = one-size-fits-all / universal"
+  },
+  {
+   "id": "v8-m2-3-5",
+   "task": "m2-3",
+   "i": 5,
+   "verdict": "wrong",
+   "correct": "My progress has plateaued.",
+   "comment": "plateau — здесь глагол: has plateaued (вышел на плато)"
+  },
+  {
+   "id": "v8-p2-d7-g4-text",
+   "task": "p2-d7-g4",
+   "level": "B1",
+   "comment": "Очень полезный и честный текст: что легко, что трудно и почему. Мысль «запоминаю, когда вижу логику» — важная, учту её в новом пакете.",
+   "fixes": [
+    {
+     "from": "It was easy to did exercise in day of current rule",
+     "to": "It was easy to do the exercises on the day of a new rule",
+     "why": "после to — начальная форма: to do; on the day"
+    },
+    {
+     "from": "after a few days, where I need to repeat",
+     "to": "a few days later, when I needed to review",
+     "why": "о времени — when (where = где); прошедшее"
+    },
+    {
+     "from": "phrase verbs",
+     "to": "phrasal verbs",
+     "why": "так называется"
+    },
+    {
+     "from": "I have problems with remembering words or tools of if I don't see logic in them",
+     "to": "I find it hard to remember words if I don't see the logic behind them",
+     "why": "find it hard to + глагол; the logic behind them"
+    },
+    {
+     "from": "I understand texts and audios well, but not clear, their context helps me",
+     "to": "I understand texts and audio well — not word for word, but the context helps me",
+     "why": "audio — без -s; «не дословно» = not word for word"
+    },
+    {
+     "from": "I don't what what I have to repeat",
+     "to": "I don't know what I need to review",
+     "why": "пропущено know"
+    },
+    {
+     "from": "I want to build correctly structure of sentences automatically",
+     "to": "I want to build sentences correctly and automatically",
+     "why": "порядок слов: build sentences correctly"
+    }
+   ]
+  },
+  {
+   "id": "v8-m2-4-text",
+   "task": "m2-4",
+   "level": "B1",
+   "comment": "Живой и связный текст по теме статьи, слова ingrained и cues употреблены к месту. Ошибки — в формах и предлогах.",
+   "fixes": [
+    {
+     "from": "a lot of difference healthy and useful habits",
+     "to": "a lot of different healthy and useful habits",
+     "why": "different — прилагательное (difference — разница)"
+    },
+    {
+     "from": "do procedures for my face skin every time",
+     "to": "follow my skincare routine every day",
+     "why": "уход за кожей = skincare routine"
+    },
+    {
+     "from": "I think I am well done with this app",
+     "to": "I think I'm doing well with this app",
+     "why": "well done = «молодец!» (похвала); «у меня хорошо получается» = I'm doing well"
+    },
+    {
+     "from": "when I'm waiting my child or when I'm laying with her",
+     "to": "when I'm waiting for my child or lying down with her",
+     "why": "wait FOR; lie (лежать) → lying; lay = класть"
+    },
+    {
+     "from": "I have an interest to read ai analysis",
+     "to": "I'm interested in reading the AI analysis",
+     "why": "be interested in + -ing"
+    },
+    {
+     "from": "I want feel confidence",
+     "to": "I want to feel confident",
+     "why": "want to + глагол; feel + прилагательное (confident)"
+    }
+   ]
+  }
+ ]
+}
