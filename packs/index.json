@@ -7,10 +7,10 @@
    "created": "2026-11-10"
   },
   {
-   "id": "pack-003",
-   "file": "pack-003.json",
+   "id": "pack-003b",
+   "file": "pack-003b.json",
    "title": "Неделя 2: строим фразы — вопросы, be/do, времена",
-   "created": "2026-11-14"
+   "created": "2026-11-16"
   }
  ],
  "levelTests": [
@@ -68,6 +68,10 @@
   {
    "id": "notes-2026-11-14",
    "file": "notes-2026-11-14.json"
+  },
+  {
+   "id": "review-2026-11-16",
+   "file": "review-2026-11-16.json"
   }
  ]
 }

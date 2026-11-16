@@ -1,0 +1,108 @@
+{
+ "type": "review",
+ "id": "review-2026-11-16",
+ "date": "2026-11-16",
+ "upTo": "2026-11-16",
+ "upToTs": "2026-11-16T09:09:04.930Z",
+ "summary": "День 1 (вопросы): узнаёте почти без ошибок (≈ 95%), а в своём переводе — 65%: пропадает be перед прилагательным (Are you free? Is it ready?). В повторении снова make/do и wish + Past Perfect.",
+ "verdicts": [
+  {
+   "id": "v16-p3-d1-g7-0",
+   "task": "p3-d1-g7",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v16-p3-d1-g7-1",
+   "task": "p3-d1-g7",
+   "i": 1,
+   "verdict": "almost",
+   "comment": "Вопрос построен верно (Does + she + use). На работе = at work, без the.",
+   "correct": "Does she use Figma at work?"
+  },
+  {
+   "id": "v16-p3-d1-g7-2",
+   "task": "p3-d1-g7",
+   "i": 2,
+   "verdict": "wrong",
+   "comment": "free — прилагательное, без be нельзя: Are you free tomorrow? или Will you be free tomorrow?",
+   "correct": "Will you be free tomorrow?"
+  },
+  {
+   "id": "v16-p3-d1-g7-3",
+   "task": "p3-d1-g7",
+   "i": 3,
+   "verdict": "wrong",
+   "comment": "готов = ready / done — прилагательное → Is the prototype ready (done)? Has the prototype done = «прототип сделал».",
+   "correct": "Is the prototype ready?"
+  },
+  {
+   "id": "v16-p3-d1-g7-4",
+   "task": "p3-d1-g7",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: users без the — пользователи вообще; the users — конкретные."
+  },
+  {
+   "id": "v16-p3-d1-g7-5",
+   "task": "p3-d1-g7",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v16-p3-d1-g7-6",
+   "task": "p3-d1-g7",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v16-p3-d1-g7-7",
+   "task": "p3-d1-g7",
+   "i": 7,
+   "verdict": "wrong",
+   "comment": "Нет вспомогательного: прошлое + глагол understand → Did … understand. «Softhearted» — похоже на автозамену; a new → the new (сценарий конкретный).",
+   "correct": "Did the users understand the new flow?"
+  },
+  {
+   "id": "v16-p3-d1-g7-8",
+   "task": "p3-d1-g7",
+   "i": 8,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v16-p3-d1-g7-9",
+   "task": "p3-d1-g7",
+   "i": 9,
+   "verdict": "ok",
+   "comment": "Так тоже правильно. Did it take long? — короче и разговорнее."
+  },
+  {
+   "id": "v16-p3-d1-g10-2",
+   "task": "p3-d1-g10",
+   "i": 2,
+   "verdict": "wrong",
+   "comment": "wish о прошлом → Past Perfect: hadn't sold (не haven't).",
+   "correct": "They wish they hadn't sold the house."
+  },
+  {
+   "id": "v16-p3-d1-g10-5",
+   "task": "p3-d1-g10",
+   "i": 5,
+   "verdict": "wrong",
+   "comment": "копия = make a copy (make — создаём новое). Could you…? — верно.",
+   "correct": "Could you make a copy of this file?"
+  },
+  {
+   "id": "v16-p3-d1-g10-7",
+   "task": "p3-d1-g10",
+   "i": 7,
+   "verdict": "almost",
+   "comment": "loose — свободный, lose — терять. the results вместо the file — по смыслу допустимо.",
+   "correct": "Don't lose your progress — save the file."
+  }
+ ]
+}
