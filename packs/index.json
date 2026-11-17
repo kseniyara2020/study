@@ -18,6 +18,11 @@
    "id": "level-v1",
    "file": "level-v1.json",
    "version": 1
+  },
+  {
+   "id": "level-v2",
+   "file": "level-v2.json",
+   "version": 2
   }
  ],
  "results": [
