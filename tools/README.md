@@ -2,7 +2,15 @@
 
 - `validate_pack.py` — проверка пакета перед публикацией: `python3 tools/validate_pack.py packs/pack-003.json`.
 - `content/banks.py`, `content/gen.py` — банки предложений и генератор pack-002 (образец для следующих пакетов; пути внутри рассчитаны на /home/claude).
-- `app.js`, `app.src.html`, `build/build.py`, `level-v1.json` — исходники приложения. Для публикации нового пакета пересобирать приложение НЕ нужно: достаточно положить JSON в `packs/` и дописать `packs/index.json`.
+- `app.js`, `app.src.html`, `build/build.py`, `level-v1.json` — исходники приложения.
+- `content/banks3.py`, `content/gen3.py` — банки и генератор pack-003; `content/speech1.py`, `speech2.py` — блоки «Из вашей речи» (по отчётам о говорении).
+
+## Как менять код приложения (только после «да» пользователя)
+1. Править только `tools/app.js` (источник правды).
+2. `python3 tools/build/sync.py` — переносит app.js в `index.html` и `tools/app.src.html`, ставит версию сборки.
+3. Новое имя кэша в `sw.js` и `tools/build/build.py` (`study-vN+1`).
+4. Проверка: `python3 -m http.server` + Playwright (Chromium предустановлен): открыть index.html, главные экраны, консоль без ошибок.
+5. `git pull`, коммит, push, дождаться деплоя GitHub Pages; записать в `claude/app-backlog.md`. Для публикации нового пакета пересобирать приложение НЕ нужно: достаточно положить JSON в `packs/` и дописать `packs/index.json`.
 
 ## Хранение ответов и файл разбора (с 31.10.2026)
 - Каждый неверный ответ сохраняется в `progress[id].wrong` и уходит в экспорт (`mistakes`). Уже разобранные помечены `reviewed: true`; в `summary` есть `reviewedUpTo` и `mistakesOpen`.
