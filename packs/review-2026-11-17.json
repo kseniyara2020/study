@@ -1,0 +1,132 @@
+{
+ "type": "review",
+ "id": "review-2026-11-17",
+ "date": "2026-11-17",
+ "upTo": "2026-11-17",
+ "upToTs": "2026-11-17T06:55:49.248Z",
+ "summary": "День 1 почти закончен. Свои вопросы пользователю — все 6 построены верно (Do/Is/Are/Have you ever)! Сложнее порядок слов в длинных фразах (how you usually do it, tell me more) и -ed/-ing (annoyed ↔ annoying).",
+ "verdicts": [
+  {
+   "id": "v17-p3-d1-g10-2",
+   "task": "p3-d1-g10",
+   "i": 2,
+   "verdict": "almost",
+   "comment": "Past Perfect теперь верно (hadn't sold)! Пропущено подлежащее: wish they hadn't…",
+   "correct": "They wish they hadn't sold the house."
+  },
+  {
+   "id": "v17-p3-d1-g10-5",
+   "task": "p3-d1-g10",
+   "i": 5,
+   "verdict": "wrong",
+   "comment": "копия = make a copy (make — создаём новое); a copy — любая копия, не the.",
+   "correct": "Could you make a copy of this file?"
+  },
+  {
+   "id": "v17-p3-d1-g10-7",
+   "task": "p3-d1-g10",
+   "i": 7,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: save the results — по смыслу подходит."
+  },
+  {
+   "id": "v17-p3-d1-u3-0",
+   "task": "p3-d1-u3",
+   "i": 0,
+   "verdict": "wrong",
+   "comment": "После thanks — for + -ing: Thanks for taking / finding the time… (Thanks that… так не говорят).",
+   "correct": "Thanks for taking the time to talk to us."
+  },
+  {
+   "id": "v17-p3-d1-u3-1",
+   "task": "p3-d1-u3",
+   "i": 1,
+   "verdict": "wrong",
+   "comment": "«Здесь есть/нет» = There is/are (no)… Here — это «вот здесь, в этом месте». И ответы = answers.",
+   "correct": "There are no right or wrong answers."
+  },
+  {
+   "id": "v17-p3-d1-u3-2",
+   "task": "p3-d1-u3",
+   "i": 2,
+   "verdict": "almost",
+   "comment": "tell нужен «кому»: Tell me a little about your role. Вежливее с Could you…",
+   "correct": "Could you tell me a bit about your role?"
+  },
+  {
+   "id": "v17-p3-d1-u3-3",
+   "task": "p3-d1-u3",
+   "i": 3,
+   "verdict": "ok",
+   "comment": "Верно."
+  },
+  {
+   "id": "v17-p3-d1-u3-4",
+   "task": "p3-d1-u3",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Так тоже понятно и допустимо. По желанию — естественнее: When did you last use it? / When was the last time you used it?"
+  },
+  {
+   "id": "v17-p3-d1-u3-5",
+   "task": "p3-d1-u3",
+   "i": 5,
+   "verdict": "almost",
+   "comment": "Грамматически верно, но в интервью спрашивают о процессе — Past Continuous: were trying (что делали в тот момент).",
+   "correct": "What were you trying to do?"
+  },
+  {
+   "id": "v17-p3-d1-u3-6",
+   "task": "p3-d1-u3",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Так тоже правильно — короче эталона."
+  },
+  {
+   "id": "v17-p3-d1-u3-7",
+   "task": "p3-d1-u3",
+   "i": 7,
+   "verdict": "wrong",
+   "comment": "annoyed — «я раздражён» (о человеке), annoying — «раздражающий» (о вещи): What was the most annoying part?",
+   "correct": "What was the most frustrating part?"
+  },
+  {
+   "id": "v17-p3-d1-g11-text",
+   "task": "p3-d1-g11",
+   "level": "B1",
+   "comment": "Все 6 вопросов построены по правилу дня: Do you…?, Is it…?, Are you…?, Have you ever…? — вспомогательный на месте. Ошибки — в словах и артиклях. Совет для интервью: добавьте открытые вопросы (How…? What…? Tell me about…) — это тема дня 2.",
+   "fixes": [
+    {
+     "from": "Is it comfortable to use mobile food apps for you?",
+     "to": "Do you find food delivery apps easy to use? / Is it convenient for you to use food delivery apps?",
+     "why": "comfortable — удобный физически (кресло); удобный в использовании = easy to use / convenient."
+    },
+    {
+     "from": "Are you active mobile user?",
+     "to": "Are you an active mobile user?",
+     "why": "Артикль: a/an перед исчисляемым в единственном числе."
+    },
+    {
+     "from": "Have you ever had food Mobil app?",
+     "to": "Have you ever used a food delivery app?",
+     "why": "Приложением пользуются — use; артикль a; Mobil → mobile (опечатка)."
+    },
+    {
+     "from": "problems or bags",
+     "to": "problems or bugs",
+     "why": "bag — сумка, bug — баг/ошибка в программе."
+    },
+    {
+     "from": "Have you ever found problems",
+     "to": "Have you ever run into problems (по желанию)",
+     "why": "Не ошибка; run into problems — естественнее для «столкнуться с проблемами»."
+    },
+    {
+     "from": "for food deliveries / food mobile apps",
+     "to": "for food delivery / food delivery apps (по желанию)",
+     "why": "Не ошибка; delivery здесь как услуга — без -s; «приложения доставки еды» = food delivery apps."
+    }
+   ]
+  }
+ ]
+}
