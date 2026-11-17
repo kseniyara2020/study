@@ -683,6 +683,7 @@ function vToday() {
       <div class="stat"><b>${total}</b><span>${L('минут по плану', 'minutes planned')}</span></div></div>`;
   if (due) h += `<button class="banner" data-act="open-review"><span class="tile" style="background:rgba(255,255,255,.2)">${IC.cards}</span>
       <span class="row-main"><span class="row-title" style="font-weight:600">${L('Повторить слова', 'Review words')}</span><span class="row-sub">${due} ${P(due, 'карточка ждёт', 'карточки ждут', 'карточек ждут', 'card is due', 'cards are due')}</span></span>${IC.chevR}</button>`;
+  h += checkBanner();
   const state = di === ci ? '' : di < ci ? L(' · пройден', ' · done') : L(' · впереди', ' · ahead');
   h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
       <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
@@ -808,8 +809,27 @@ const skillName = k => L(SKILL_UI[k].ru, SKILL_UI[k].en);
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const BANDS = ['A2', 'B1', 'B2', 'C1'];
 function currentTest() { return S.tests.slice().sort((a, b) => (b.version || 0) - (a.version || 0))[0]; }
-function latestResult(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return Object.assign({ date: S.checks[i].date, test: S.checks[i].test }, r); } return null; }
+function latestResult(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r) return Object.assign({ date: S.checks[i].date, test: S.checks[i].test, kind: S.checks[i].kind }, r); } return null; }
 function latestLevel(skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const r = S.checks[i].results[skill]; if (r && r.level) return r; } return null; }
+// window of the full check: set by Claude in the test file (window: {from, to}); old tests without it — 4–6 weeks after the last check
+function checkWindow() {
+  const t = currentTest();
+  if (t && t.window && t.window.from && t.window.to) return { from: t.window.from, to: t.window.to, test: t };
+  const last = S.checks[S.checks.length - 1]; if (!last) return null;
+  return { from: addDays(last.date, 28), to: addDays(last.date, 42), test: null };
+}
+function checkBanner() {
+  const w = checkWindow(); if (!w || !w.test) return '';
+  const left = SKILLS.filter(k => !doneInTest(w.test.id, k)).length; if (!left) return '';
+  const t = today(), soon = addDays(w.from, -3);
+  if (t < soon) return '';
+  let title, sub;
+  if (t < w.from) { const n = Math.round((new Date(w.from) - new Date(t)) / 864e5); title = L('Контрольная через ', 'Level check in ') + n + ' ' + P(n, 'день', 'дня', 'дней', 'day', 'days'); sub = fmtShort(w.from) + ' – ' + fmtShort(w.to) + ' · ' + L('5 навыков, можно по одному', '5 skills, one at a time is fine'); }
+  else if (t <= w.to) { title = L('Время контрольной', 'Time for the level check'); sub = L('осталось ', '') + left + ' ' + L('из 5 навыков', 'of 5 skills left') + ' · ' + L('до ', 'until ') + fmtShort(w.to); }
+  else { title = L('Контрольная ждёт', 'The level check is waiting'); sub = L('осталось ', '') + left + ' ' + L('из 5 навыков', 'of 5 skills left') + ' · ' + L('можно пройти в любой день', 'take it any day'); }
+  return `<button class="banner" data-act="open-checks"><span class="tile" style="background:rgba(255,255,255,.2)">${IC.target}</span>
+      <span class="row-main"><span class="row-title" style="font-weight:600">${title}</span><span class="row-sub">${sub}</span></span>${IC.chevR}</button>`;
+}
 function doneInTest(testId, skill) { for (let i = S.checks.length - 1; i >= 0; i--) { const c = S.checks[i]; if (c.test === testId && c.results[skill]) return Object.assign({ date: c.date }, c.results[skill]); } return null; }
 function overallLevel() {
   const ls = SKILLS.map(k => latestLevel(k)).filter(Boolean).map(r => LEVELS.indexOf(r.level)).filter(i => i >= 0);
@@ -848,13 +868,13 @@ function vProgress() {
     const r = latestResult(k);
     let sub, pill;
     if (r && r.pending) { sub = L('на проверке у Claude', 'waiting for Claude'); pill = `<span class="pill">${L('ждёт', 'pending')}</span>`; }
-    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? L('самооценка · ', 'self-assessment · ') : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
+    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? (r.kind === 'graded' ? L('оценка Claude · ', 'graded by Claude · ') : L('самооценка · ', 'self-assessment · ')) : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
     else { sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k)); pill = '<span class="pill big">—</span>'; }
     return `<button class="row" data-act="open-check" data-skill="${k}"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${pill}${IC.chevR}</button>`;
   }).join('') + '</div>';
-  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо оценивает Claude, говорение — самооценка.', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing is graded by Claude, speaking is a self-assessment.')}</div>`;
-  const last = S.checks[S.checks.length - 1];
-  const from = addDays(last.date, 28), to = addDays(last.date, 42);
+  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо и говорение оценивает Claude (говорение — в чате Speaking).', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing and speaking are graded by Claude (speaking — in the Speaking chat).')}</div>`;
+  const w = checkWindow() || { from: today(), to: today() };
+  const from = w.from, to = w.to;
   h += groupHead(L('Проверки', 'Checks')) + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
       <span class="row-main"><span class="row-title">${L('Следующая контрольная', 'Next full check')}</span><span class="row-sub">${fmtShort(from)} – ${fmtShort(to)}</span></span><span class="pill">${L('5 навыков', '5 skills')}</span></div>` +
     S.checks.slice().reverse().map(c => {
@@ -895,11 +915,12 @@ function vCheck(skill) {
 }
 function checkIntro(t, skill, sk) {
   const d = doneInTest(t.id, skill);
-  const n = skill === 'writing' ? sk.parts.length : skill === 'speaking' ? sk.prompts.length : checkSteps(sk).length;
+  const n = skill === 'writing' ? sk.parts.length : skill === 'speaking' ? (sk.prompts || []).length : checkSteps(sk).length;
   const unit = skill === 'writing' ? P(n, 'задание', 'задания', 'заданий', 'task', 'tasks') : skill === 'speaking' ? P(n, 'вопрос', 'вопроса', 'вопросов', 'prompt', 'prompts') : P(n, 'вопрос', 'вопроса', 'вопросов', 'question', 'questions');
-  let h = `<div class="tmeta"><span class="pill" style="background:${SKILL_UI[skill].color};color:#fff">${L('CEFR A2–C1', 'CEFR A2–C1')}</span><span class="pill">${mins(sk.minutes)}</span><span class="pill">${n} ${unit}</span><span class="pill">${L('версия', 'version')} ${t.version}</span></div>`;
+  let h = `<div class="tmeta"><span class="pill" style="background:${SKILL_UI[skill].color};color:#fff">${L('CEFR A2–C1', 'CEFR A2–C1')}</span><span class="pill">${mins(sk.minutes)}</span><span class="pill">${sk.mode === 'chat' ? L('в чате Speaking', 'in the Speaking chat') : n + ' ' + unit}</span><span class="pill">${L('версия', 'version')} ${t.version}</span></div>`;
   if (d) h += `<div class="notice">${IC.check}<span><b>${L('Вы уже проходили эту версию', 'You have taken this version')} ${fmtShort(d.date)}${d.level ? ' · ' + d.level : d.pending ? L(' · на проверке', ' · pending') : ''}.</b> ${L('Новую версию теста Claude выложит к следующей контрольной, она загрузится сама. Повторное прохождение этой версии даст завышенный результат: вопросы уже знакомы.', 'Claude will publish a new version for the next full check, and it will load automatically. Retaking this version gives an inflated result: you have seen the questions.')}</span></div>`;
   h += `<div class="panel"><p class="prompt" style="margin:0">${md(sk.about)}</p></div>`;
+  if (sk.mode === 'chat') return h + `<div class="gfoot">${d ? L('Результат пришёл от Claude.', 'The result came from Claude.') : L('Результат придёт от Claude сам — после того как вы пришлёте отчёт в чат «Экспорт / импорт».', 'The result will arrive from Claude automatically after you send the report to the Export / Import chat.')}</div>`;
   h += `<div class="actions"><button class="btn" data-act="check-start">${d ? L('Пройти ещё раз', 'Take again') : L('Начать', 'Start')}</button></div>`;
   return h;
 }
