@@ -417,7 +417,7 @@ function initState() {
     checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
     settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.95, trUrl: '', lang: 'ru' },
     media: (SEED.media || []).slice(),
-    activity: {}
+    activity: {}, speaking: []
   };
 }
 function load() { try { const r = localStorage.getItem(KEY); if (!r) return null; const s = JSON.parse(r); return s && s.version === 1 ? s : null; } catch (e) { return null; } }
@@ -433,6 +433,7 @@ delete S.settings.deeplKey; delete S.settings.voice;
 if (!S.verdicts || Array.isArray(S.verdicts)) S.verdicts = {};
 if (!S.notes) S.notes = [];
 if (!S.media) S.media = [];
+if (!S.speaking) S.speaking = []; // отчёты чата Speaking (18.11.2026): полный текст — для Claude в экспорт, в приложении — короткое резюме
 S.checks.forEach(c => { if (c.kind === 'Входной тест') c.kind = 'placement'; });
 document.documentElement.lang = lang();
 if (!S.packs.some(p => p.id === SEED.id || (p.replaces || []).includes(SEED.id))) { addContentEarly(SEED); }
@@ -616,6 +617,64 @@ function reviewStats() {
   });
   return st;
 }
+/* ---------- Speaking: отчёты из чата Speaking ---------- */
+function parseSpeak(text) {
+  const t = String(text || '').replace(/\r/g, ''), lines = t.split('\n');
+  const head = lines.find(l => /ГОВОРЕНИЕ/i.test(l)) || '';
+  const dm = head.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+  const date = dm ? `${dm[3]}-${pad(+dm[2])}-${pad(+dm[1])}` : today();
+  const line = re => (lines.find(l => re.test(l)) || '').replace(re, '').trim();
+  const lvlLine = lines.find(l => /^\s*Уровень CEFR/i.test(l)) || '';
+  const lm = lvlLine.split(':').slice(1).join(':').match(/\b([ABC][12][+−-]?)/);
+  const tm = (line(/^\s*Длительность:/i) || '').match(/(\d+)/);
+  const sect = name => { const i = lines.findIndex(l => new RegExp('^\\s*' + name, 'i').test(l)); if (i < 0) return []; const out = []; for (let k = i + 1; k < lines.length; k++) { const l = lines[k]; if (/^\s*\d+\.\s/.test(l)) out.push(l.replace(/^\s*\d+\.\s*/, '').trim()); else if (/^\S/.test(l) && out.length) break; } return out; };
+  const errors = sect('Ошибки').map(l => { const m = l.match(/^(.+?)\s+—\s+(\d+)\s+—/); return m ? { c: m[1].trim(), n: +m[2] } : null; }).filter(Boolean).sort((a, b) => b.n - a.n);
+  const train = sect('Что тренировать').map(l => l.split(/[:(—]/)[0].trim()).filter(Boolean);
+  return { date, check: /КОНТРОЛЬНАЯ/i.test(head), level: lm ? lm[1] : '', turns: tm ? +tm[1] : 0, topics: line(/^\s*(Темы|Части):/i), errors: errors.slice(0, 3), train: train.slice(0, 2) };
+}
+function speakSum(r) { return r.sum || parseSpeak(r.text); }
+function speakCard() {
+  const list = S.speaking || [], t = list.filter(r => r.date === today()), last = t[t.length - 1];
+  const sm = last && speakSum(last);
+  return `<button class="row sec-card" data-act="open-speaking"><span class="tile" style="background:var(--teal)">${IC.mic}</span>
+    <span class="row-main"><span class="row-title" style="font-weight:600">${L('Говорение', 'Speaking')} <span class="row-sub" style="display:inline;font-weight:400">· ${L('по желанию', 'optional')}</span></span>
+    ${sm ? `<span class="row-sub">${L('Сегодня', 'Today')}: ${[sm.level, sm.turns ? sm.turns + ' ' + P(sm.turns, 'реплика', 'реплики', 'реплик', 'turn', 'turns') : ''].filter(Boolean).join(' · ')}${t.length > 1 ? ' · ' + t.length + ' ' + L('разг.', 'talks') : ''}</span>${sm.errors.length ? `<span class="row-sub">${L('Главное: ', 'Focus: ')}${esc(sm.errors.map(e => e.c + ' ×' + e.n).join(' · '))}</span>` : ''}`
+      : `<span class="row-sub">${L('Поговорите в чате Speaking и вставьте отчёт', 'Talk in the Speaking chat and paste the report')}</span>`}</span>${IC.chevR}</button>`;
+}
+function vSpeaking() {
+  const list = (S.speaking || []).slice().sort((a, b) => (b.date + (b.at || '')).localeCompare(a.date + (a.at || '')));
+  let h = `<div class="actions" style="margin-top:0"><button class="btn" data-act="speak-new">${L('Вставить отчёт', 'Paste the report')}</button></div>`;
+  const f = S.speakFocus;
+  if (f && (f.items || []).length) h += groupHead(L('Фокус следующего разговора', 'Focus for the next talk')) + `<div class="panel">${f.items.map(x => `<div style="margin:2px 0">• ${esc(x)}</div>`).join('')}</div>`;
+  if (!list.length) h += empty(IC.mic, L('Разговоров пока нет', 'No talks yet'), L('Поговорите голосом в чате Speaking, скопируйте отчёт в конце и вставьте его сюда.', 'Talk in the Speaking chat, copy the report at the end and paste it here.'));
+  else h += groupHead(L('Разговоры', 'Talks') + ' · ' + list.length) + '<div class="group">' + list.map(r => {
+    const sm = speakSum(r);
+    return `<div class="row static" style="align-items:flex-start"><span class="row-main">
+      <span class="row-sub">${fmtShort(r.date)}${sm.check ? ' · ' + L('контрольная', 'level check') : ''}${sm.turns ? ' · ' + sm.turns + ' ' + P(sm.turns, 'реплика', 'реплики', 'реплик', 'turn', 'turns') : ''}</span>
+      ${sm.topics ? `<span class="row-title" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(sm.topics)}</span>` : ''}
+      ${sm.errors.length ? `<span class="row-sub">${L('Ошибки: ', 'Mistakes: ')}${esc(sm.errors.map(e => e.c + ' ×' + e.n).join(' · '))}</span>` : ''}
+      ${sm.train.length ? `<span class="row-sub">${L('Тренировать: ', 'Practise: ')}${esc(sm.train.join('; '))}</span>` : ''}
+      <span><button class="link-btn" data-act="speak-del" data-id="${esc(r.id)}">${UI.speakDel === r.id ? L('Точно удалить?', 'Delete for sure?') : L('Удалить', 'Delete')}</button></span>
+    </span>${sm.level ? `<span class="pill">${esc(sm.level)}</span>` : ''}</div>`;
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Не входит в план дня. День с разговором засчитывается в серию. Полный отчёт сохраняется для Claude и уходит в экспорт — переносить его в чат «Экспорт / импорт» отдельно не нужно.', 'Not part of the daily plan. A day with a talk counts towards your streak. The full report is kept for Claude and goes into the export.')}</div>`;
+  return { title: L('Говорение', 'Speaking'), back: true, sub: L('Голосом в чате Speaking · по желанию', 'By voice in the Speaking chat · optional'), body: h };
+}
+function sheetSpeak() {
+  return `<div class="sheet-h"><button class="nav-btn" data-act="sheet-close" style="justify-self:start">${L('Отмена', 'Cancel')}</button><b>${L('Отчёт о разговоре', 'Talk report')}</b><button class="nav-btn" data-act="speak-save" style="justify-self:end;font-weight:600">${L('Сохранить', 'Save')}</button></div>
+    <div class="stack"><textarea class="code" id="speak-text" style="min-height:220px" placeholder="ОТЧЁТ ГОВОРЕНИЕ · ДД.ММ.ГГГГ…"></textarea>
+    ${navigator.clipboard && navigator.clipboard.readText ? `<button class="btn sec" data-act="speak-paste">${L('Вставить из буфера', 'Paste from clipboard')}</button>` : ''}</div>
+    <div class="gfoot">${L('Скопируйте в чате Speaking весь отчёт — от «ОТЧЁТ ГОВОРЕНИЕ» до конца — и вставьте сюда.', 'Copy the whole report from the Speaking chat and paste it here.')}</div>`;
+}
+function saveSpeak(text) {
+  text = String(text || '').trim();
+  if (!/ГОВОРЕНИЕ/i.test(text) || !/Уровень|Ошибки/i.test(text)) { toast(L('Не похоже на отчёт из чата Speaking', 'This does not look like a Speaking report')); return false; }
+  if ((S.speaking || []).some(r => r.text === text)) { toast(L('Этот отчёт уже сохранён', 'This report is already saved')); return false; }
+  const sum = parseSpeak(text);
+  S.speaking.push({ id: 'sp-' + Date.now().toString(36), date: sum.date, at: new Date().toISOString(), text, sum });
+  S.activity[sum.date] = (S.activity[sum.date] || 0) + 1;
+  save(); return true;
+}
 function reviewCard() {
   const st = reviewStats();
   if (!st.pending && !st.reviewed && !st.texts) return '';
@@ -693,7 +752,7 @@ function vToday() {
   h += `<div class="daybar"><button class="nav-btn" data-act="day" data-d="${di - 1}" ${di === 0 ? 'disabled' : ''} aria-label="${L('Предыдущий день', 'Previous day')}">${IC.chevL}</button>
       <div class="daybar-t"><b>${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}${state}</b><span>${esc(d.title)}</span></div>
       <button class="nav-btn" data-act="day" data-d="${di + 1}" ${di === p.days.length - 1 ? 'disabled' : ''} aria-label="${L('Следующий день', 'Next day')}">${IC.chevRb}</button></div>`;
-  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + reviewCard() + '</div>';
+  h += groupHead(L('Английский', 'English')) + '<div class="group icons">' + ['general', 'ux'].filter(sec => (d[sec] || []).length).map(sec => secCard(sec, d[sec], di)).join('') + speakCard() + reviewCard() + '</div>';
   const show = S.shows[0];
   if (show && S.settings.mediaNudge) {
     const n = S.myWords.filter(w => w.show === show.id).length;
@@ -715,6 +774,8 @@ function vEnglish() {
     h += `<button class="row" data-act="open-section" data-sec="${sec}"><span class="tile" style="background:${s.color}">${s.icon}</span>
       <span class="row-main"><span class="row-title">${s.name()}</span><span class="row-sub">${esc(s.goal())}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
   });
+  { const n = (S.speaking || []).length; h += `<button class="row" data-act="open-speaking"><span class="tile" style="background:var(--teal)">${IC.mic}</span>
+      <span class="row-main"><span class="row-title">${L('Говорение', 'Speaking')}</span><span class="row-sub">${L('голосом в чате Speaking · по желанию', 'by voice in the Speaking chat · optional')}</span></span><span class="row-val">${n}</span>${IC.chevR}</button>`; }
   h += '</div>' + groupHead(L('По желанию', 'Optional')) + `<div class="group icons"><button class="row" data-act="tab" data-tab="media"><span class="tile" style="background:var(--pink)">${IC.tv}</span>
       <span class="row-main"><span class="row-title">${L('Медиа', 'Media')}</span><span class="row-sub">${L('Сериалы, фильмы, видео', 'Series, films, videos')}</span></span>${IC.chevR}</button></div>`;
   const due = dueCards().length, total = Object.keys(S.cards).length;
@@ -1357,6 +1418,7 @@ function buildExport() {
     appNotes: (S.notes || []).filter(n => !['done', 'declined'].includes(n.status)),
     openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).map(o => Object.assign({ task: id, unfinished: true }, o)))),
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
+    speaking: S.speaking || [],
     packs: S.packs, tests: S.tests, media: S.media
   };
 }
@@ -1400,6 +1462,7 @@ function addContent(d) {
     purgeReviewed();
     msg = L('Claude разобрал ваши ответы до ', 'Claude reviewed your answers up to ') + fmtDate(d.upTo);
   }
+  if (Array.isArray(d.speakingFocus) && d.speakingFocus.length && (!S.speakFocus || (d.date || '') >= (S.speakFocus.date || ''))) S.speakFocus = { date: d.date || today(), items: d.speakingFocus.slice(0, 4) };
   let gotNotes = 0;
   (d.noteStatus || []).forEach(u => { const n = (S.notes || []).find(x => x.id === u.id); if (n && (n.status !== u.status || n.reply !== u.reply)) { n.status = u.status || n.status; if (u.reply) n.reply = u.reply; if (u.status === 'done') n.doneAt = u.date || today(); gotNotes++; } });
   if (gotNotes) msg = L('Ответ Claude по доработкам: ', 'Claude replied to your notes: ') + gotNotes;
@@ -1421,7 +1484,7 @@ function importData(raw) {
 }
 function mergeExport(d, replace) {
   if (replace) {
-    S = Object.assign(initState(), { media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, inProgress: d.inProgress || {}, settings: S.settings, reviews: d.reviews || S.reviews || [], verdicts: d.verdicts || S.verdicts || {} });
+    S = Object.assign(initState(), { speaking: d.speaking || [], media: d.media || S.media, packs: d.packs && d.packs.length ? d.packs : S.packs, tests: d.tests && d.tests.length ? d.tests : S.tests, progress: d.progress || {}, cards: d.cards || {}, myWords: d.myWords || [], shows: d.shows || S.shows, checks: d.checks || S.checks, activity: d.activity || {}, inProgress: d.inProgress || {}, settings: S.settings, reviews: d.reviews || S.reviews || [], verdicts: d.verdicts || S.verdicts || {} });
   } else {
     (d.packs || []).forEach(p => { if (!S.packs.some(x => x.id === p.id)) S.packs.push(p); });
     (d.tests || []).forEach(p => { if (!S.tests.some(x => x.id === p.id)) S.tests.push(p); });
@@ -1435,6 +1498,7 @@ function mergeExport(d, replace) {
     (d.reviews || []).forEach(r => { if (!(S.reviews || []).some(x => x.id === r.id)) S.reviews = [...(S.reviews || []), r]; });
     Object.entries(d.verdicts || {}).forEach(([tid, rv]) => { S.verdicts[tid] = Object.assign({}, rv, S.verdicts[tid] || {}); });
     (d.appNotes || []).forEach(n => { if (!S.notes.some(x => x.id === n.id)) S.notes.push(n); });
+    (d.speaking || []).forEach(r => { if (r && r.id && !S.speaking.some(x => x.id === r.id)) S.speaking.push(r); });
     Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
     (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
     (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
@@ -1459,6 +1523,7 @@ function currentView() {
     if (top.v === 'daysec') return vDaySec(top.sec, top.di);
     if (top.v === 'reviews') return vReviews();
     if (top.v === 'notes') return vNotes();
+    if (top.v === 'speaking') return vSpeaking();
   }
   return { today: vToday, english: vEnglish, media: vMedia, progress: vProgress, settings: vSettings }[UI.tab]();
 }
@@ -1528,7 +1593,7 @@ function renderSheet() {
   const root = document.getElementById('sheet-root');
   if (!UI.sheet) { root.innerHTML = ''; return; }
   const k = UI.sheet.kind;
-  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : k === 'rule' ? sheetRule() : k === 'note' ? sheetNote() : sheetImport()}</div></div>`;
+  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${k === 'add' ? sheetAddWord() : k === 'export' ? sheetExport() : k === 'rule' ? sheetRule() : k === 'note' ? sheetNote() : k === 'speak' ? sheetSpeak() : sheetImport()}</div></div>`;
   const f = root.querySelector('#aw-text'); if (f) setTimeout(() => f.focus(), 50);
 }
 function go(fn) { fn(); UI.scrolled = false; render(); window.scrollTo(0, 0); }
@@ -1735,6 +1800,11 @@ document.addEventListener('click', e => {
     case 'del-word': S.myWords = S.myWords.filter(w => w.id !== el.dataset.id); save(); render(); toast(L('Удалено', 'Deleted')); break;
     case 'watched': { const sh = S.shows.find(s => s.id === UI.stack[UI.stack.length - 1].id); if (!sh.watched.includes(el.dataset.ep)) sh.watched.push(el.dataset.ep); save(); render(); toast(L('Отмечено. Пришлите экспорт Claude', 'Marked. Send Claude an export')); break; }
     case 'sheet-close': UI.sheet = null; renderSheet(); break;
+    case 'open-speaking': UI.speakDel = null; go(() => UI.stack.push({ v: 'speaking' })); break;
+    case 'speak-new': UI.sheet = { kind: 'speak' }; renderSheet(); setTimeout(() => { const f = document.getElementById('speak-text'); if (f) f.focus(); }, 60); break;
+    case 'speak-paste': navigator.clipboard.readText().then(x => { const f = document.getElementById('speak-text'); if (f) f.value = x; }).catch(() => toast(L('Не получилось прочитать буфер — вставьте вручную', 'Could not read the clipboard — paste manually'))); break;
+    case 'speak-save': if (saveSpeak((document.getElementById('speak-text') || {}).value)) { UI.sheet = null; renderSheet(); render(); toast(L('Отчёт сохранён', 'Report saved')); } break;
+    case 'speak-del': { const id = el.dataset.id; if (UI.speakDel !== id) { UI.speakDel = id; render(); break; } S.speaking = S.speaking.filter(r => r.id !== id); UI.speakDel = null; save(); render(); break; }
     case 'export': (S.notes || []).forEach(n => { if (!n.status || n.status === 'new') { n.status = 'sent'; n.sentAt = today(); } }); save(); UI.sheet = { kind: 'export' }; renderSheet(); break;
     case 'open-notes': go(() => UI.stack.push({ v: 'notes' })); break;
     case 'note-new': stopMic(); UI.sheet = { kind: 'note', draft: { kind: 'improve', where: '' } }; renderSheet(); break;
