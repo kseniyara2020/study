@@ -196,7 +196,10 @@ function allTasks() {
 }
 function findTask(id) { return allTasks().find(x => x.task.id === id); }
 const isDone = id => !!(S.progress[id] && S.progress[id].done);
-function dayTasks(d) { return [...(d.general || []), ...(d.ux || [])]; }
+// «Повторите вслух» — по желанию: не входит в счёт дня, минуты и закрытие дня; стоит в конце дня отдельной группой
+const isOptional = t => t.type === 'shadow';
+const req = list => (list || []).filter(t => !isOptional(t));
+function dayTasks(d) { return req([...(d.general || []), ...(d.ux || [])]); }
 function activePack() {
   const open = S.packs.find(p => (p.days || []).some(d => dayTasks(d).some(t => !isDone(t.id))));
   return open || S.packs[S.packs.length - 1] || null;
@@ -340,6 +343,7 @@ function vReviews() {
   return { title: L('Проверка Claude', 'Claude’s review'), back: true, sub: L('Переводы и тексты с оценкой', 'Translations and texts with assessment'), body: h };
 }
 function secStats(list) {
+  list = req(list);
   const done = list.filter(t => isDone(t.id));
   const plan = list.reduce((a, t) => a + (t.minutes || 0), 0);
   const spent = Math.round(done.reduce((a, t) => a + ((S.progress[t.id].spent || 0) / 60 || t.minutes || 0), 0));
@@ -347,7 +351,7 @@ function secStats(list) {
 }
 function secCard(sec, list, di) {
   const s = SECTIONS[sec], st = secStats(list), pct = st.total ? Math.round(st.done / st.total * 100) : 0;
-  const next = list.find(t => !isDone(t.id));
+  const next = req(list).find(t => !isDone(t.id));
   return `<button class="row sec-card" data-act="open-daysec" data-sec="${sec}" data-di="${di}">
     <span class="tile" style="background:${s.color}">${s.icon}</span>
     <span class="row-main"><span class="row-title" style="font-weight:600">${s.name()}</span>
@@ -358,15 +362,16 @@ function secCard(sec, list, di) {
 function vDaySec(sec, di) {
   const p = activePack(), d = p && p.days[di];
   if (!d) return { title: SECTIONS[sec].name(), back: true, body: '' };
-  const list = d[sec] || [], st = secStats(list), next = list.find(t => !isDone(t.id));
+  const list = d[sec] || [], st = secStats(list), next = req(list).find(t => !isDone(t.id)), opt = list.filter(isOptional);
   let h = `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b>${st.done}/${st.total} ${L('заданий', 'tasks')}</b><span class="row-sub">${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span></div>
     <span class="sec-bar" style="margin-top:10px"><i style="width:${st.total ? Math.round(st.done / st.total * 100) : 0}%;background:${SECTIONS[sec].color}"></i></span>
     ${next ? `<div class="actions" style="margin-top:14px"><button class="btn" data-act="open-task" data-id="${esc(next.id)}">${L('Продолжить', 'Continue')}: ${esc(next.title)}</button></div>` : ''}</div>`;
-  h += groupHead(L('Задания дня', 'Today’s tasks')) + `<div class="group">${list.map(taskRow).join('')}</div>`;
+  h += groupHead(L('Задания дня', 'Today’s tasks')) + `<div class="group">${req(list).map(taskRow).join('')}</div>`;
+  if (opt.length) h += groupHead(L('Дополнительно · по желанию', 'Extra · optional')) + `<div class="group">${opt.map(taskRow).join('')}</div><div class="gfoot">${L('Послушайте и повторите фразы дня. Не входит в план дня.', 'Listen and repeat the day’s phrases. Not part of the daily plan.')}</div>`;
   return { title: SECTIONS[sec].name(), back: true, sub: esc(L('День ', 'Day ') + d.day + ' · ' + d.title), body: h };
 }
 function secHead(sec, list) {
-  const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
+  list = req(list); const s = SECTIONS[sec], done = list.filter(t => isDone(t.id)).length;
   return `<div class="ghead"><span class="tile" style="background:${s.color};width:22px;height:22px;border-radius:6px">${s.icon}</span>${s.name()}<span style="margin-left:auto">${done}/${list.length}</span></div>`;
 }
 
@@ -409,7 +414,7 @@ function vEnglish() {
   const tasks = allTasks();
   let h = groupHead(L('Ежедневно', 'Daily')) + '<div class="group icons">';
   ['general', 'ux'].forEach(sec => {
-    const list = tasks.filter(x => x.sec === sec), done = list.filter(x => isDone(x.task.id)).length, s = SECTIONS[sec];
+    const list = tasks.filter(x => x.sec === sec && !isOptional(x.task)), done = list.filter(x => isDone(x.task.id)).length, s = SECTIONS[sec];
     h += `<button class="row" data-act="open-section" data-sec="${sec}"><span class="tile" style="background:${s.color}">${s.icon}</span>
       <span class="row-main"><span class="row-title">${s.name()}</span><span class="row-sub">${esc(s.goal())}</span></span><span class="row-val">${done}/${list.length}</span>${IC.chevR}</button>`;
   });
@@ -428,7 +433,7 @@ function vSection(sec) {
   let h = '';
   S.packs.forEach(p => {
     h += `<div class="ghead">${esc(p.title)}</div>`;
-    p.days.forEach(d => { const list = d[sec] || []; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">${L('День', 'Day')} ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
+    p.days.forEach(d => { const list = [...req(d[sec]), ...(d[sec] || []).filter(isOptional)]; if (!list.length) return; h += `<div class="lbl" style="margin:16px 16px 6px">${L('День', 'Day')} ${d.day} · ${esc(d.title)}</div><div class="group">${list.map(taskRow).join('')}</div>`; });
   });
   return { title: s.name(), back: true, sub: esc(s.goal()), body: h };
 }
@@ -449,11 +454,15 @@ function vMedia() {
     const list = (S.media || []).filter(m => m.kind === seg);
     if (!list.length) h += empty(seg === 'article' ? IC.read : IC.ear, seg === 'article' ? L('Пока нет статей', 'No articles yet') : L('Пока нет подкастов', 'No podcasts yet'), L('Claude добавит их вместе со следующим пакетом.', 'Claude will add them with the next pack.'));
     else {
-      h += '<div class="group icons" style="margin-top:16px">' + list.map(m => {
-        const ts = m.tasks || [], d = ts.filter(t => isDone(t.id)).length;
+      const cnt = m => (m.tasks || []).filter(t => isDone(t.id)).length, full = m => (m.tasks || []).length > 0 && cnt(m) === m.tasks.length;
+      const open = list.filter(m => !full(m)).map((m, i) => ({ m, i })).sort((a, b) => ((cnt(b.m) > 0) - (cnt(a.m) > 0)) || a.i - b.i).map(x => x.m), done = list.filter(full);
+      const mrow = m => {
+        const ts = m.tasks || [], d = cnt(m);
         return `<button class="row" data-act="open-media" data-id="${esc(m.id)}"><span class="tile" style="background:${m.topic === 'ux' ? 'var(--orange)' : 'var(--blue)'}">${seg === 'article' ? IC.read : IC.ear}</span>
           <span class="row-main"><span class="row-title">${esc(m.title)}</span><span class="row-sub">${esc(m.source)} · ${esc(m.level)} · ${mins(m.minutes)}</span></span><span class="row-val">${d}/${ts.length}</span>${IC.chevR}</button>`;
-      }).join('') + '</div>';
+      };
+      if (open.length) h += '<div class="group icons" style="margin-top:16px">' + open.map(mrow).join('') + '</div>';
+      if (done.length) h += groupHead(L('Пройдено', 'Completed') + ' · ' + done.length) + '<div class="group icons">' + done.map(mrow).join('') + '</div>';
       h += `<div class="gfoot">${seg === 'article' ? L('Статьи про UX/UI и на общие темы. Читайте по ссылке, задания — здесь. Новые статьи приходят с пакетами.', 'Articles about UX/UI and general topics. Read via the link, do the tasks here. New articles come with packs.') : L('Слушайте выпуск в приложении «Подкасты», задания — здесь. Слова из выпуска запишите — Claude сделает по ним упражнения.', 'Listen in the Podcasts app, do the tasks here. Save words from the episode — Claude will turn them into exercises.')}</div>`;
     }
   }
