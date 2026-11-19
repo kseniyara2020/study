@@ -218,3 +218,6 @@ body::before{background:transparent}
 
 /* card text on black */
 .group,.panel,.fb,.opt,.field,.audio,.stat,.daybar,.flash,.tiles.answer,.trbox,.code,.notice,.sheet,.dcard,.pcard,.hero,.mc,.glow,.stile,.q,.fitems{color:var(--label)}
+
+/* iOS status bar zone: black (v20) */
+body::before{background:#000!important}

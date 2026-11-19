@@ -1,7 +1,7 @@
 <title>Мой учебный план</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 /* Layout: iOS grouped lists on a grouped background; bottom tab bar on phone, sidebar from 900px (macOS). */
 :root{
@@ -502,6 +502,9 @@ body::before{background:transparent}
 
 /* card text on black */
 .group,.panel,.fb,.opt,.field,.audio,.stat,.daybar,.flash,.tiles.answer,.trbox,.code,.notice,.sheet,.dcard,.pcard,.hero,.mc,.glow,.stile,.q,.fitems{color:var(--label)}
+
+/* iOS status bar zone: black (v20) */
+body::before{background:#000!important}
 /* ===== /v17 ===== */
 </style>
 
