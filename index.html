@@ -325,7 +325,8 @@ body{color:var(--ink);background:
   background-color:#F5F6FF}
 body::before{background:transparent}
 /* text on the page (not in cards) */
-.large{color:var(--ink);font-size:32px;line-height:40px;letter-spacing:-.6px;margin:2px 0}
+.large{color:var(--ink);font-size:28px;line-height:34px;letter-spacing:-.5px;margin:2px 0}
+.content.task .large{font-size:26px;line-height:32px;letter-spacing:-.5px}
 .sub{color:var(--ink2)}
 .large-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hpill{height:32px;padding:0 14px;border-radius:16px;background:var(--ink);color:#D8E3FF;font-size:15px;font-weight:600;display:inline-flex;align-items:center;white-space:nowrap;flex:none}
@@ -1396,7 +1397,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 19.11 17:16</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 19.11 17:20</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
@@ -1467,12 +1468,12 @@ function vTask(id) {
   const meta = `<div class="tmeta"><span class="pill secp">${s.short()}</span>${x.day ? `<span class="pill">${L('День', 'Day')} ${x.day.day}</span>` : x.item ? `<span class="pill">${esc(x.item.title)}</span>` : ''}<span class="pill">${typeLabel(t)} · ${mins(t.minutes)}</span>${isDone(id) ? `<span class="pill good">${L('Выполнено', 'Done')}</span>` : ''}</div>`;
   let body = '';
   const pr = S.progress[id];
-  if (pr && pr.done && t.type !== 'lesson' && !(TS && TS.id === id && (TS.redo || TS.startedUndone))) return { title: t.title, back: true, sec: x.sec, body: meta + doneView(t, pr) };
+  if (pr && pr.done && t.type !== 'lesson' && !(TS && TS.id === id && (TS.redo || TS.startedUndone))) return { title: t.title, back: true, sec: x.sec, task: true, body: meta + doneView(t, pr) };
   if (t.type === 'lesson') body = tLesson(t);
   else if (t.type === 'cards') body = tCards(t);
   else if (t.type === 'write') body = tWrite(t);
   else body = tItems(t);
-  return { title: t.title, back: true, sec: x.sec, body: meta + body };
+  return { title: t.title, back: true, sec: x.sec, task: true, body: meta + body };
 }
 const fmtScore = n => String(Math.round(n * 10) / 10).replace('.', ',');
 function verdictPill(r) {
@@ -1827,7 +1828,7 @@ function render() {
   document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
       <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>${L('Назад', 'Back')}</span></button>` : ''}</div>
       <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
-    <div class="content sec-${v.sec || 'general'}"><div class="large-row"><h1 class="large">${esc(v.title)}</h1>${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
+    <div class="content sec-${v.sec || 'general'}${v.task ? ' task' : ''}"><div class="large-row"><h1 class="large">${esc(v.title)}</h1>${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
   const T = tabs();
   document.getElementById('tabbar').innerHTML = T.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
   document.getElementById('sidebar').innerHTML = `<div class="side-h">${L('Учёба', 'Study')}</div>` + T.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
