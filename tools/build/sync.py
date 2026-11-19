@@ -31,4 +31,12 @@ for f,b in [(ROOT+'/index.html',build),(ROOT+'/tools/app.src.html',None)]:
     if CSS_OLD in s: s=s.replace(CSS_OLD,CSS_NEW)
     if '.topic-tag{' not in s: s=s.replace('.seg-chips{', TAG+'.seg-chips{',1)
     elif '.dline{' not in s: print('CSS not found',f); sys.exit(1)
+    # v17 design layer: tools/build/v17.css, kept between markers before the end of the main <style>
+    css=open(ROOT+'/tools/build/v17.css').read().strip()
+    a=s.find('/* ===== v17 redesign'); b=s.find('/* ===== /v17 ===== */')
+    if a>=0 and b>a: s=s[:a]+css+'\n/* ===== /v17 ===== */'+s[b+len('/* ===== /v17 ===== */'):]
+    else:
+        k=s.index('@media (prefers-reduced-motion: reduce)'); k=s.index('</style>',k)
+        s=s[:k]+css+'\n/* ===== /v17 ===== */\n'+s[k:]
+    s=s.replace('<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">','<meta name="theme-color" content="#7E92FF" media="(prefers-color-scheme: light)">').replace('<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">','<meta name="theme-color" content="#7E92FF" media="(prefers-color-scheme: dark)">')
     open(f,'w').write(s); print('synced',f)
