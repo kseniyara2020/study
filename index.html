@@ -14,7 +14,7 @@
 <title>Мой учебный план</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <style>
 /* Layout: iOS grouped lists on a grouped background; bottom tab bar on phone, sidebar from 900px (macOS). */
 :root{
@@ -342,7 +342,7 @@ body::before{background:transparent}
 .nav-l .nav-btn{width:44px;height:44px;min-width:44px;padding:0;margin-left:6px;justify-content:center;border-radius:22px;background:var(--ink);color:#D8E3FF}
 .nav-l .nav-btn span{display:none}
 .nav-r .nav-btn{color:var(--ink)}
-.content{padding-bottom:calc(122px + env(safe-area-inset-bottom,0px))}
+.content{padding-bottom:calc(96px + max(12px,env(safe-area-inset-bottom,0px)))}
 /* cards and lists */
 .group{border-radius:12px;border:1px solid var(--sep)}
 .panel{border-radius:16px;border:1px solid var(--sep)}
@@ -422,7 +422,7 @@ body::before{background:transparent}
 .sheet-h .nav-btn{color:var(--accent)}
 .sheet .seg{background:#15161D}.sheet .seg button{color:var(--label2)}.sheet .seg button.on{background:#2B2D38;color:var(--label)}
 /* tab bar: floating pill */
-.tabbar{left:20px;right:20px;bottom:calc(26px + env(safe-area-inset-bottom,0px));height:64px;padding:0 8px;display:flex;align-items:center;justify-content:space-between;
+.tabbar{left:20px;right:20px;bottom:max(12px,env(safe-area-inset-bottom,0px));height:64px;padding:0 8px;display:flex;align-items:center;justify-content:space-between;
   border-radius:32px;background:var(--navbg);border:1px solid #CAA6F842;box-shadow:0 6px 18px rgba(40,40,120,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
 .tab{width:48px;height:48px;padding:0;justify-content:center;border-radius:24px;color:#1F2757;flex:none}
 .tab span{display:none}
@@ -1396,7 +1396,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 19.11 17:10</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 19.11 17:16</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
