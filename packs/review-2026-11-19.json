@@ -1,0 +1,48 @@
+{
+ "type": "review",
+ "id": "review-2026-11-19",
+ "date": "2026-11-19",
+ "upTo": "2026-11-19",
+ "upToTs": "2026-11-19T09:18:52.469Z",
+ "summary": "День 2 закрыт: вопросы ≈ 83% (было 77%), косвенные вопросы и вопросы с предлогом в конце — верно. Слабо: вопрос к подлежащему (Кто тебе звонил? → Who called you?) и UX-фразы уточнения. Переводы: ✓ 12 · ≈ 3 · ✗ 7.",
+ "speakingFocus": [
+  "am/is/are в длинном рассказе: подлежащее → пауза → is (The article is…, AI programs are…, Which one is better?)",
+  "a / the: a designer, a word, an exercise · без артикля: research, go to bed, go home, to Poland",
+  "to / -ing: need to, can't afford to, dream of + -ing, stop + -ing · после if — без will: if the text is longer…",
+  "Держим: -s (she runs, he doesn't) и паузу после подлежащего"
+ ],
+ "verdicts": [
+  {"id": "v19-p3-d2-g7-0", "task": "p3-d2-g7", "i": 0, "verdict": "ok"},
+  {"id": "v19-p3-d2-g7-1", "task": "p3-d2-g7", "i": 1, "verdict": "ok"},
+  {"id": "v19-p3-d2-g7-2", "task": "p3-d2-g7", "i": 2, "verdict": "ok", "comment": "так тоже правильно — Present Perfect Continuous здесь даже точнее"},
+  {"id": "v19-p3-d2-g7-3", "task": "p3-d2-g7", "i": 3, "verdict": "wrong", "correct": "Who called you?", "comment": "Смысл перевернулся: Who did you call? = «Кому ты звонил?». «Кто звонил» — вопрос к подлежащему, без did: Who called you?"},
+  {"id": "v19-p3-d2-g7-4", "task": "p3-d2-g7", "i": 4, "verdict": "wrong", "correct": "Could you tell me where the file is?", "comment": "say → tell me (сказать кому-то); после Could you tell me — прямой порядок: where the file is; the file"},
+  {"id": "v19-p3-d2-g7-5", "task": "p3-d2-g7", "i": 5, "verdict": "ok"},
+  {"id": "v19-p3-d2-g7-6", "task": "p3-d2-g7", "i": 6, "verdict": "ok", "comment": "так тоже правильно: explain = пояснить"},
+  {"id": "v19-p3-d2-g7-7", "task": "p3-d2-g7", "i": 7, "verdict": "wrong", "correct": "I wonder what users think.", "comment": "Русское «интересно, …» → I wonder… (= мне интересно). Без глагола фраза не держится; можно и It would be interesting to know what users think."},
+  {"id": "v19-p3-d2-g7-8", "task": "p3-d2-g7", "i": 8, "verdict": "ok", "comment": "так тоже правильно; isn't working — «сейчас не работает», doesn't work — «вообще не работает»"},
+  {"id": "v19-p3-d2-g7-9", "task": "p3-d2-g7", "i": 9, "verdict": "almost", "correct": "Where can I find the latest version?", "comment": "latest — самая свежая; last — последняя по счёту / финальная"},
+  {"id": "v19-p3-d2-g10-0", "task": "p3-d2-g10", "i": 0, "verdict": "wrong", "correct": "We used to use Sketch, but now we use Figma.", "comment": "После used to — начальная форма: used to use (не used to used). Во второй части нужен глагол: now we use Figma"},
+  {"id": "v19-p3-d2-g10-9", "task": "p3-d2-g10", "i": 9, "verdict": "ok"},
+  {"id": "v19-p3-d2-u3-0", "task": "p3-d2-u3", "i": 0, "verdict": "ok", "comment": "так тоже правильно; по желанию: could you repeat that? — так чаще говорят"},
+  {"id": "v19-p3-d2-u3-1", "task": "p3-d2-u3", "i": 1, "verdict": "almost", "correct": "What exactly do you mean (by that)?", "comment": "Потерялось «именно» — exactly"},
+  {"id": "v19-p3-d2-u3-2", "task": "p3-d2-u3", "i": 2, "verdict": "wrong", "correct": "Just to clarify, is this for mobile or desktop?", "comment": "«Уточню» — Just to clarify (Just note — «просто заметь»); mobile / desktop — без артикля"},
+  {"id": "v19-p3-d2-u3-3", "task": "p3-d2-u3", "i": 3, "verdict": "ok", "comment": "так тоже правильно (here можно опустить)"},
+  {"id": "v19-p3-d2-u3-4", "task": "p3-d2-u3", "i": 4, "verdict": "wrong", "correct": "What problem are we trying to solve?", "comment": "В вопросе are перед we: are we trying. What problem — какую вообще; Which — когда выбираем из известных"},
+  {"id": "v19-p3-d2-u3-5", "task": "p3-d2-u3", "i": 5, "verdict": "ok", "comment": "так тоже правильно; «к какому сроку» точнее — When do you need it by?"},
+  {"id": "v19-p3-d2-u3-6", "task": "p3-d2-u3", "i": 6, "verdict": "ok"},
+  {"id": "v19-p3-d2-u3-7", "task": "p3-d2-u3", "i": 7, "verdict": "ok", "comment": "так тоже правильно"},
+  {"id": "v19-p3-d2-u6-0", "task": "p3-d2-u6", "i": 0, "verdict": "almost", "correct": "Thanks for taking the time to talk to us.", "comment": "Устойчиво: take the time (с the)"},
+  {"id": "v19-p3-d2-u6-1", "task": "p3-d2-u6", "i": 1, "verdict": "wrong", "correct": "There are no right or wrong answers.", "comment": "Пара — right or wrong (false — «ложный»); «нет никаких» — There are no…"},
+  {"id": "v19-p3-d2-g11-text", "task": "p3-d2-g11", "level": "B1+", "comment": "Все 5 вопросов построены верно: к подлежащему (Who decided…), косвенный (Could you tell me where the new file is?), с предлогом в конце (What are you looking for?). Мелочи — артикли и одно слово.", "fixes": [
+    {"from": "the colour of buttons", "to": "the colour of the buttons", "why": "Конкретные кнопки в макете — the"},
+    {"from": "start design for mobile app", "to": "start designing the mobile app", "why": "start + -ing; конкретное приложение — the"},
+    {"from": "how edge cases improve", "to": "how we can handle edge cases better", "why": "Пограничные случаи не «улучшаются» — их обрабатывают: handle edge cases"}
+  ]}
+ ],
+ "noteStatus": [
+  {"id": "n-mwmnvqsr8wiu", "status": "done", "reply": "by + срок = «к (не позже)»: I need it by Friday — к пятнице. В вопросе by, как и другие предлоги, уходит в конец: When do you need it by? — «К какому сроку это нужно?». Объяснение добавлено в задание."},
+  {"id": "n-mwmoa5v7hts7", "status": "done", "reply": "With whom should I talk…? — правильно, но звучит книжно; в речи говорят Who should I talk to…? (предлог в конце). Из данных слов собиралось только это. Ваш вариант Who I should to talk — ошибка: в вопросе should перед I и после should без to."},
+  {"id": "n-mwmo6mtmp6nr", "status": "planned", "reply": "Согласна: заглавная и знак в конце подсказывают начало и конец. Предложила в чате: все слова с маленькой (кроме I и имён), без точки и знака вопроса; правильный вариант после ответа — как обычно. Ждёт вашего «да»."}
+ ]
+}
