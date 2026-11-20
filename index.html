@@ -1400,7 +1400,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 19.11 18:32</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 20.11 15:35</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
@@ -1556,7 +1556,25 @@ function seedShuffle(arr, seedStr) {
   if (a.length > 2 && a.every((x, k) => x.i === k)) a.push(a.shift());
   return a;
 }
-function orderTokens(it) { return it.en.split(/\s+/).filter(Boolean); }
+// «Соберите фразу» (решение 20.11.2026): плашки без подсказки начала и конца — первое слово с маленькой (кроме I и имён), без знака в конце.
+// Имена — слова, которые хоть где-то в заданиях стоят с заглавной не в начале предложения (Figma, API, Anna).
+let PROPER = null;
+function properNames() {
+  if (PROPER) return PROPER;
+  PROPER = new Set();
+  const add = t => String(t || '').split(/\s+/).slice(1).forEach(w => { const c = w.replace(/^[^A-Za-z]+|[^A-Za-z']+$/g, ''); if (/^[A-Z]/.test(c)) PROPER.add(c.toLowerCase()); });
+  (S.packs || []).forEach(p => (p.days || []).forEach(d => [...(d.general || []), ...(d.ux || [])].forEach(t => (t.items || []).forEach(it => { add(it.en); (Array.isArray(it.a) ? it.a : []).forEach(add); }))));
+  return PROPER;
+}
+function orderTokens(it) {
+  const t = it.en.split(/\s+/).filter(Boolean);
+  if (!t.length) return t;
+  const f = t[0], core = f.replace(/[^A-Za-z']/g, '');
+  if (/^[A-Z][a-z']*$/.test(core) && core !== 'I' && !/^I'/.test(core) && !properNames().has(core.toLowerCase())) t[0] = f.charAt(0).toLowerCase() + f.slice(1);
+  const last = t.length - 1, l = t[last].replace(/[.?!…]+$/, '');
+  if (l) t[last] = l;
+  return t;
+}
 // topic tag above a question in mixed review tasks (decision 10.11.2026): the topic name only, the rule itself opens after the answer
 function topicTag(t, it) {
   if (!it || !it.rule) return '';
@@ -1714,7 +1732,7 @@ function buildExport() {
     mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, isReviewed(w) ? { reviewed: true } : {})))),
     reviews: S.reviews || [], inProgress: S.inProgress || {}, verdicts: S.verdicts || {},
     appNotes: (S.notes || []).filter(n => !['done', 'declined'].includes(n.status)),
-    openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).map(o => Object.assign({ task: id, unfinished: true }, o)))),
+    openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id, unfinished: true }, o)))),
     writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
     speaking: S.speaking || [],
     packs: S.packs, tests: S.tests, media: S.media
@@ -1745,7 +1763,7 @@ function addContent(d) {
   let msg = null;
   if (d.type === 'study-pack' && Array.isArray(d.days) && d.id && !S.packs.some(p => p.id === d.id || (p.replaces || []).includes(d.id))) {
     if (Array.isArray(d.replaces)) S.packs = S.packs.filter(p => !d.replaces.includes(p.id));
-    S.packs.push(d);
+    S.packs.push(d); PROPER = null;
     // unfinished tasks that no longer exist in any pack start over
     Object.keys(S.inProgress || {}).forEach(id => { if (!findTask(id)) delete S.inProgress[id]; });
     (d.media || []).forEach(m => { if (m && m.id && !S.media.some(x => x.id === m.id)) S.media.push(m); });
