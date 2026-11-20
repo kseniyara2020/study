@@ -83,6 +83,7 @@ const IC = {
   chevR: '<svg class="chev" viewBox="0 0 8 14" width="8" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l6 6-6 6"/></svg>',
   chevL: I('<path d="M15 4l-8 8 8 8"/>'),
   chevRb: I('<path d="M9 4l8 8-8 8"/>'),
+  xmark: I('<path d="M6 6l12 12M18 6L6 18"/>'),
   check: I('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
   plus: I('<path d="M12 5v14M5 12h14"/>'),
   play: I('<path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/>', true),
@@ -681,39 +682,64 @@ function checkKind(c) {
 }
 function skillMinutes(t, k) { return (t.skills[k] && t.skills[k].minutes) || 10; }
 
+function lvScale(cur, goal) {
+  return `<div class="lvs">${LEVELS.map(l => `<span class="${l === cur ? 'cur' : l === goal ? 'goal' : ''}">${l}</span>`).join('')}</div>`;
+}
+function weekStart(d) { const w = (parse(d).getDay() + 6) % 7; return addDays(d, -w); }
+function weekFull(mon) { for (let i = 0; i < 7; i++) if (!S.activity[addDays(mon, i)]) return false; return true; }
+function fullWeeksRow() {
+  const t = today(); let mon = weekStart(t), n = 0;
+  if (!(addDays(mon, 6) <= t && weekFull(mon))) mon = addDays(mon, -7);
+  for (let k = 0; k < 520 && weekFull(mon); k++) { n++; mon = addDays(mon, -7); }
+  return n;
+}
+function weekActivity() {
+  const t = today(), mon = weekStart(t);
+  const names = lang() === 'ru' ? ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const A = [0xD9, 0xD3, 0xFF], B = [0x6C, 0x5E, 0xF0];
+  const shade = k => '#' + A.map((a, j) => Math.round(a + (B[j] - a) * Math.min(k, 6) / 6).toString(16).padStart(2, '0')).join('');
+  let run = 0, done = 0, cells = '';
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(mon, i), fut = d > t, on = !fut && !!S.activity[d];
+    run = on ? run + 1 : 0; if (on) done++;
+    const cls = (fut ? 'fut' : on ? 'on' : 'miss') + (d === t ? ' now' : '');
+    cells += `<div class="wk7d ${d === t ? 'now' : ''} ${fut ? 'fut' : ''}"><span>${names[i]}</span><i class="${cls}"${on ? ` style="background:${shade(run - 1)}"` : ''} title="${fmtShort(d)}"></i></div>`;
+  }
+  const full = done === 7, fw = fullWeeksRow();
+  return { cells, done, full, fw, range: fmtDate(mon, { day: 'numeric', month: 'short' }) + ' – ' + fmtDate(addDays(mon, 6), { day: 'numeric', month: 'short' }) };
+}
 function vProgress() {
-  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level);
-  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>${L('дней подряд', 'days in a row')}</span></div>
-     <div class="stat"><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
-     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>`;
-  // activity: fills left to right from the first study day
-  const t = today(), first = Object.keys(S.activity).filter(k => S.activity[k]).sort()[0];
-  let start = first || t; if (addDays(start, 13) < t) start = addDays(t, -13);
-  let cells = '', active = 0;
-  for (let i = 0; i < 14; i++) { const d = addDays(start, i), a = d <= t ? (S.activity[d] || 0) : 0; if (a) active++; cells += `<i class="${a ? 'on' : ''}" title="${fmtShort(d)}"></i>`; }
-  h += groupHead(L('Активность, 14 дней', 'Activity, 14 days')) + `<div class="panel"><div class="days14">${cells}</div><div class="row-sub" style="margin-top:10px">${L('Дней с занятиями', 'Study days')}: ${active} ${L('из', 'of')} 14</div></div>`;
-  h += groupHead(L('Уровень по CEFR', 'CEFR level')) + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${ov.level}</b><span class="row-sub">${L('цель', 'goal')}: ${LEVELS[ci + 1] || ov.level}</span></div>
-     <div class="cefr" style="margin-bottom:0">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : ''}">${l}</div>`).join('')}</div>
-     <div class="actions" style="margin-top:16px"><button class="btn" data-act="open-checks">${L('Пройти проверку уровня', 'Take a level check')}</button></div></div>`;
-  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group">' + SKILLS.map(k => {
+  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level), goal = LEVELS[ci + 1] || ov.level;
+  const lastDate = SKILLS.map(k => latestResult(k)).filter(r => r && !r.pending && r.date).map(r => r.date).sort().pop();
+  let h = `<div class="panel glow pv-lv"><div class="pv-row"><span>${L('Общий уровень', 'Overall level')}</span>${lastDate ? `<span>${L('тест', 'test')} ${fmtShort(lastDate)}</span>` : ''}</div>
+    <div class="pv-big">${ov.level}<small> · ${L('цель', 'goal')} ${goal}</small></div>${lvScale(ov.level, goal)}</div>`;
+  const w = weekActivity();
+  h += groupHead(L('Активность', 'Activity')) + `<div class="panel glow wide pv-act"><div class="pstats">
+      <div><b>${streak()}${L('д', 'd')}</b><span>${L('дней подряд', 'day streak')}</span></div>
+      <div><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
+      <div><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>
+    <div class="pv-sep"></div><div class="pv-cap">${L('Эта неделя', 'This week')} · ${w.range}</div>
+    <div class="wk7">${w.cells}</div>
+    <div class="pv-foot"><b class="${w.full ? 'full' : ''}">${w.full ? L('Полная неделя ✓', 'Full week ✓') : L('Эта неделя', 'This week') + ` · ${w.done} ${L('из', 'of')} 7`}</b>${w.fw ? `<span>${L('Полных недель подряд', 'Full weeks in a row')}: ${w.fw}</span>` : ''}</div></div>`;
+  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group pv-sk">' + SKILLS.map(k => {
     const r = latestResult(k);
-    let sub, pill;
-    if (r && r.pending) { sub = L('на проверке у Claude', 'waiting for Claude'); pill = `<span class="pill">${L('ждёт', 'pending')}</span>`; }
-    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? (r.kind === 'graded' ? L('оценка Claude · ', 'graded by Claude · ') : L('самооценка · ', 'self-assessment · ')) : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
-    else { sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k)); pill = '<span class="pill big">—</span>'; }
-    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${pill}${IC.chevR}</button>`;
+    let sub, sc = '';
+    if (r && r.pending) sub = L('на проверке у Claude', 'waiting for Claude');
+    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? (r.kind === 'graded' ? L('оценка Claude · ', 'graded by Claude · ') : L('самооценка · ', 'self-assessment · ')) : '') + fmtShort(r.date); sc = lvScale(r.level); }
+    else sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k));
+    return `<button class="pv-skr" data-act="open-check" data-skill="${k}"><span class="pv-skh"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${IC.chevR}</span>${sc}</button>`;
   }).join('') + '</div>';
-  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо и говорение оценивает Claude (говорение — в чате Speaking).', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing and speaking are graded by Claude (speaking — in the Speaking chat).')}</div>`;
-  const w = checkWindow() || { from: today(), to: today() };
-  const from = w.from, to = w.to;
-  h += groupHead(L('Проверки', 'Checks')) + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
-      <span class="row-main"><span class="row-title">${L('Следующая контрольная', 'Next full check')}</span><span class="row-sub">${fmtShort(from)} – ${fmtShort(to)}</span></span><span class="pill">${L('5 навыков', '5 skills')}</span></div>` +
-    S.checks.slice().reverse().map(c => {
-      const ks = Object.keys(c.results), r0 = c.results[ks[0]];
-      return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
+  const t = currentTest(), total = SKILLS.reduce((a, k) => a + skillMinutes(t, k), 0), win = checkWindow();
+  const nt = nextCheckText();
+  h += groupHead(L('Проверка уровня', 'Level check')) + `<div class="panel pv-chk"><div class="pv-chkh"><div><b>${nt === '—' ? L('Проверка уровня', 'Level check') : L('Следующая проверка', 'Next check') + ' ' + esc(nt)}</b><span>${L('5 навыков', '5 skills')} · ~${total} ${L('мин', 'min')}</span></div>${win ? `<span class="tagx">${fmtDate(win.from, { day: 'numeric', month: 'short' })} – ${fmtDate(win.to, { day: 'numeric', month: 'short' })}</span>` : ''}</div>
+    <button class="btn sec pv-open" data-act="open-checks">${IC.chart}<span>${L('Открыть проверку уровня', 'Open level check')}</span></button></div>`;
+  if (S.checks.length) h += '<div class="group icons" style="margin-top:8px">' + S.checks.slice().reverse().map(c => {
+    const ks = Object.keys(c.results), r0 = c.results[ks[0]];
+    return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
       <span class="row-main"><span class="row-title">${checkKind(c)}</span><span class="row-sub">${fmtDate(c.date)} · ${ks.map(k => skillName(k) + (c.results[k].total ? ' ' + c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span>${r0.pending ? `<span class="pill">${L('ждёт', 'pending')}</span>` : `<span class="pill lvl">${r0.level}</span>`}</div>`;
-    }).join('') + '</div>';
-  return { title: L('Прогресс', 'Progress'), body: h };
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Письмо и говорение оценивает Claude.', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Writing and speaking are graded by Claude.')}</div>`;
+  return { title: L('Прогресс', 'Progress'), pill: `${ov.level} → ${goal}`, body: h };
 }
 
 function vChecks() {
@@ -1109,8 +1135,8 @@ function tItems(t) {
     }
   } else {
     h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
-      let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
-      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${c === 'right' ? IC.check : ''}</button>`;
+      let c = ''; if (TS.picked !== null) c = (k === TS.picked ? 'pick' : 'other') + (k === it.a ? ' right' : k === TS.picked ? ' wrong' : '');
+      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${k === it.a && TS.picked !== null ? IC.check : c === 'pick wrong' ? IC.xmark : ''}</button>`;
     }).join('') + '</div>';
     if (TS.picked !== null) {
       const ok = TS.picked === it.a, mine = it.options[TS.picked], right = it.options[it.a];
@@ -1312,7 +1338,7 @@ function render() {
   document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
       <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>${L('Назад', 'Back')}</span></button>` : ''}</div>
       <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
-    <div class="content sec-${v.sec || 'general'}${v.task ? ' task' : ''}"><div class="large-row"><h1 class="large">${esc(v.title)}</h1>${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
+    <div class="content sec-${v.sec || 'general'}${v.task ? ' task' : ''}"><div class="large-row">${v.back ? `<button class="tback" data-act="back" aria-label="${L('Назад', 'Back')}">${IC.chevL}<h1 class="large">${esc(v.title)}</h1></button>` : `<h1 class="large">${esc(v.title)}</h1>`}${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
   const T = tabs();
   document.getElementById('tabbar').innerHTML = T.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
   document.getElementById('sidebar').innerHTML = `<div class="side-h">${L('Учёба', 'Study')}</div>` + T.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')

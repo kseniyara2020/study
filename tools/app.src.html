@@ -299,7 +299,7 @@ textarea.field{min-height:180px;resize:vertical}
   color-scheme:light;
 }
 .sec-general{--sec:#B3A8FF;--sec-rgb:108,94,240;--btn:linear-gradient(100deg,#2F2A8C 0%,#4A43C9 55%,#6C5EF0 100%)}
-.sec-ux{--sec:#A3B4FF;--sec-rgb:70,96,232;--btn:linear-gradient(100deg,#1A2878 0%,#2E44C2 55%,#4660E8 100%)}
+.sec-ux{--sec:#A3B4FF;--sec-rgb:70,96,232;--btn:linear-gradient(100deg,#29247F 0%,#4640C6 55%,#6455E8 100%)}
 .sec-words{--sec:#EE9BDA;--sec-rgb:206,80,178}
 .sec-speaking{--sec:#72D5DE;--sec-rgb:16,168,176;--btn:linear-gradient(100deg,#063F4A 0%,#0A6670 55%,#0C8088 100%)}
 .sec-media{--sec:#9AABFF;--sec-rgb:120,150,255}
@@ -317,7 +317,7 @@ body::before{background:transparent}
 .sub{color:var(--ink2)}
 .large-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hpill{height:32px;padding:0 14px;border-radius:16px;background:var(--ink);color:#D8E3FF;font-size:15px;font-weight:600;display:inline-flex;align-items:center;white-space:nowrap;flex:none}
-.ghead{color:var(--ink);text-transform:none;font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.4px;margin:32px 2px 12px}
+.ghead{color:var(--ink);text-transform:none;font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.4px;margin:32px 2px 8px}
 .ghead:first-child{margin-top:12px}
 .ghead a,.ghead .glink{margin-left:auto;font-size:15px;font-weight:600;color:var(--link);text-decoration:none;background:none;border:0;cursor:pointer;font-family:inherit;letter-spacing:-.2px;padding:0}
 .gfoot{color:var(--ink2);margin:8px 4px 0}
@@ -505,6 +505,66 @@ body::before{background:transparent}
 
 /* iOS status bar zone: black (v20) */
 body::before{background:#000!important}
+
+/* ===== v21 ===== */
+/* nav bar: no duplicate title on scroll; back lives in the title */
+.nav,.nav.scrolled,.nav.solid{visibility:hidden;pointer-events:none;background:none!important;border-color:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.tback{display:flex;align-items:flex-start;gap:4px;margin:0 0 0 -6px;padding:0;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;font:inherit;min-width:0}
+.tback svg{width:28px;height:34px;flex:none;stroke-width:2.4}
+.content.task .tback svg{height:32px}
+.tback .large{margin:2px 0}
+/* dictate */
+.mic-row .chip.on{background:var(--ink);color:#D8E3FF;height:36px;padding:0 14px;border-radius:18px;font-weight:600}
+.mic-row .row-sub{color:var(--ink2)}
+/* task progress: done part white */
+.progress i{background:#FFFFFF}
+/* answer field after save: stays black, only text dims */
+.field:disabled,.field[disabled]{opacity:1;background:var(--card);color:#A3AAC0;-webkit-text-fill-color:#A3AAC0}
+/* neutral result: plain text, no plate */
+.fb.neutral{background:none;border:0;padding:0 2px;margin-top:20px}
+.fb.neutral b,.fb.neutral b:first-child{color:var(--ink);font-size:17px;line-height:22px;font-weight:600}
+.fb.neutral .row-sub{color:var(--ink2);font-size:15px;line-height:21px}
+/* choice after answer: picked stays black, others dim; colour is in the text */
+.opt.pick,.opt.pick.right,.opt.pick.wrong{background:var(--card);border:1px solid var(--sep);opacity:1;font-weight:500}
+.opt.other,.opt.other.right{background:rgba(11,13,20,.88);border:1px solid rgba(255,255,255,.05);opacity:1;font-weight:500}
+.opt.right{color:#3DD68C}.opt.wrong{color:#FF7B7B}
+.opt.right svg,.opt.wrong svg{width:20px;height:20px;flex:none}
+/* progress screen */
+.pv-lv{padding:20px 18px}
+.pv-row{display:flex;justify-content:space-between;font-size:13px;line-height:18px;color:var(--label2)}
+.pv-big{margin:6px 0 16px;font-size:34px;line-height:38px;font-weight:700;letter-spacing:-1px;color:var(--label)}
+.pv-big small{font-size:18px;font-weight:600;color:rgba(255,255,255,.72);letter-spacing:-.2px}
+.lvs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.lvs span{height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(255,255,255,.08);color:var(--label2)}
+.lvs span.cur{background:#6C5EF0;color:#fff}
+.lvs span.goal{background:transparent;color:#B3A8FF;border:1.5px dashed #B3A8FF}
+.pv-act{padding:20px 18px 18px}
+.pv-sep{margin:18px 0 16px;border-top:1px solid var(--sep)}
+.pv-cap{font-size:13px;line-height:18px;color:var(--label2);margin-bottom:12px}
+.wk7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wk7d{display:flex;flex-direction:column;align-items:center;gap:8px}
+.wk7d span{font-size:12px;line-height:14px;color:var(--label2)}
+.wk7d.now span{color:var(--label);font-weight:600}.wk7d.fut span{color:var(--label3)}
+.wk7d i{display:block;width:100%;height:30px;border-radius:8px;box-sizing:border-box}
+.wk7d i.miss{background:rgba(255,255,255,.08)}
+.wk7d i.fut{border:1.5px dashed rgba(255,255,255,.16)}
+.wk7d i.now{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
+.pv-foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;line-height:18px;color:var(--label2)}
+.pv-foot b{color:var(--label);font-weight:600}.pv-foot b.full{color:#B3A8FF}
+.pv-sk{padding:0}
+.pv-skr{display:block;width:100%;padding:14px 16px;border:0;background:none;color:var(--label);text-align:left;cursor:pointer;font:inherit}
+.pv-skr+.pv-skr{border-top:1px solid var(--sep)}
+.pv-skr .chev{color:var(--label3)}
+.pv-skh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pv-skr .lvs{margin-top:12px}.pv-skr .lvs span{height:26px}
+.pv-chk{padding:18px 16px}
+.pv-chkh{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pv-chkh b{display:block;font-size:17px;line-height:22px;font-weight:600;color:var(--label)}
+.pv-chkh div span{display:block;margin-top:2px;font-size:13px;color:var(--label2)}
+.pv-chk .pv-open{margin-top:16px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.pv-chk .pv-open svg{width:18px;height:18px}
+.content.sec-general .pv-chk .tagx{--sec-rgb:108,94,240;--sec:#B3A8FF}
+/* ===== /v21 ===== */
 /* ===== /v17 ===== */
 </style>
 
@@ -604,6 +664,7 @@ const IC = {
   chevR: '<svg class="chev" viewBox="0 0 8 14" width="8" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l6 6-6 6"/></svg>',
   chevL: I('<path d="M15 4l-8 8 8 8"/>'),
   chevRb: I('<path d="M9 4l8 8-8 8"/>'),
+  xmark: I('<path d="M6 6l12 12M18 6L6 18"/>'),
   check: I('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
   plus: I('<path d="M12 5v14M5 12h14"/>'),
   play: I('<path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/>', true),
@@ -1202,39 +1263,64 @@ function checkKind(c) {
 }
 function skillMinutes(t, k) { return (t.skills[k] && t.skills[k].minutes) || 10; }
 
+function lvScale(cur, goal) {
+  return `<div class="lvs">${LEVELS.map(l => `<span class="${l === cur ? 'cur' : l === goal ? 'goal' : ''}">${l}</span>`).join('')}</div>`;
+}
+function weekStart(d) { const w = (parse(d).getDay() + 6) % 7; return addDays(d, -w); }
+function weekFull(mon) { for (let i = 0; i < 7; i++) if (!S.activity[addDays(mon, i)]) return false; return true; }
+function fullWeeksRow() {
+  const t = today(); let mon = weekStart(t), n = 0;
+  if (!(addDays(mon, 6) <= t && weekFull(mon))) mon = addDays(mon, -7);
+  for (let k = 0; k < 520 && weekFull(mon); k++) { n++; mon = addDays(mon, -7); }
+  return n;
+}
+function weekActivity() {
+  const t = today(), mon = weekStart(t);
+  const names = lang() === 'ru' ? ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const A = [0xD9, 0xD3, 0xFF], B = [0x6C, 0x5E, 0xF0];
+  const shade = k => '#' + A.map((a, j) => Math.round(a + (B[j] - a) * Math.min(k, 6) / 6).toString(16).padStart(2, '0')).join('');
+  let run = 0, done = 0, cells = '';
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(mon, i), fut = d > t, on = !fut && !!S.activity[d];
+    run = on ? run + 1 : 0; if (on) done++;
+    const cls = (fut ? 'fut' : on ? 'on' : 'miss') + (d === t ? ' now' : '');
+    cells += `<div class="wk7d ${d === t ? 'now' : ''} ${fut ? 'fut' : ''}"><span>${names[i]}</span><i class="${cls}"${on ? ` style="background:${shade(run - 1)}"` : ''} title="${fmtShort(d)}"></i></div>`;
+  }
+  const full = done === 7, fw = fullWeeksRow();
+  return { cells, done, full, fw, range: fmtDate(mon, { day: 'numeric', month: 'short' }) + ' – ' + fmtDate(addDays(mon, 6), { day: 'numeric', month: 'short' }) };
+}
 function vProgress() {
-  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level);
-  let h = `<div class="strip"><div class="stat"><b>${IC.flame}${streak()}</b><span>${L('дней подряд', 'days in a row')}</span></div>
-     <div class="stat"><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
-     <div class="stat"><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>`;
-  // activity: fills left to right from the first study day
-  const t = today(), first = Object.keys(S.activity).filter(k => S.activity[k]).sort()[0];
-  let start = first || t; if (addDays(start, 13) < t) start = addDays(t, -13);
-  let cells = '', active = 0;
-  for (let i = 0; i < 14; i++) { const d = addDays(start, i), a = d <= t ? (S.activity[d] || 0) : 0; if (a) active++; cells += `<i class="${a ? 'on' : ''}" title="${fmtShort(d)}"></i>`; }
-  h += groupHead(L('Активность, 14 дней', 'Activity, 14 days')) + `<div class="panel"><div class="days14">${cells}</div><div class="row-sub" style="margin-top:10px">${L('Дней с занятиями', 'Study days')}: ${active} ${L('из', 'of')} 14</div></div>`;
-  h += groupHead(L('Уровень по CEFR', 'CEFR level')) + `<div class="panel"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><b style="font-size:22px">${ov.level}</b><span class="row-sub">${L('цель', 'goal')}: ${LEVELS[ci + 1] || ov.level}</span></div>
-     <div class="cefr" style="margin-bottom:0">${LEVELS.map((l, i) => `<div class="${i === ci ? 'cur' : ''}">${l}</div>`).join('')}</div>
-     <div class="actions" style="margin-top:16px"><button class="btn" data-act="open-checks">${L('Пройти проверку уровня', 'Take a level check')}</button></div></div>`;
-  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group">' + SKILLS.map(k => {
+  const ov = overallLevel(), ci = LEVELS.indexOf(ov.level), goal = LEVELS[ci + 1] || ov.level;
+  const lastDate = SKILLS.map(k => latestResult(k)).filter(r => r && !r.pending && r.date).map(r => r.date).sort().pop();
+  let h = `<div class="panel glow pv-lv"><div class="pv-row"><span>${L('Общий уровень', 'Overall level')}</span>${lastDate ? `<span>${L('тест', 'test')} ${fmtShort(lastDate)}</span>` : ''}</div>
+    <div class="pv-big">${ov.level}<small> · ${L('цель', 'goal')} ${goal}</small></div>${lvScale(ov.level, goal)}</div>`;
+  const w = weekActivity();
+  h += groupHead(L('Активность', 'Activity')) + `<div class="panel glow wide pv-act"><div class="pstats">
+      <div><b>${streak()}${L('д', 'd')}</b><span>${L('дней подряд', 'day streak')}</span></div>
+      <div><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
+      <div><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>
+    <div class="pv-sep"></div><div class="pv-cap">${L('Эта неделя', 'This week')} · ${w.range}</div>
+    <div class="wk7">${w.cells}</div>
+    <div class="pv-foot"><b class="${w.full ? 'full' : ''}">${w.full ? L('Полная неделя ✓', 'Full week ✓') : L('Эта неделя', 'This week') + ` · ${w.done} ${L('из', 'of')} 7`}</b>${w.fw ? `<span>${L('Полных недель подряд', 'Full weeks in a row')}: ${w.fw}</span>` : ''}</div></div>`;
+  h += groupHead(L('По навыкам', 'By skill')) + '<div class="group pv-sk">' + SKILLS.map(k => {
     const r = latestResult(k);
-    let sub, pill;
-    if (r && r.pending) { sub = L('на проверке у Claude', 'waiting for Claude'); pill = `<span class="pill">${L('ждёт', 'pending')}</span>`; }
-    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? (r.kind === 'graded' ? L('оценка Claude · ', 'graded by Claude · ') : L('самооценка · ', 'self-assessment · ')) : '') + fmtShort(r.date); pill = `<span class="pill lvl big">${r.level}</span>`; }
-    else { sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k)); pill = '<span class="pill big">—</span>'; }
-    return `<button class="row" data-act="open-check" data-skill="${k}"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${pill}${IC.chevR}</button>`;
+    let sub, sc = '';
+    if (r && r.pending) sub = L('на проверке у Claude', 'waiting for Claude');
+    else if (r) { sub = (r.total ? `${r.score} ${L('из', 'of')} ${r.total} · ` : k === 'speaking' ? (r.kind === 'graded' ? L('оценка Claude · ', 'graded by Claude · ') : L('самооценка · ', 'self-assessment · ')) : '') + fmtShort(r.date); sc = lvScale(r.level); }
+    else sub = L('не проверено · ', 'not checked · ') + mins(skillMinutes(currentTest(), k));
+    return `<button class="pv-skr" data-act="open-check" data-skill="${k}"><span class="pv-skh"><span class="row-main"><span class="row-title">${skillName(k)}</span><span class="row-sub">${sub}</span></span>${IC.chevR}</span>${sc}</button>`;
   }).join('') + '</div>';
-  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Каждый навык можно проверить отдельно в любой момент. Письмо и говорение оценивает Claude (говорение — в чате Speaking).', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Check any skill separately at any time. Writing and speaking are graded by Claude (speaking — in the Speaking chat).')}</div>`;
-  const w = checkWindow() || { from: today(), to: today() };
-  const from = w.from, to = w.to;
-  h += groupHead(L('Проверки', 'Checks')) + `<div class="group icons"><div class="row static"><span class="tile" style="background:var(--accent)">${IC.target}</span>
-      <span class="row-main"><span class="row-title">${L('Следующая контрольная', 'Next full check')}</span><span class="row-sub">${fmtShort(from)} – ${fmtShort(to)}</span></span><span class="pill">${L('5 навыков', '5 skills')}</span></div>` +
-    S.checks.slice().reverse().map(c => {
-      const ks = Object.keys(c.results), r0 = c.results[ks[0]];
-      return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
+  const t = currentTest(), total = SKILLS.reduce((a, k) => a + skillMinutes(t, k), 0), win = checkWindow();
+  const nt = nextCheckText();
+  h += groupHead(L('Проверка уровня', 'Level check')) + `<div class="panel pv-chk"><div class="pv-chkh"><div><b>${nt === '—' ? L('Проверка уровня', 'Level check') : L('Следующая проверка', 'Next check') + ' ' + esc(nt)}</b><span>${L('5 навыков', '5 skills')} · ~${total} ${L('мин', 'min')}</span></div>${win ? `<span class="tagx">${fmtDate(win.from, { day: 'numeric', month: 'short' })} – ${fmtDate(win.to, { day: 'numeric', month: 'short' })}</span>` : ''}</div>
+    <button class="btn sec pv-open" data-act="open-checks">${IC.chart}<span>${L('Открыть проверку уровня', 'Open level check')}</span></button></div>`;
+  if (S.checks.length) h += '<div class="group icons" style="margin-top:8px">' + S.checks.slice().reverse().map(c => {
+    const ks = Object.keys(c.results), r0 = c.results[ks[0]];
+    return `<div class="row static"><span class="tile" style="background:${r0.pending ? 'var(--label3)' : 'var(--green)'}">${IC.check}</span>
       <span class="row-main"><span class="row-title">${checkKind(c)}</span><span class="row-sub">${fmtDate(c.date)} · ${ks.map(k => skillName(k) + (c.results[k].total ? ' ' + c.results[k].score + '/' + c.results[k].total : '')).join(', ')}</span></span>${r0.pending ? `<span class="pill">${L('ждёт', 'pending')}</span>` : `<span class="pill lvl">${r0.level}</span>`}</div>`;
-    }).join('') + '</div>';
-  return { title: L('Прогресс', 'Progress'), body: h };
+  }).join('') + '</div>';
+  h += `<div class="gfoot">${L('Шкала CEFR (A1–C2) — общая для Cambridge, IELTS и TOEFL. Письмо и говорение оценивает Claude.', 'The CEFR scale (A1–C2) is shared by Cambridge, IELTS and TOEFL. Writing and speaking are graded by Claude.')}</div>`;
+  return { title: L('Прогресс', 'Progress'), pill: `${ov.level} → ${goal}`, body: h };
 }
 
 function vChecks() {
@@ -1630,8 +1716,8 @@ function tItems(t) {
     }
   } else {
     h += `<p class="q">${md(it.q)}</p><div class="opts">` + it.options.map((o, k) => {
-      let c = ''; if (TS.picked !== null) c = k === it.a ? 'right' : k === TS.picked ? 'wrong' : 'dim';
-      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${c === 'right' ? IC.check : ''}</button>`;
+      let c = ''; if (TS.picked !== null) c = (k === TS.picked ? 'pick' : 'other') + (k === it.a ? ' right' : k === TS.picked ? ' wrong' : '');
+      return `<button class="opt ${c}" data-act="pick" data-i="${k}" ${TS.picked !== null ? 'disabled' : ''}><span>${md(o)}</span>${k === it.a && TS.picked !== null ? IC.check : c === 'pick wrong' ? IC.xmark : ''}</button>`;
     }).join('') + '</div>';
     if (TS.picked !== null) {
       const ok = TS.picked === it.a, mine = it.options[TS.picked], right = it.options[it.a];
@@ -1833,7 +1919,7 @@ function render() {
   document.getElementById('main').innerHTML = `<header class="nav ${UI.scrolled ? 'scrolled' : ''}" id="nav">
       <div class="nav-l">${v.back ? `<button class="nav-btn" data-act="back">${IC.chevL}<span>${L('Назад', 'Back')}</span></button>` : ''}</div>
       <div class="nav-t">${esc(v.title)}</div><div class="nav-r">${v.action || ''}</div></header>
-    <div class="content sec-${v.sec || 'general'}${v.task ? ' task' : ''}"><div class="large-row"><h1 class="large">${esc(v.title)}</h1>${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
+    <div class="content sec-${v.sec || 'general'}${v.task ? ' task' : ''}"><div class="large-row">${v.back ? `<button class="tback" data-act="back" aria-label="${L('Назад', 'Back')}">${IC.chevL}<h1 class="large">${esc(v.title)}</h1></button>` : `<h1 class="large">${esc(v.title)}</h1>`}${v.pill ? `<span class="hpill">${v.pill}</span>` : ''}</div>${v.sub ? `<p class="sub">${v.sub}</p>` : '<div style="height:14px"></div>'}${v.body}</div>`;
   const T = tabs();
   document.getElementById('tabbar').innerHTML = T.map(([k, n, ic]) => `<button class="tab ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}" aria-label="${n}">${ic}<span>${n}</span></button>`).join('');
   document.getElementById('sidebar').innerHTML = `<div class="side-h">${L('Учёба', 'Study')}</div>` + T.map(([k, n, ic]) => `<button class="side-i ${UI.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${ic}<span>${n}</span></button>`).join('')
