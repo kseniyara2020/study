@@ -1,0 +1,21 @@
+{
+ "type": "review",
+ "id": "review-2026-11-20",
+ "date": "2026-11-20",
+ "upTo": "2026-11-20",
+ "upToTs": "2026-11-20T12:13:28.567Z",
+ "summary": "День 3 (фразовые) начат: 34/40 (85%) — снова путаются put off ↔ call off, плюс point out, find out, catch up. Повторение UX-фраз: устойчивые фразы созвона (Let me get back to you, That's a fair point, Good catch) пока не вспоминаются.",
+ "verdicts": [
+  {"id": "v20-p3-d2-u6-2", "task": "p3-d2-u6", "i": 2, "verdict": "ok", "comment": "так тоже правильно; more — «подробнее», a bit — «немного»"},
+  {"id": "v20-p3-d2-u6-3", "task": "p3-d2-u6", "i": 3, "verdict": "ok"},
+  {"id": "v20-p3-d2-u6-4", "task": "p3-d2-u6", "i": 4, "verdict": "almost", "correct": "Can everyone see my screen?", "comment": "see — глагол восприятия, в -ing почти не бывает; на созвоне: Can everyone see my screen?"},
+  {"id": "v20-p3-d2-u6-5", "task": "p3-d2-u6", "i": 5, "verdict": "wrong", "correct": "Let me think about it and get back to you.", "comment": "Let me (не Let's me); «вернусь к вам» на работе — get back to you (come back — физически вернуться)"},
+  {"id": "v20-p3-d2-u6-6", "task": "p3-d2-u6", "i": 6, "verdict": "wrong", "correct": "That's a fair point.", "comment": "notice — уведомление; «замечание, довод» — point: That's a fair point"},
+  {"id": "v20-p3-d2-u6-7", "task": "p3-d2-u6", "i": 7, "verdict": "wrong", "correct": "Good catch, I'll fix it.", "comment": "«Хорошо подмечено» — устойчиво Good catch (дословно «хорошо поймал»); note — заметка"}
+ ],
+ "noteStatus": [
+  {"id": "n-mwnsdywmch6z", "status": "planned", "reply": "Контраст кнопки «Надиктовать» и подписи + белая активная часть прогресс-бара — передано в чат «Дизайн приложения» (там идёт редизайн v17–v20); внесём после вашего «да» там."},
+  {"id": "n-mwnzs1z2avi6", "status": "planned", "reply": "Убрать строку-дубль заголовка при скролле; поле ответа после «Сохранить» — чёрное, текст приглушён; «Сохранено — проверит Claude» и вариант — текстом без плашки. Передано в чат «Дизайн приложения»."},
+  {"id": "n-mwo115ug6e9n", "status": "planned", "reply": "Убрать круглую кнопку «Назад»; назад — по нажатию на заголовок со стрелкой без кружка перед ним. Передано в чат «Дизайн приложения»."}
+ ]
+}
