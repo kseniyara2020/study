@@ -121,7 +121,7 @@ function initState() {
     checks: [{ id: 'chk-2026-10-30', date: '2026-10-30', kind: 'placement', results: { grammar: { score: 6, total: 12, level: 'B1' } } }],
     settings: { remind: '19:00', mediaNudge: true, voiceSlot: 'us-f', rate: 0.95, trUrl: '', lang: 'ru' },
     media: (SEED.media || []).slice(),
-    activity: {}, speaking: []
+    activity: {}, speaking: [], dayMoved: {}, revCards: true
   };
 }
 function load() { try { const r = localStorage.getItem(KEY); if (!r) return null; const s = JSON.parse(r); return s && s.version === 1 ? s : null; } catch (e) { return null; } }
@@ -198,16 +198,30 @@ function allTasks() {
 }
 function findTask(id) { return allTasks().find(x => x.task.id === id); }
 const isDone = id => !!(S.progress[id] && S.progress[id].done);
-// «Повторите вслух» — по желанию: не входит в счёт дня, минуты и закрытие дня; стоит в конце дня отдельной группой
-const isOptional = t => t.type === 'shadow';
+// Дополнительные задания (с 23.11.2026, кэш v23): shadow или optional: true в пакете — не входят в ядро дня
+const isOptional = t => t.type === 'shadow' || t.optional === true;
 const req = list => (list || []).filter(t => !isOptional(t));
 function dayTasks(d) { return req([...(d.general || []), ...(d.ux || [])]); }
+function dayOptional(d) { return [...(d.general || []), ...(d.ux || [])].filter(isOptional); }
+// ключ дня не зависит от версии пакета (pack-003m → 003n): id первого задания дня
+function dayKey(d) { const t = (d.general || [])[0] || (d.ux || [])[0]; return t ? t.id : 'd' + d.day; }
+const coreDone = d => dayTasks(d).every(t => isDone(t.id));
+const dayMovedOn = d => !!(S.dayMoved && S.dayMoved[dayKey(d)]);
+// день открыт, пока не сделано ядро; после ядра — пока не сделаны дополнительные и не нажата «Перейти к следующему дню»
+const dayOpen = d => !coreDone(d) || (!dayMovedOn(d) && dayOptional(d).some(t => !isDone(t.id)));
 function activePack() {
-  const open = S.packs.find(p => (p.days || []).some(d => dayTasks(d).some(t => !isDone(t.id))));
+  const open = S.packs.find(p => (p.days || []).some(dayOpen));
   return open || S.packs[S.packs.length - 1] || null;
 }
-function currentDayIndex(p) { const i = p.days.findIndex(d => dayTasks(d).some(t => !isDone(t.id))); return i < 0 ? p.days.length - 1 : i; }
+function currentDayIndex(p) { const i = p.days.findIndex(dayOpen); return i < 0 ? p.days.length - 1 : i; }
+const REV = '~r'; // обратная карточка: русское значение → вспомнить английское
+function isRev(id) { return id.slice(-2) === REV; }
+function cardBase(id) { return isRev(id) ? id.slice(0, -2) : id; }
+const wordCount = () => Object.keys(S.cards).filter(id => !isRev(id)).length;
 function dueCards() { const t = today(); return Object.keys(S.cards).filter(id => S.cards[id].due <= t); }
+// миграция v23: дни, где ядро уже сделано, считаются закрытыми (как было раньше); карточки — обратная сторона «рус → англ», по 15 в день
+if (!S.dayMoved) { S.dayMoved = {}; S.packs.forEach(p => (p.days || []).forEach(d => { if (dayTasks(d).length && coreDone(d) && dayOptional(d).some(t => !isDone(t.id))) S.dayMoved[dayKey(d)] = 'v23'; })); save(); }
+if (!S.revCards) { let k = 0; Object.keys(S.cards).filter(id => !isRev(id)).forEach(id => { if (!S.cards[id + REV]) S.cards[id + REV] = { box: 1, due: addDays(today(), 1 + Math.floor(k++ / 15)) }; }); S.revCards = true; save(); }
 function streak() {
   let n = 0, d = today();
   if (!S.activity[d]) d = addDays(d, -1);
@@ -297,7 +311,7 @@ function markDone(id, extra) {
   S.progress[id] = Object.assign({ done: true, at: today() }, prev, extra || {}, { done: true, spent });
   touchActivity(); save();
 }
-function addCards(ids) { const t = addDays(today(), 1); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; }); }
+function addCards(ids) { const t = addDays(today(), 1), t2 = addDays(today(), 2); ids.forEach(id => { if (!S.cards[id]) S.cards[id] = { box: 1, due: t }; if (!S.cards[id + REV]) S.cards[id + REV] = { box: 1, due: t2 }; }); }
 
 /* ---------- views: common ---------- */
 function groupHead(text, extra) { return `<div class="ghead">${text}${extra || ''}</div>`; }
@@ -428,7 +442,7 @@ function dayTiles(p, di) {
   const d = p && p.days[di];
   const g = d ? secStats(d.general || []) : { done: 0, total: 0, plan: 0, spent: 0 }, u = d ? secStats(d.ux || []) : { done: 0, total: 0, plan: 0, spent: 0 };
   const left = st => Math.max(0, st.plan - st.spent);
-  const due = dueCards().length, total = Object.keys(S.cards).length, lt = lastTalk();
+  const due = dueCards().length, total = wordCount(), lt = lastTalk();
   let h = '<div class="tiles4">';
   h += sTile('general', g.done, '/' + g.total, L('Общий', 'General'), g.total ? (g.done === g.total ? L('готово', 'done') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), g.total ? Math.round(g.done / g.total * 100) : 0, 'open-daysec', `data-sec="general" data-di="${di}"`);
   h += sTile('ux', u.done, '/' + u.total, 'UX/UI', u.total ? (u.done === u.total ? L('готово', 'done') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), u.total ? Math.round(u.done / u.total * 100) : 0, 'open-daysec', `data-sec="ux" data-di="${di}"`);
@@ -467,7 +481,8 @@ function vToday() {
   if (!p) return { title: L('Сегодня', 'Today'), body: empty(IC.box, L('Нет пакета заданий', 'No task pack'), L('Попросите Claude собрать пакет и импортируйте его в Настройках.', 'Ask Claude for a pack and import it in Settings.')) };
   const di = currentDayIndex(p), d = p.days[di];
   const all = dayTasks(d), done = all.filter(t => isDone(t.id)).length, pct = all.length ? Math.round(done / all.length * 100) : 0;
-  const next = all.find(t => !isDone(t.id));
+  const optNext = all.every(t => isDone(t.id)) && !dayMovedOn(d) ? dayOptional(d).find(t => !isDone(t.id)) : null;
+  const next = all.find(t => !isDone(t.id)) || optNext;
   const secOf = t => (d.ux || []).includes(t) ? 'ux' : 'general';
   const topicSec = next ? secOf(next) : 'general';
   const parts = ['general', 'ux'].filter(s => req(d[s] || []).length).map(s => SECTIONS[s].short()).join(' + ');
@@ -475,7 +490,9 @@ function vToday() {
   h += `<div class="dcard sec-${topicSec}">${weekHtml()}
     <div class="dsep"><div class="wk-cap">${L('Тема дня', 'Today’s topic')} · ${esc(SECTIONS[topicSec].name())}</div><div class="dtop">${esc(d.title)}</div>
     <div class="dprog"><span><b>${done} ${L('из', 'of')} ${all.length}</b> · ${esc(parts)}</span><em>${pct}%</em></div>${pbarHtml(pct)}</div>
-    ${next ? ctaHtml('open-task', `data-id="${esc(next.id)}"`, L('Продолжить', 'Continue'), '· ' + mins(next.minutes), L('Дальше: ', 'Next: ') + next.title) : `<div class="dprog" style="justify-content:center"><b>${L('Всё готово на сегодня', 'All done for today')}</b></div>`}</div>`;
+    ${optNext ? `<div class="dprog" style="justify-content:center"><b>${L('Ядро дня готово', 'Core of the day done')}</b></div>` : ''}
+    ${next ? ctaHtml('open-task', `data-id="${esc(next.id)}"`, optNext ? L('Дополнительно', 'Extra') : L('Продолжить', 'Continue'), '· ' + mins(next.minutes), L('Дальше: ', 'Next: ') + next.title) : `<div class="dprog" style="justify-content:center"><b>${L('Всё готово на сегодня', 'All done for today')}</b></div>`}
+    ${optNext ? nextDayBtn(d) : ''}</div>`;
   h += groupHead(L('Английский', 'English'), `<button class="glink" data-act="tab" data-tab="english">${L('Все', 'All')}</button>`) + dayTiles(p, di);
   if (S.settings.mediaNudge) {
     const rows = [];
@@ -489,6 +506,8 @@ function vToday() {
     <div class="pfoot"><span>${L('Следующая проверка', 'Next level check')}</span><b>${esc(nextCheckText())}</b></div></div>`;
   return { title: L('Сегодня', 'Today'), pill: `${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}`, body: h };
 }
+
+function nextDayBtn(d) { return `<div class="actions"><button class="btn sec" data-act="next-day" data-key="${esc(dayKey(d))}">${L('Перейти к следующему дню', 'Go to the next day')}</button></div>`; }
 
 /* ---------- English ---------- */
 function vEnglish() {
@@ -524,7 +543,9 @@ function vDaySec(sec, di) {
     <div class="meta"><span>${st.spent} ${L('из', 'of')} ~${st.plan} ${L('мин', 'min')}</span><span>${tot ? Math.round(sc / tot * 100) + '% ' + L('верно', 'correct') : ''}</span></div>
     ${next ? ctaHtml('open-task', `data-id="${esc(next.id)}"`, L('Продолжить', 'Continue'), '· ' + mins(next.minutes), L('Дальше: ', 'Next: ') + next.title) : ''}</div>`;
   h += groupHead(L('Задания', 'Tasks')) + `<div class="group">${req(list).map(t => taskRow(t, next && t.id === next.id)).join('')}</div>`;
-  if (opt.length) h += groupHead(L('Дополнительно · по желанию', 'Extra · optional')) + `<div class="group">${opt.map(t => taskRow(t)).join('')}</div><div class="gfoot">${L('Послушайте и повторите фразы дня. Не входит в план дня.', 'Listen and repeat the day’s phrases. Not part of the daily plan.')}</div>`;
+  const onlyShadow = opt.every(t => t.type === 'shadow');
+  if (opt.length) h += groupHead(L('Дополнительно · по желанию', 'Extra · optional')) + `<div class="group">${opt.map(t => taskRow(t)).join('')}</div><div class="gfoot">${onlyShadow ? L('Послушайте и повторите фразы дня. Не входит в план дня.', 'Listen and repeat the day’s phrases. Not part of the daily plan.') : L('Не входит в ядро дня. Можно пройти сейчас или позже.', 'Not part of the core of the day. Do it now or later.')}</div>`;
+  if (!next && di === currentDayIndex(p) && coreDone(d) && !dayMovedOn(d) && dayOptional(d).some(t => !isDone(t.id))) h += nextDayBtn(d);
   return { title: sec === 'ux' ? 'UX/UI' : SECTIONS[sec].short(), back: true, sec, pill: `${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}`, sub: esc(d.title), body: h };
 }
 
@@ -717,7 +738,7 @@ function vProgress() {
   h += groupHead(L('Активность', 'Activity')) + `<div class="panel glow wide pv-act"><div class="pstats">
       <div><b>${streak()}${L('д', 'd')}</b><span>${L('дней подряд', 'day streak')}</span></div>
       <div><b>${doneCount()}</b><span>${L('заданий выполнено', 'tasks done')}</span></div>
-      <div><b>${Object.keys(S.cards).length}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>
+      <div><b>${wordCount()}</b><span>${L('слов в повторении', 'words in review')}</span></div></div>
     <div class="pv-sep"></div><div class="pv-cap">${L('Эта неделя', 'This week')} · ${w.range}</div>
     <div class="wk7">${w.cells}</div>
     <div class="pv-foot"><b class="${w.full ? 'full' : ''}">${w.full ? L('Полная неделя ✓', 'Full week ✓') : L('Эта неделя', 'This week') + ` · ${w.done} ${L('из', 'of')} 7`}</b>${w.fw ? `<span>${L('Полных недель подряд', 'Full weeks in a row')}: ${w.fw}</span>` : ''}</div></div>`;
@@ -1152,7 +1173,7 @@ function nextBtn(t) { return `<div class="actions"><button class="btn" data-act=
 /* ---------- review ---------- */
 function vReview() {
   const V = vocabMap();
-  if (!RV) RV = { queue: dueCards().filter(id => V[id]), i: 0, flipped: false, known: 0 };
+  if (!RV) RV = { queue: dueCards().filter(id => V[cardBase(id)]), i: 0, flipped: false, known: 0 };
   const title = L('Повторение', 'Review');
   if (!RV.queue.length || RV.i >= RV.queue.length) {
     const next = Object.values(S.cards).map(c => c.due).sort()[0];
@@ -1161,10 +1182,14 @@ function vReview() {
       ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>${L('Повторение на сегодня закончено.', 'Today’s review is done.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`
       : empty(IC.cards, L('Всё повторено', 'All caught up'), next ? L('Следующее повторение: ', 'Next review: ') + fmtShort(next) + '.' : L('Слова появятся после заданий «Новые слова».', 'Words appear after “New words” tasks.')) };
   }
-  const v = V[RV.queue[RV.i]];
+  const cid = RV.queue[RV.i], rev = isRev(cid), v = V[cardBase(cid)];
+  const dir = `<span class="pill lvl">${rev ? L('рус → англ', 'RU → EN') : L('англ → рус', 'EN → RU')}</span>`;
+  const face = rev
+    ? `<span class="en">${esc(v.ru)}</span>${RV.flipped ? `<span class="ru">${esc(v.en)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Скажите по-английски и нажмите', 'Say it in English and tap')}</span>`}`
+    : `<span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Вспомните перевод и нажмите', 'Recall the translation and tap')}</span>`}`;
   let h = `<div class="progress"><i style="width:${(RV.i / RV.queue.length) * 100}%"></i></div>
-    <button class="flash" data-act="rv-flip"><span class="en">${esc(v.en)}</span>${RV.flipped ? `<span class="ru">${esc(v.ru)}</span><span class="exs">${esc(v.ex)}</span>` : `<span class="tap">${L('Вспомните перевод и нажмите', 'Recall the translation and tap')}</span>`}</button>
-    <div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} ${L('Слово', 'Word')}</button></div>`;
+    <button class="flash" data-act="rv-flip">${dir}${face}</button>
+    ${!rev || RV.flipped ? `<div class="btns"><button class="btn sec" data-act="speak" data-text="${esc(v.en)}">${IC.play} ${L('Слово', 'Word')}</button></div>` : ''}`;
   if (RV.flipped) h += `<div class="btns"><button class="btn danger" data-act="rv" data-ok="0">${L('Не помню', 'Forgot')}</button><button class="btn ok" data-act="rv" data-ok="1">${L('Помню', 'Remembered')}</button></div>`;
   h += `<div class="qcount" style="text-align:center">${RV.i + 1} ${L('из', 'of')} ${RV.queue.length}</div>`;
   return { title, back: true, sec: 'words', body: h };
@@ -1216,13 +1241,13 @@ function buildExport() {
   Object.entries(S.progress).forEach(([id, p]) => { if (p.answer) writing[id] = p.answer; });
   return {
     type: 'study-export', version: 1, exportedAt: new Date().toISOString(),
-    summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: Object.keys(S.cards).length, packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
-    progress: S.progress, cards: S.cards, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
+    summary: { reviewedUpTo: reviewedUpTo() || null, mistakesOpen: mistakeStats().open, streak: streak(), tasksDone: doneCount(), cardsInReview: wordCount(), packs: S.packs.map(p => p.id), tests: S.tests.map(t => t.id), overall: overallLevel() },
+    progress: S.progress, cards: S.cards, dayMoved: S.dayMoved || {}, myWords: S.myWords, shows: S.shows, checks: S.checks, activity: S.activity,
     mistakes: [...Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id, unfinished: true }, w)))].concat(Object.entries(S.progress).flatMap(([id, p]) => (p.wrong || []).map(w => Object.assign({ task: id }, w, isReviewed(w) ? { reviewed: true } : {})))),
     reviews: S.reviews || [], inProgress: S.inProgress || {}, verdicts: S.verdicts || {},
     appNotes: (S.notes || []).filter(n => !['done', 'declined'].includes(n.status)),
     openAnswers: Object.entries(S.progress).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id }, o))).concat(Object.entries(S.inProgress || {}).flatMap(([id, p]) => (p.open || []).filter(o => !(S.verdicts[id] || {})[o.i]).map(o => Object.assign({ task: id, unfinished: true }, o)))),
-    writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => V[id] ? V[id].en : id),
+    writing, weakCards: Object.entries(S.cards).filter(([, c]) => c.box <= 1 && c.lapses).map(([id]) => { const b = cardBase(id); return (V[b] ? V[b].en : b) + (isRev(id) ? ' (рус → англ)' : ''); }),
     speaking: S.speaking || [],
     packs: S.packs, tests: S.tests, media: S.media
   };
@@ -1304,6 +1329,7 @@ function mergeExport(d, replace) {
     Object.entries(d.verdicts || {}).forEach(([tid, rv]) => { S.verdicts[tid] = Object.assign({}, rv, S.verdicts[tid] || {}); });
     (d.appNotes || []).forEach(n => { if (!S.notes.some(x => x.id === n.id)) S.notes.push(n); });
     (d.speaking || []).forEach(r => { if (r && r.id && !S.speaking.some(x => x.id === r.id)) S.speaking.push(r); });
+    Object.entries(d.dayMoved || {}).forEach(([k, v]) => { S.dayMoved[k] = S.dayMoved[k] || v; });
     Object.entries(d.cards || {}).forEach(([id, c]) => { const cur = S.cards[id]; if (!cur || c.box > cur.box) S.cards[id] = c; });
     (d.myWords || []).forEach(w => { if (!S.myWords.some(x => x.id === w.id)) S.myWords.push(w); });
     (d.shows || []).forEach(sh => { const cur = S.shows.find(x => x.id === sh.id); if (!cur) S.shows.push(sh); else cur.watched = [...new Set([...cur.watched, ...(sh.watched || [])])]; });
@@ -1478,8 +1504,10 @@ function nextItem() {
     const pr = S.progress[t.id];
     if (total) { pr.score = sc; pr.total = total; } else { delete pr.score; delete pr.total; }
     if (wrong.length) pr.wrong = [...(pr.wrong || []), ...wrong].slice(-500);
+    const prevOpen = [...((S.inProgress && S.inProgress[t.id] && S.inProgress[t.id].open) || []), ...(pr.open || [])];
     if (S.inProgress) delete S.inProgress[t.id];
-    if (TS.open && TS.open.length) { pr.open = [...(pr.open || []).filter(o => !TS.open.some(n => n.i === o.i)), ...TS.open.map(o => Object.assign({ date: today() }, o))]; if (S.verdicts[t.id]) TS.open.forEach(o => { delete S.verdicts[t.id][o.i]; }); }
+    // оценку Claude стираем, только если ответ изменился (раньше стирались и оценки переводов, сделанных до перерыва)
+    if (TS.open && TS.open.length) { pr.open = [...(pr.open || []).filter(o => !TS.open.some(n => n.i === o.i)), ...TS.open.map(o => Object.assign({ date: today() }, o))]; if (S.verdicts[t.id]) TS.open.forEach(o => { const was = prevOpen.find(x => x.i === o.i); if (!was || norm(was.answer || '') !== norm(o.answer || '')) delete S.verdicts[t.id][o.i]; }); }
     save();
   }
   else { TS.i++; TS.picked = null; TS.checked = false; TS.input = null; TS.order = []; TS.best = null; TS.almost = null; persistTS(); }
@@ -1584,6 +1612,7 @@ document.addEventListener('click', e => {
       render(); break;
     }
     case 'save-write': { stopMic(); const t = findTask(TS.id).task; clearTS(t.id); markDone(t.id, { answer: TS.draft, words: words(TS.draft), voice: !!TS.voice }); S.progress[t.id].answer = TS.draft; save(); toast(L('Сохранено — попадёт в экспорт', 'Saved — it goes into your export')); render(); break; }
+    case 'next-day': S.dayMoved = S.dayMoved || {}; S.dayMoved[el.dataset.key] = today(); touchActivity(); save(); UI.stack = []; render(); window.scrollTo(0, 0); toast(L('Следующий день открыт', 'Next day is open')); break;
     case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
     case 'rv': {
       const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
