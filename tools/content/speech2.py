@@ -10,7 +10,7 @@ S = "he/she/it + действие → -s; в отрицании -s уходит 
 PL = "things / users / they — множественное → глагол без -s"
 FIX = [
  ("I want ask you a question.", ["I want to ask you a question."], "Я хочу задать вам вопрос.", TO),
- ("I'm continue work on the dashboard.", ["I'm continuing to work on the dashboard.", "I'm continuing working on the dashboard.", "I continue working on the dashboard.", "I continue to work on the dashboard.", "I'm still working on the dashboard."], "Я продолжаю работать над дашбордом.", BE + "; continue + to / -ing"),
+ ("I'm continue work on the dashboard.", ["I'm continuing to work on the dashboard.", "I'm continuing work on the dashboard.", "I'm continuing my work on the dashboard.", "I'm continuing working on the dashboard.", "I continue working on the dashboard.", "I continue to work on the dashboard.", "I'm still working on the dashboard."], "Я продолжаю работать над дашбордом.", BE + "; continue + to / -ing"),
  ("It scare me.", ["It scares me."], "Меня это пугает.", S),
  ("I need finish the layout today.", ["I need to finish the layout today."], "Мне нужно закончить макет сегодня.", TO),
  ("Thanks for help me.", ["Thanks for helping me.", "Thank you for helping me."], "Спасибо, что помогли мне.", ING),
