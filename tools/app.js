@@ -464,8 +464,8 @@ function dayTiles(p, di) {
   // v26: слова доступны всегда (без повторения на сегодня — тренировка); говорение — дней подряд
   const nextRev = Object.values(S.cards).map(c => c.due).sort()[0];
   h += due ? sTile('words', due, ' ' + L('на сегодня', 'today'), L('Слова', 'Words'), L('повторение на сегодня', 'to review today'), null, 'open-review')
-    : sTile('words', total, total ? ' ' + P(total, 'слово', 'слова', 'слов', 'word', 'words') : '', L('Слова', 'Words'), total ? (nextRev ? L('повторение ', 'next review ') + fmtShort(nextRev) + ' · ' : '') + L('тренировка в любой момент', 'practice anytime') : L('пока нет слов', 'no words yet'), null, total ? 'open-practice' : 'open-review');
-  h += sTile('speaking', talkStreak(), ' ' + L('дн. подряд', 'days in a row'), L('Говорение', 'Speaking'), lt ? shortDur(daysSince(lt)) + ' ' + L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
+    : sTile('words', total, total ? ' ' + L('сл.', 'W') : '', L('Слова', 'Words'), total ? (nextRev ? L('повторение ', 'next review ') + fmtShort(nextRev) + ' · ' : '') + L('тренировка в любой момент', 'practice anytime') : L('пока нет слов', 'no words yet'), null, total ? 'open-practice' : 'open-review');
+  h += sTile('speaking', talkStreak(), ' ' + L('дн. подряд', 'd streak'), L('Говорение', 'Speaking'), lt ? shortDur(daysSince(lt)) + ' ' + L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
   return h + '</div>';
 }
 function coverHtml(kind, label, sm) {

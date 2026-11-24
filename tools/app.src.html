@@ -574,6 +574,9 @@ body::before{background:#000!important}
 /* v27 (24.11): текущий день в «Плане недели» — полупрозрачный круг цвета раздела с маленькой точкой (не похоже на чекбокс) */
 .row.plan .check.now{border:none;background:color-mix(in srgb,var(--sec) 22%,transparent)}
 .row.plan .check.now::after{width:8px;height:8px;border-radius:4px}
+
+/* v29: подпись-единица на плитке «Говорение» мельче */
+.stile.sec-speaking .v small{font-size:13px;font-weight:600;letter-spacing:0;margin-left:2px}
 /* ===== /v17 ===== */
 </style>
 
@@ -1054,8 +1057,8 @@ function dayTiles(p, di) {
   // v26: слова доступны всегда (без повторения на сегодня — тренировка); говорение — дней подряд
   const nextRev = Object.values(S.cards).map(c => c.due).sort()[0];
   h += due ? sTile('words', due, ' ' + L('на сегодня', 'today'), L('Слова', 'Words'), L('повторение на сегодня', 'to review today'), null, 'open-review')
-    : sTile('words', total, total ? ' ' + P(total, 'слово', 'слова', 'слов', 'word', 'words') : '', L('Слова', 'Words'), total ? (nextRev ? L('повторение ', 'next review ') + fmtShort(nextRev) + ' · ' : '') + L('тренировка в любой момент', 'practice anytime') : L('пока нет слов', 'no words yet'), null, total ? 'open-practice' : 'open-review');
-  h += sTile('speaking', talkStreak(), ' ' + L('дн. подряд', 'days in a row'), L('Говорение', 'Speaking'), lt ? shortDur(daysSince(lt)) + ' ' + L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
+    : sTile('words', total, total ? ' ' + L('сл.', 'W') : '', L('Слова', 'Words'), total ? (nextRev ? L('повторение ', 'next review ') + fmtShort(nextRev) + ' · ' : '') + L('тренировка в любой момент', 'practice anytime') : L('пока нет слов', 'no words yet'), null, total ? 'open-practice' : 'open-review');
+  h += sTile('speaking', talkStreak(), ' ' + L('дн. подряд', 'd streak'), L('Говорение', 'Speaking'), lt ? shortDur(daysSince(lt)) + ' ' + L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
   return h + '</div>';
 }
 function coverHtml(kind, label, sm) {

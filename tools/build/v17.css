@@ -290,3 +290,6 @@ body::before{background:#000!important}
 /* v27 (24.11): текущий день в «Плане недели» — полупрозрачный круг цвета раздела с маленькой точкой (не похоже на чекбокс) */
 .row.plan .check.now{border:none;background:color-mix(in srgb,var(--sec) 22%,transparent)}
 .row.plan .check.now::after{width:8px;height:8px;border-radius:4px}
+
+/* v29: подпись-единица на плитке «Говорение» мельче */
+.stile.sec-speaking .v small{font-size:13px;font-weight:600;letter-spacing:0;margin-left:2px}
