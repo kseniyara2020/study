@@ -442,10 +442,12 @@ function dayTiles(p, di) {
   const d = p && p.days[di];
   const g = d ? secStats(d.general || []) : { done: 0, total: 0, plan: 0, spent: 0 }, u = d ? secStats(d.ux || []) : { done: 0, total: 0, plan: 0, spent: 0 };
   const left = st => Math.max(0, st.plan - st.spent);
+  const optLeft = sec => d ? (d[sec] || []).filter(t => isOptional(t) && !isDone(t.id)).length : 0;
+  const doneTxt = sec => optLeft(sec) ? L('ядро готово · ещё ', 'core done · ') + optLeft(sec) + L(' доп.', ' extra') : L('готово', 'done');
   const due = dueCards().length, total = wordCount(), lt = lastTalk();
   let h = '<div class="tiles4">';
-  h += sTile('general', g.done, '/' + g.total, L('Общий', 'General'), g.total ? (g.done === g.total ? L('готово', 'done') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), g.total ? Math.round(g.done / g.total * 100) : 0, 'open-daysec', `data-sec="general" data-di="${di}"`);
-  h += sTile('ux', u.done, '/' + u.total, 'UX/UI', u.total ? (u.done === u.total ? L('готово', 'done') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), u.total ? Math.round(u.done / u.total * 100) : 0, 'open-daysec', `data-sec="ux" data-di="${di}"`);
+  h += sTile('general', g.done, '/' + g.total, L('Общий', 'General'), g.total ? (g.done === g.total ? doneTxt('general') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), g.total ? Math.round(g.done / g.total * 100) : 0, 'open-daysec', `data-sec="general" data-di="${di}"`);
+  h += sTile('ux', u.done, '/' + u.total, 'UX/UI', u.total ? (u.done === u.total ? doneTxt('ux') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), u.total ? Math.round(u.done / u.total * 100) : 0, 'open-daysec', `data-sec="ux" data-di="${di}"`);
   h += sTile('words', due, '', L('Слова', 'Words'), total ? (due ? L('на повторение', 'to review today') : L('всё повторено', 'all reviewed')) : L('пока нет слов', 'no words yet'), null, 'open-review');
   h += sTile('speaking', lt ? shortDur(daysSince(lt)) : '—', '', L('Говорение', 'Speaking'), lt ? L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
   return h + '</div>';
@@ -514,14 +516,15 @@ function vEnglish() {
   const p = activePack();
   if (!p) return { title: L('Английский', 'English'), body: empty(IC.box, L('Нет пакета заданий', 'No task pack'), '') };
   const ci = currentDayIndex(p);
-  let h = groupHead(L('Ежедневно', 'Daily')) + dayTiles(p, ci);
-  h += groupHead(L('Эта неделя', 'This week'));
+  // 24.11 (v24): наверху — текущий день (плашки General / UX/UI), ниже — план недели только для чтения
+  let h = groupHead(L('Эта неделя', 'This week') + ' · ' + L('День', 'Day') + ' ' + p.days[ci].day) + dayTiles(p, ci);
+  h += groupHead(L('План недели', 'Week plan'));
   h += '<div class="group">' + p.days.map((d, i) => {
-    const list = dayTasks(d), all = list.length && list.every(t => isDone(t.id)), now = i === ci && !all;
-    return `<button class="row" data-act="open-daysec" data-sec="general" data-di="${i}"><span class="check ${all ? 'on' : now ? 'now' : ''}">${all ? IC.check : ''}</span>
-      <span class="row-main"><span class="row-title" ${all ? 'style="color:var(--label2)"' : ''}>${esc(d.title)}</span><span class="row-sub">${L('День', 'Day')} ${d.day} · ${list.filter(t => isDone(t.id)).length}/${list.length}</span></span>${now ? `<span class="nowtag">${L('Сейчас', 'Now')}</span>` : ''}${IC.chevR}</button>`;
-  }).join('') + '</div>';
-  h += '<div class="group" style="margin-top:8px">' + ['general', 'ux'].map(sec => `<button class="row" data-act="open-section" data-sec="${sec}"><span class="row-main"><span class="row-title">${L('Все задания', 'All tasks')} · ${esc(SECTIONS[sec].short())}</span><span class="row-sub">${L('все дни всех пакетов', 'all days of all packs')}</span></span>${IC.chevR}</button>`).join('') + '</div>';
+    const list = dayTasks(d), all = list.length && list.every(t => isDone(t.id)), now = i === ci, open = i <= ci;
+    const inner = `<span class="check ${all ? 'on' : now ? 'now' : ''}">${all ? IC.check : ''}</span>
+      <span class="row-main"><span class="row-title" ${all || !open ? 'style="color:var(--label2)"' : ''}>${esc(d.title)}</span><span class="row-sub">${L('День', 'Day')} ${d.day}${open ? ' · ' + list.filter(t => isDone(t.id)).length + '/' + list.length : ' · ' + L('впереди', 'coming up')}</span></span>${now ? `<span class="nowtag">${L('Сейчас', 'Now')}</span>` : ''}`;
+    return open ? `<button class="row" data-act="open-daysec" data-sec="general" data-di="${i}">${inner}${IC.chevR}</button>` : `<div class="row" aria-disabled="true">${inner}</div>`;
+  }).join('') + '</div><div class="gfoot">' + L('Будущие дни откроются по порядку. Прошедшие можно открыть, чтобы посмотреть результаты.', 'Future days open in order. Past days open to view results.') + '</div>';
   const st = reviewStats();
   if (st.pending || st.reviewed || st.texts) {
     const acc = st.reviewed ? Math.round((st.ok + st.almost * 0.5) / st.reviewed * 100) : 0;
@@ -544,7 +547,7 @@ function vDaySec(sec, di) {
     ${next ? ctaHtml('open-task', `data-id="${esc(next.id)}"`, L('Продолжить', 'Continue'), '· ' + mins(next.minutes), L('Дальше: ', 'Next: ') + next.title) : ''}</div>`;
   h += groupHead(L('Задания', 'Tasks')) + `<div class="group">${req(list).map(t => taskRow(t, next && t.id === next.id)).join('')}</div>`;
   const onlyShadow = opt.every(t => t.type === 'shadow');
-  if (opt.length) h += groupHead(L('Дополнительно · по желанию', 'Extra · optional')) + `<div class="group">${opt.map(t => taskRow(t)).join('')}</div><div class="gfoot">${onlyShadow ? L('Послушайте и повторите фразы дня. Не входит в план дня.', 'Listen and repeat the day’s phrases. Not part of the daily plan.') : L('Не входит в ядро дня. Можно пройти сейчас или позже.', 'Not part of the core of the day. Do it now or later.')}</div>`;
+  if (opt.length) h += groupHead(L('Дополнительно · по желанию', 'Additional · optional') + ' · ' + opt.filter(t => !isDone(t.id)).length + ' ' + L('осталось', 'left')) + `<div class="group">${opt.map(t => taskRow(t)).join('')}</div><div class="gfoot">${onlyShadow ? L('Послушайте и повторите фразы дня. Не входит в план дня.', 'Listen and repeat the day’s phrases. Not part of the daily plan.') : L('Не входит в ядро дня. Можно пройти сейчас или позже.', 'Not part of the core of the day. Do it now or later.')}</div>`;
   if (!next && di === currentDayIndex(p) && coreDone(d) && !dayMovedOn(d) && dayOptional(d).some(t => !isDone(t.id))) h += nextDayBtn(d);
   return { title: sec === 'ux' ? 'UX/UI' : SECTIONS[sec].short(), back: true, sec, pill: `${L('День', 'Day')} ${d.day} ${L('из', 'of')} ${p.days.length}`, sub: esc(d.title), body: h };
 }
