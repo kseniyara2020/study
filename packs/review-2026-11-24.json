@@ -1,0 +1,138 @@
+{
+ "type": "review",
+ "id": "review-2026-11-24",
+ "date": "2026-11-24",
+ "upTo": "2026-11-24",
+ "upToTs": "2026-11-24T12:15:23.255Z",
+ "summary": "be/do держится: перевод 8,5 из 10, ошибка одна — It is rarely (нужен глагол: It rarely happens). Slack-итог — B1, carry on + -ing уже верно.",
+ "verdicts": [
+  {
+   "id": "v24-p3-d4-g7-0",
+   "task": "p3-d4-g7",
+   "i": 0,
+   "verdict": "ok",
+   "comment": "Верно: sure — прилагательное → I'm not"
+  },
+  {
+   "id": "v24-p3-d4-g7-1",
+   "task": "p3-d4-g7",
+   "i": 1,
+   "verdict": "ok",
+   "comment": "Верно: make — глагол → doesn't make"
+  },
+  {
+   "id": "v24-p3-d4-g7-2",
+   "task": "p3-d4-g7",
+   "i": 2,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: afraid of + -ing = afraid to + глагол"
+  },
+  {
+   "id": "v24-p3-d4-g7-3",
+   "task": "p3-d4-g7",
+   "i": 3,
+   "verdict": "almost",
+   "comment": "«Работать над» = work on (with — «работать с»); над конкретными — the empty states",
+   "correct": "I'm still working on the empty states."
+  },
+  {
+   "id": "v24-p3-d4-g7-4",
+   "task": "p3-d4-g7",
+   "i": 4,
+   "verdict": "ok",
+   "comment": "Верно: sound — глагол → it sounds"
+  },
+  {
+   "id": "v24-p3-d4-g7-5",
+   "task": "p3-d4-g7",
+   "i": 5,
+   "verdict": "ok",
+   "comment": "Так тоже правильно: hard = difficult; «не очень» можно передать not very"
+  },
+  {
+   "id": "v24-p3-d4-g7-6",
+   "task": "p3-d4-g7",
+   "i": 6,
+   "verdict": "ok",
+   "comment": "Верно; right now — «прямо сейчас», тоже можно"
+  },
+  {
+   "id": "v24-p3-d4-g7-7",
+   "task": "p3-d4-g7",
+   "i": 7,
+   "verdict": "ok",
+   "comment": "Верно: сейчас, процесс → are + -ing"
+  },
+  {
+   "id": "v24-p3-d4-g7-8",
+   "task": "p3-d4-g7",
+   "i": 8,
+   "verdict": "almost",
+   "comment": "Запуск продукта — launch; start = «начать»",
+   "correct": "We're not ready to launch."
+  },
+  {
+   "id": "v24-p3-d4-g7-9",
+   "task": "p3-d4-g7",
+   "i": 9,
+   "verdict": "wrong",
+   "comment": "rarely — наречие, не глагол: нужен глагол happen (be тут не работает)",
+   "correct": "It rarely happens. / This doesn't happen often."
+  },
+  {
+   "id": "v24-p3-d3-u7-text",
+   "task": "p3-d3-u7",
+   "level": "B1",
+   "comment": "Понятный отчёт команде: есть главный вывод, что сделано и что дальше. Отлично: carrying on working (вчера было carried on to working), got stuck, have fixed, set up interviews. Ошибки — артикли и share.",
+   "fixes": [
+    {
+     "from": "During a few tests we have looked into three findings.",
+     "to": "We ran a few tests and found three issues.",
+     "why": "look into = изучать; находки находят — found. Отчёт о прошедших тестах — Past Simple"
+    },
+    {
+     "from": "users got stuck on payment page",
+     "to": "users got stuck on the payment page",
+     "why": "Понятно, какая страница → the"
+    },
+    {
+     "from": "We have fixed all bugs",
+     "to": "We have fixed all the bugs",
+     "why": "Те самые баги → all the bugs"
+    },
+    {
+     "from": "change interface of payment page",
+     "to": "change the interface of the payment page",
+     "why": "Конкретный интерфейс конкретной страницы → the … the"
+    },
+    {
+     "from": "I'll share you the recording",
+     "to": "I'll share the recording with you",
+     "why": "share что-то with кого-то"
+    },
+    {
+     "from": "working with users' problem",
+     "to": "working on the main problem (по желанию)",
+     "why": "Не ошибка грамматики: работать над проблемой — work on; the — понятно какой"
+    }
+   ]
+  }
+ ],
+ "noteStatus": [
+  {
+   "id": "n-mwnsdywmch6z",
+   "status": "done",
+   "reply": "Сделано в версии v22 (чат «Дизайн приложения»)"
+  },
+  {
+   "id": "n-mwnzs1z2avi6",
+   "status": "done",
+   "reply": "Сделано в версии v22 (чат «Дизайн приложения»)"
+  },
+  {
+   "id": "n-mwo115ug6e9n",
+   "status": "done",
+   "reply": "Сделано в версии v22 (чат «Дизайн приложения»)"
+  }
+ ]
+}
