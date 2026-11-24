@@ -285,9 +285,7 @@ body::before{background:#000!important}
 /* v25 (24.11, чат «Экспорт / импорт»): плитки дня — ядро и дополнительные */
 .stile .v.muted{color:rgba(255,255,255,.5)} .stile .v.muted small{color:rgba(255,255,255,.4)}
 .stile .v.extra{color:var(--sec)}
-.pbar.seg{display:flex;position:relative;overflow:hidden}
-.pbar.seg i{border-radius:0;height:6px;flex:none}
-.pbar.seg i.c{background:rgba(255,255,255,.45)} .pbar.seg i.c.ok{background:#fff} .pbar.seg i.x{background:var(--sec)}
+.pbar.seg{display:block;height:6px;border-radius:3px}
 .row.plan{cursor:default}
 /* v27 (24.11): текущий день в «Плане недели» — полупрозрачный круг цвета раздела с маленькой точкой (не похоже на чекбокс) */
 .row.plan .check.now{border:none;background:color-mix(in srgb,var(--sec) 22%,transparent)}

@@ -582,9 +582,7 @@ body::before{background:#000!important}
 /* v25 (24.11, чат «Экспорт / импорт»): плитки дня — ядро и дополнительные */
 .stile .v.muted{color:rgba(255,255,255,.5)} .stile .v.muted small{color:rgba(255,255,255,.4)}
 .stile .v.extra{color:var(--sec)}
-.pbar.seg{display:flex;position:relative;overflow:hidden}
-.pbar.seg i{border-radius:0;height:6px;flex:none}
-.pbar.seg i.c{background:rgba(255,255,255,.45)} .pbar.seg i.c.ok{background:#fff} .pbar.seg i.x{background:var(--sec)}
+.pbar.seg{display:block;height:6px;border-radius:3px}
 .row.plan{cursor:default}
 /* v27 (24.11): текущий день в «Плане недели» — полупрозрачный круг цвета раздела с маленькой точкой (не похоже на чекбокс) */
 .row.plan .check.now{border:none;background:color-mix(in srgb,var(--sec) 22%,transparent)}
@@ -1053,7 +1051,9 @@ function dayTileState(d, sec) {
   const cd = core.filter(t => isDone(t.id)).length, od = opt.filter(t => isDone(t.id)).length, n = all.length;
   const coreOk = core.length > 0 && cd === core.length;
   const w = x => n ? (x / n * 100).toFixed(1) : 0;
-  const bar = `<span class="pbar seg"><i class="c ${coreOk ? 'ok' : ''}" style="width:${w(cd)}%"></i><i class="x" style="width:${w(od)}%"></i></span>`;
+  // v28: одна полоса с жёсткими переходами цвета (без вложенных кусков — на iOS они «съезжали»)
+  const a = w(cd), b = (Number(w(cd)) + Number(w(od))).toFixed(1), cc = coreOk ? '#fff' : 'rgba(255,255,255,.45)';
+  const bar = `<span class="pbar seg" style="background:linear-gradient(to right, ${cc} 0 ${a}%, var(--sec) ${a}% ${b}%, rgba(255,255,255,.10) ${b}% 100%)"></span>`;
   return { done: cd + od, total: n, cls: !coreOk ? 'muted' : od ? 'extra' : '', bar };
 }
 function dayTiles(p, di) {
@@ -1536,7 +1536,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 24.11 16:09</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 24.11 16:11</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 

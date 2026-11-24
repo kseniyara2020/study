@@ -445,7 +445,9 @@ function dayTileState(d, sec) {
   const cd = core.filter(t => isDone(t.id)).length, od = opt.filter(t => isDone(t.id)).length, n = all.length;
   const coreOk = core.length > 0 && cd === core.length;
   const w = x => n ? (x / n * 100).toFixed(1) : 0;
-  const bar = `<span class="pbar seg"><i class="c ${coreOk ? 'ok' : ''}" style="width:${w(cd)}%"></i><i class="x" style="width:${w(od)}%"></i></span>`;
+  // v28: одна полоса с жёсткими переходами цвета (без вложенных кусков — на iOS они «съезжали»)
+  const a = w(cd), b = (Number(w(cd)) + Number(w(od))).toFixed(1), cc = coreOk ? '#fff' : 'rgba(255,255,255,.45)';
+  const bar = `<span class="pbar seg" style="background:linear-gradient(to right, ${cc} 0 ${a}%, var(--sec) ${a}% ${b}%, rgba(255,255,255,.10) ${b}% 100%)"></span>`;
   return { done: cd + od, total: n, cls: !coreOk ? 'muted' : od ? 'extra' : '', bar };
 }
 function dayTiles(p, di) {
