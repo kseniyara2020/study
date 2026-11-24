@@ -281,3 +281,12 @@ body::before{background:#000!important}
 .pv-chk .pv-open svg{width:18px;height:18px}
 .content.sec-general .pv-chk .tagx{--sec-rgb:108,94,240;--sec:#B3A8FF}
 /* ===== /v21 ===== */
+
+/* v25 (24.11, чат «Экспорт / импорт»): плитки дня — ядро и дополнительные */
+.stile .v.muted{color:rgba(255,255,255,.5)} .stile .v.muted small{color:rgba(255,255,255,.4)}
+.stile .v.extra{color:var(--sec)}
+.pbar.seg{display:flex;position:relative;overflow:visible}
+.pbar.seg i{border-radius:0;height:6px;flex:none}.pbar.seg i:first-child{border-radius:3px 0 0 3px}
+.pbar.seg i.c{background:rgba(255,255,255,.45)} .pbar.seg i.c.ok{background:#fff} .pbar.seg i.x{background:var(--sec)}
+.pbar.seg .mark{position:absolute;top:-2px;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:rgba(255,255,255,.55)}
+.row.plan{cursor:default}

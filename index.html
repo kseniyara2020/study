@@ -578,6 +578,15 @@ body::before{background:#000!important}
 .pv-chk .pv-open svg{width:18px;height:18px}
 .content.sec-general .pv-chk .tagx{--sec-rgb:108,94,240;--sec:#B3A8FF}
 /* ===== /v21 ===== */
+
+/* v25 (24.11, чат «Экспорт / импорт»): плитки дня — ядро и дополнительные */
+.stile .v.muted{color:rgba(255,255,255,.5)} .stile .v.muted small{color:rgba(255,255,255,.4)}
+.stile .v.extra{color:var(--sec)}
+.pbar.seg{display:flex;position:relative;overflow:visible}
+.pbar.seg i{border-radius:0;height:6px;flex:none}.pbar.seg i:first-child{border-radius:3px 0 0 3px}
+.pbar.seg i.c{background:rgba(255,255,255,.45)} .pbar.seg i.c.ok{background:#fff} .pbar.seg i.x{background:var(--sec)}
+.pbar.seg .mark{position:absolute;top:-2px;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:rgba(255,255,255,.55)}
+.row.plan{cursor:default}
 /* ===== /v17 ===== */
 </style>
 </head>
@@ -1032,8 +1041,17 @@ function weekHtml() {
 function shortDur(days) { return days >= 60 ? Math.round(days / 30) + L('мес', 'm') : days >= 14 ? Math.round(days / 7) + L('н', 'w') : days + L('д', 'd'); }
 function daysSince(d) { return Math.max(0, Math.round((parse(today()) - parse(d)) / 864e5)); }
 function lastTalk() { const l = (S.speaking || []).map(r => r.date).sort(); return l[l.length - 1] || null; }
-function sTile(sec, val, unit, name, sub, pct, act, attrs) {
-  return `<button class="stile sec-${sec}" data-act="${act}" ${attrs || ''}><span class="v">${esc(String(val))}${unit ? `<small>${esc(unit)}</small>` : ''}</span><span><span class="n">${esc(name)}</span><span class="s">${esc(sub)}</span>${pct == null ? '' : pbarHtml(pct)}</span></button>`;
+function sTile(sec, val, unit, name, sub, pct, act, attrs, vcls, bar) {
+  return `<button class="stile sec-${sec}" data-act="${act}" ${attrs || ''}><span class="v ${vcls || ''}">${esc(String(val))}${unit ? `<small>${esc(unit)}</small>` : ''}</span><span><span class="n">${esc(name)}</span><span class="s">${esc(sub)}</span>${bar || (pct == null ? '' : pbarHtml(pct))}</span></button>`;
+}
+// 24.11 (v25): плитка дня — счёт по всем заданиям; цифра и полоска: до ядра приглушённо, ядро — белое, дополнительные — цвет раздела
+function dayTileState(d, sec) {
+  const all = d ? (d[sec] || []) : [], core = req(all), opt = all.filter(isOptional);
+  const cd = core.filter(t => isDone(t.id)).length, od = opt.filter(t => isDone(t.id)).length, n = all.length;
+  const coreOk = core.length > 0 && cd === core.length;
+  const w = x => n ? (x / n * 100).toFixed(1) : 0;
+  const bar = `<span class="pbar seg"><i class="c ${coreOk ? 'ok' : ''}" style="width:${w(cd)}%"></i><i class="x" style="width:${w(od)}%"></i>${opt.length && core.length ? `<b class="mark" style="left:${w(core.length)}%"></b>` : ''}</span>`;
+  return { done: cd + od, total: n, cls: !coreOk ? 'muted' : od ? 'extra' : '', bar };
 }
 function dayTiles(p, di) {
   const d = p && p.days[di];
@@ -1043,8 +1061,9 @@ function dayTiles(p, di) {
   const doneTxt = sec => optLeft(sec) ? L('ядро готово · ещё ', 'core done · ') + optLeft(sec) + L(' доп.', ' extra') : L('готово', 'done');
   const due = dueCards().length, total = wordCount(), lt = lastTalk();
   let h = '<div class="tiles4">';
-  h += sTile('general', g.done, '/' + g.total, L('Общий', 'General'), g.total ? (g.done === g.total ? doneTxt('general') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), g.total ? Math.round(g.done / g.total * 100) : 0, 'open-daysec', `data-sec="general" data-di="${di}"`);
-  h += sTile('ux', u.done, '/' + u.total, 'UX/UI', u.total ? (u.done === u.total ? doneTxt('ux') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), u.total ? Math.round(u.done / u.total * 100) : 0, 'open-daysec', `data-sec="ux" data-di="${di}"`);
+  const gs = dayTileState(d, 'general'), us = dayTileState(d, 'ux');
+  h += sTile('general', gs.done, '/' + gs.total, L('Общий', 'General'), g.total ? (g.done === g.total ? doneTxt('general') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), 0, 'open-daysec', `data-sec="general" data-di="${di}"`, gs.cls, gs.bar);
+  h += sTile('ux', us.done, '/' + us.total, 'UX/UI', u.total ? (u.done === u.total ? doneTxt('ux') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), 0, 'open-daysec', `data-sec="ux" data-di="${di}"`, us.cls, us.bar);
   h += sTile('words', due, '', L('Слова', 'Words'), total ? (due ? L('на повторение', 'to review today') : L('всё повторено', 'all reviewed')) : L('пока нет слов', 'no words yet'), null, 'open-review');
   h += sTile('speaking', lt ? shortDur(daysSince(lt)) : '—', '', L('Говорение', 'Speaking'), lt ? L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
   return h + '</div>';
@@ -1117,11 +1136,11 @@ function vEnglish() {
   let h = groupHead(L('Эта неделя', 'This week') + ' · ' + L('День', 'Day') + ' ' + p.days[ci].day) + dayTiles(p, ci);
   h += groupHead(L('План недели', 'Week plan'));
   h += '<div class="group">' + p.days.map((d, i) => {
-    const list = dayTasks(d), all = list.length && list.every(t => isDone(t.id)), now = i === ci, open = i <= ci;
-    const inner = `<span class="check ${all ? 'on' : now ? 'now' : ''}">${all ? IC.check : ''}</span>
-      <span class="row-main"><span class="row-title" ${all || !open ? 'style="color:var(--label2)"' : ''}>${esc(d.title)}</span><span class="row-sub">${L('День', 'Day')} ${d.day}${open ? ' · ' + list.filter(t => isDone(t.id)).length + '/' + list.length : ' · ' + L('впереди', 'coming up')}</span></span>${now ? `<span class="nowtag">${L('Сейчас', 'Now')}</span>` : ''}`;
-    return open ? `<button class="row" data-act="open-daysec" data-sec="general" data-di="${i}">${inner}${IC.chevR}</button>` : `<div class="row" aria-disabled="true">${inner}</div>`;
-  }).join('') + '</div><div class="gfoot">' + L('Будущие дни откроются по порядку. Прошедшие можно открыть, чтобы посмотреть результаты.', 'Future days open in order. Past days open to view results.') + '</div>';
+    const list = dayTasks(d), all = list.length && list.every(t => isDone(t.id)), now = i === ci;
+    const desc = i < ci || (all && !now) ? L('пройден', 'done') : now ? L('сейчас', 'now') + ' · ' + list.filter(t => isDone(t.id)).length + ' ' + L('из', 'of') + ' ' + list.length : L('впереди', 'coming up');
+    return `<div class="row plan"><span class="check ${all ? 'on' : now ? 'now' : ''}">${all ? IC.check : ''}</span>
+      <span class="row-main"><span class="row-title" ${!now ? 'style="color:var(--label2)"' : ''}>${esc(d.title)}</span><span class="row-sub">${L('День', 'Day')} ${d.day} · ${desc}</span></span></div>`;
+  }).join('') + '</div>';
   const st = reviewStats();
   if (st.pending || st.reviewed || st.texts) {
     const acc = st.reviewed ? Math.round((st.ok + st.almost * 0.5) / st.reviewed * 100) : 0;
@@ -1510,7 +1529,7 @@ function vSettings() {
   h += groupHead(L('Сброс', 'Reset')) + (UI.resetAsk
     ? `<div class="panel"><p style="margin:0 0 12px">${L('Удалить весь прогресс, слова и ответы на этом устройстве? Сначала сделайте экспорт, если он нужен.', 'Delete all progress, words and answers on this device? Export first if you need them.')}</p><div class="btns"><button class="btn sec" data-act="reset-no">${L('Отмена', 'Cancel')}</button><button class="btn danger" data-act="reset-yes">${L('Удалить', 'Delete')}</button></div></div>`
     : `<div class="group"><button class="row" data-act="reset-ask"><span class="row-main"><span class="row-title" style="color:var(--red)">${L('Сбросить прогресс', 'Reset progress')}</span></span></button></div>`);
-  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 24.11 15:52</div>`;
+  h += `<div class="gfoot" style="margin-top:20px;text-align:center">${L('Данные хранятся только на этом устройстве', 'Data is stored only on this device')}<br>${L('Версия', 'Version')} 24.11 16:00</div>`;
   return { title: L('Настройки', 'Settings'), body: h };
 }
 
