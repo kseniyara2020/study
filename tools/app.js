@@ -434,6 +434,7 @@ function weekHtml() {
 }
 function shortDur(days) { return days >= 60 ? Math.round(days / 30) + L('мес', 'm') : days >= 14 ? Math.round(days / 7) + L('н', 'w') : days + L('д', 'd'); }
 function daysSince(d) { return Math.max(0, Math.round((parse(today()) - parse(d)) / 864e5)); }
+function talkStreak() { const ds = new Set((S.speaking || []).map(r => r.date)); let d = ds.has(today()) ? today() : addDays(today(), -1), n = 0; while (ds.has(d)) { n++; d = addDays(d, -1); } return n; }
 function lastTalk() { const l = (S.speaking || []).map(r => r.date).sort(); return l[l.length - 1] || null; }
 function sTile(sec, val, unit, name, sub, pct, act, attrs, vcls, bar) {
   return `<button class="stile sec-${sec}" data-act="${act}" ${attrs || ''}><span class="v ${vcls || ''}">${esc(String(val))}${unit ? `<small>${esc(unit)}</small>` : ''}</span><span><span class="n">${esc(name)}</span><span class="s">${esc(sub)}</span>${bar || (pct == null ? '' : pbarHtml(pct))}</span></button>`;
@@ -444,7 +445,7 @@ function dayTileState(d, sec) {
   const cd = core.filter(t => isDone(t.id)).length, od = opt.filter(t => isDone(t.id)).length, n = all.length;
   const coreOk = core.length > 0 && cd === core.length;
   const w = x => n ? (x / n * 100).toFixed(1) : 0;
-  const bar = `<span class="pbar seg"><i class="c ${coreOk ? 'ok' : ''}" style="width:${w(cd)}%"></i><i class="x" style="width:${w(od)}%"></i>${opt.length && core.length ? `<b class="mark" style="left:${w(core.length)}%"></b>` : ''}</span>`;
+  const bar = `<span class="pbar seg"><i class="c ${coreOk ? 'ok' : ''}" style="width:${w(cd)}%"></i><i class="x" style="width:${w(od)}%"></i></span>`;
   return { done: cd + od, total: n, cls: !coreOk ? 'muted' : od ? 'extra' : '', bar };
 }
 function dayTiles(p, di) {
@@ -458,8 +459,11 @@ function dayTiles(p, di) {
   const gs = dayTileState(d, 'general'), us = dayTileState(d, 'ux');
   h += sTile('general', gs.done, '/' + gs.total, L('Общий', 'General'), g.total ? (g.done === g.total ? doneTxt('general') : '~' + left(g) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), 0, 'open-daysec', `data-sec="general" data-di="${di}"`, gs.cls, gs.bar);
   h += sTile('ux', us.done, '/' + us.total, 'UX/UI', u.total ? (u.done === u.total ? doneTxt('ux') : '~' + left(u) + ' ' + L('мин осталось', 'min left')) : L('нет заданий', 'no tasks'), 0, 'open-daysec', `data-sec="ux" data-di="${di}"`, us.cls, us.bar);
-  h += sTile('words', due, '', L('Слова', 'Words'), total ? (due ? L('на повторение', 'to review today') : L('всё повторено', 'all reviewed')) : L('пока нет слов', 'no words yet'), null, 'open-review');
-  h += sTile('speaking', lt ? shortDur(daysSince(lt)) : '—', '', L('Говорение', 'Speaking'), lt ? L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
+  // v26: слова доступны всегда (без повторения на сегодня — тренировка); говорение — дней подряд
+  const nextRev = Object.values(S.cards).map(c => c.due).sort()[0];
+  h += due ? sTile('words', due, ' ' + L('на сегодня', 'today'), L('Слова', 'Words'), L('повторение на сегодня', 'to review today'), null, 'open-review')
+    : sTile('words', total, total ? ' ' + P(total, 'слово', 'слова', 'слов', 'word', 'words') : '', L('Слова', 'Words'), total ? (nextRev ? L('повторение ', 'next review ') + fmtShort(nextRev) + ' · ' : '') + L('тренировка в любой момент', 'practice anytime') : L('пока нет слов', 'no words yet'), null, total ? 'open-practice' : 'open-review');
+  h += sTile('speaking', talkStreak(), ' ' + L('дн. подряд', 'days in a row'), L('Говорение', 'Speaking'), lt ? shortDur(daysSince(lt)) + ' ' + L('с последнего разговора', 'since last talk') : L('по желанию', 'optional'), null, 'open-speaking');
   return h + '</div>';
 }
 function coverHtml(kind, label, sm) {
@@ -506,6 +510,7 @@ function vToday() {
     ${next ? ctaHtml('open-task', `data-id="${esc(next.id)}"`, optNext ? L('Дополнительно', 'Extra') : L('Продолжить', 'Continue'), '· ' + mins(next.minutes), L('Дальше: ', 'Next: ') + next.title) : `<div class="dprog" style="justify-content:center"><b>${L('Всё готово на сегодня', 'All done for today')}</b></div>`}
     ${optNext ? nextDayBtn(d) : ''}</div>`;
   h += groupHead(L('Английский', 'English'), `<button class="glink" data-act="tab" data-tab="english">${L('Все', 'All')}</button>`) + dayTiles(p, di);
+  { const due = dueCards().filter(id => vocabMap()[cardBase(id)]).length; if (due) h += `<div class="group" style="margin-top:12px"><button class="row" data-act="open-review"><span class="check now"></span><span class="row-main"><span class="row-title">${L('Слова на повторение', 'Words to review')} · ${due}</span><span class="row-sub">${L('Задание на сегодня · карточки в обе стороны', 'Today’s task · cards both ways')}</span></span>${IC.chevR}</button></div>`; }
   if (S.settings.mediaNudge) {
     const rows = [];
     S.shows.forEach(sh => { const n = S.myWords.filter(w => w.show === sh.id).length; rows.push(mediaRow('series', sh.current || '', sh.title + ' · ' + (sh.current || ''), L('Сериал', 'Series'), n + ' ' + P(n, 'слово записано', 'слова записано', 'слов записано', 'word saved', 'words saved'), 'open-show', `data-id="${esc(sh.id)}"`)); });
@@ -1187,12 +1192,12 @@ function nextBtn(t) { return `<div class="actions"><button class="btn" data-act=
 function vReview() {
   const V = vocabMap();
   if (!RV) RV = { queue: dueCards().filter(id => V[cardBase(id)]), i: 0, flipped: false, known: 0 };
-  const title = L('Повторение', 'Review');
+  const title = RV.practice ? L('Тренировка слов', 'Word practice') : L('Повторение', 'Review');
   if (!RV.queue.length || RV.i >= RV.queue.length) {
     const next = Object.values(S.cards).map(c => c.due).sort()[0];
     const done = RV.queue.length;
     return { title, back: true, body: done
-      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>${L('Повторение на сегодня закончено.', 'Today’s review is done.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`
+      ? `<div class="summary"><div class="big">${RV.known}/${done}</div><p>${RV.practice ? L('Тренировка закончена. Расписание повторений не изменилось.', 'Practice done. Your review schedule is unchanged.') : L('Повторение на сегодня закончено.', 'Today’s review is done.')}</p></div><div class="actions"><button class="btn" data-act="back">${L('Готово', 'Done')}</button></div>`
       : empty(IC.cards, L('Всё повторено', 'All caught up'), next ? L('Следующее повторение: ', 'Next review: ') + fmtShort(next) + '.' : L('Слова появятся после заданий «Новые слова».', 'Words appear after “New words” tasks.')) };
   }
   const cid = RV.queue[RV.i], rev = isRev(cid), v = V[cardBase(cid)];
@@ -1539,6 +1544,7 @@ document.addEventListener('click', e => {
     case 'open-section': go(() => UI.stack.push({ v: 'section', sec: el.dataset.sec })); break;
     case 'open-show': go(() => { UI.seg = 'words'; UI.stack.push({ v: 'show', id: el.dataset.id }); }); break;
     case 'open-review': go(() => { RV = null; UI.stack.push({ v: 'review' }); }); break;
+    case 'open-practice': go(() => { const V = vocabMap(); const ids = Object.keys(S.cards).filter(id => V[cardBase(id)]).sort((a, b) => ((S.cards[b].lapses || 0) - (S.cards[a].lapses || 0)) || (S.cards[a].box - S.cards[b].box)); RV = { queue: ids.slice(0, 15), i: 0, flipped: false, known: 0, practice: true }; UI.stack.push({ v: 'review' }); }); break;
     case 'open-checks': go(() => UI.stack.push({ v: 'checks' })); break;
     case 'open-check': go(() => { CS = null; UI.stack.push({ v: 'check', skill: el.dataset.skill }); }); break;
     case 'check-start': CS.started = true; CS.i = 0; CS.answers = []; go(() => {}); break;
@@ -1629,6 +1635,7 @@ document.addEventListener('click', e => {
     case 'rv-flip': RV.flipped = !RV.flipped; render(); break;
     case 'rv': {
       const id = RV.queue[RV.i], c = S.cards[id], ok = el.dataset.ok === '1';
+      if (RV.practice) { if (ok) RV.known++; touchActivity(); save(); RV.i++; RV.flipped = false; render(); break; } // тренировка не меняет расписание
       if (ok) { c.box = Math.min(5, c.box + 1); RV.known++; } else { c.box = 1; c.lapses = (c.lapses || 0) + 1; }
       c.due = addDays(today(), INTERVALS[c.box]); touchActivity(); save();
       RV.i++; RV.flipped = false; render(); break;
